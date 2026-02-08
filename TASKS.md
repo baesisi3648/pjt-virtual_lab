@@ -1,407 +1,626 @@
-# TASKS.md - Virtual Lab for NGT Safety Framework (MVP)
+# Virtual Lab Final - TASKS.md
 
-> **모드**: 문서 기반 (from-docs)
-> **소스**: `virtual_lab_mvp.md`, `virtual_lab_script.md`
+> **프로젝트**: Virtual Lab for NGT Safety Framework (Production)
+> **목표**: MVP → Production 업그레이드 (Dynamic Team + Autonomous Research + Parallel Meetings)
 > **생성일**: 2026-02-08
 
 ---
 
-## 프로젝트 요약
+## 📊 Phase Overview
 
-| 항목 | 내용 |
-|------|------|
-| **목표** | 유전자편집식품(NGT) 표준 안전성 평가 프레임워크를 도출하는 AI 에이전트 시스템 |
-| **아키텍처** | PI + Critic + Scientist → LangGraph Critique Loop |
-| **백엔드** | FastAPI + LangGraph + OpenAI API |
-| **프론트엔드** | Streamlit (Chat UI + Report Viewer) |
-| **데이터** | Context Injection (RAG 없음, 하드코딩 텍스트) |
+| Phase | 제목 | 핵심 목표 | 태스크 수 |
+|-------|------|-----------|----------|
+| **P0** | Project Setup | PostgreSQL + ChromaDB + Redis 환경 구축 | 5 |
+| **P1** | Knowledge Injection | RAG 시스템 구축 (벡터 DB + 규제 문서) | 4 |
+| **P2** | Eyes & Ears | Web Search 연동 (Tavily API) | 4 |
+| **P3** | The Brain | 병렬 회의 + 동적 팀 구성 | 6 |
+| **P4** | The Face | Next.js UI + 실시간 스트리밍 | 5 |
+
+**Total**: 24 Tasks
 
 ---
 
-## 의존성 그래프
+## Phase 0: Project Setup
 
-```mermaid
-flowchart TD
-    subgraph P0 [Phase 0: Setup]
-        T01[P0-T0.1: 프로젝트 초기화]
-        T02[P0-T0.2: 환경 설정]
-    end
+### P0-T1: Database Infrastructure Setup
+**목표**: PostgreSQL + ChromaDB 컨테이너 환경 구축
 
-    subgraph P1 [Phase 1: Core Infrastructure]
-        R1[P1-R1: LLM Utils]
-        R2[P1-R2: Guidelines Data]
-    end
+**작업**:
+- [ ] `docker-compose.yml` 작성
+  - PostgreSQL (세션 이력 저장)
+  - ChromaDB (벡터 저장소)
+  - Redis (Celery 백엔드)
+- [ ] `init.sql` 작성 (sessions, reports 테이블)
+- [ ] 헬스체크 스크립트 작성
 
-    subgraph P2 [Phase 2: Agent System]
-        R3[P2-R1: Scientist Agent]
-        R4[P2-R2: Critic Agent]
-        R5[P2-R3: PI Agent]
-        R6[P2-R4: LangGraph Workflow]
-    end
-
-    subgraph P3 [Phase 3: API & UI]
-        R7[P3-R1: FastAPI Server]
-        S1[P3-S1: Streamlit UI]
-    end
-
-    subgraph P4 [Phase 4: Integration]
-        V1[P4-V1: E2E 검증]
-    end
-
-    T01 --> T02
-    T02 --> R1
-    T02 --> R2
-    R1 --> R3
-    R1 --> R4
-    R1 --> R5
-    R2 --> R3
-    R2 --> R4
-    R3 --> R6
-    R4 --> R6
-    R5 --> R6
-    R6 --> R7
-    R7 --> S1
-    S1 --> V1
+**검증**:
+```bash
+docker-compose up -d
+docker-compose ps  # 3개 컨테이너 모두 healthy
 ```
 
+**차단**: 없음
+
 ---
 
-## Phase 0: 프로젝트 셋업
+### P0-T2: Backend Dependencies Update
+**목표**: Production 의존성 추가
 
-### [ ] P0-T0.1: 프로젝트 초기화
-- **담당**: backend-specialist
-- **스펙**: 디렉토리 구조 생성 및 기본 파일 배치
-- **산출물**:
+**작업**:
+- [ ] `requirements.txt` 업데이트
   ```
-  virtual-lab-mvp/
-  ├── app.py                # Streamlit Frontend
-  ├── server.py             # FastAPI Backend
-  ├── agents/
-  │   ├── __init__.py
-  │   ├── pi.py
-  │   ├── critic.py
-  │   └── scientist.py
-  ├── workflow/
-  │   ├── __init__.py
-  │   └── graph.py
-  ├── data/
-  │   └── guidelines.py
-  ├── utils/
-  │   └── llm.py
-  ├── tests/
-  │   ├── __init__.py
-  │   ├── test_agents.py
-  │   ├── test_workflow.py
-  │   └── test_server.py
-  ├── .env.example
-  └── requirements.txt
+  chromadb>=0.4.0
+  psycopg2-binary>=2.9.0
+  sqlalchemy>=2.0.0
+  celery>=5.3.0
+  redis>=5.0.0
+  tavily-python>=0.3.0
+  langsmith>=0.1.0
+  ```
+- [ ] 가상환경 재생성 테스트
+
+**검증**:
+```bash
+pip install -r requirements.txt
+python -c "import chromadb; import tavily"
+```
+
+**차단**: 없음
+
+---
+
+### P0-T3: Environment Configuration
+**목표**: 환경 변수 관리 강화
+
+**작업**:
+- [ ] `.env.example` 업데이트
+  ```
+  POSTGRES_URL=postgresql://...
+  CHROMA_HOST=localhost
+  CHROMA_PORT=8001
+  TAVILY_API_KEY=tvly-...
+  LANGSMITH_API_KEY=lsv2_...
+  REDIS_URL=redis://localhost:6379
+  ```
+- [ ] `config.py` 작성 (Pydantic Settings)
+- [ ] Secrets 검증 로직 추가
+
+**검증**:
+```python
+from config import settings
+assert settings.TAVILY_API_KEY.startswith("tvly-")
+```
+
+**차단**: 없음
+
+---
+
+### P0-T4: Database Models
+**목표**: SQLAlchemy ORM 모델 정의
+
+**작업**:
+- [ ] `models/session.py` 작성
+  ```python
+  class Session(Base):
+      id: UUID
+      user_query: Text
+      final_report: Text
+      created_at: DateTime
+  ```
+- [ ] `models/agent_log.py` 작성 (에이전트 행동 추적)
+- [ ] Alembic 마이그레이션 초기화
+
+**검증**:
+```bash
+alembic revision --autogenerate -m "init"
+alembic upgrade head
+```
+
+**차단**: P0-T1 (DB 실행 필요)
+
+---
+
+### P0-T5: Celery Task Queue Setup
+**목표**: 비동기 작업 처리 인프라
+
+**작업**:
+- [ ] `celery_app.py` 작성
+  ```python
+  app = Celery('virtual_lab', broker='redis://...')
+  ```
+- [ ] `tasks/research_task.py` 작성 (장시간 연구 작업)
+- [ ] Celery worker 실행 스크립트
+
+**검증**:
+```bash
+celery -A celery_app worker --loglevel=info
+# 테스트 태스크 submit
+```
+
+**차단**: P0-T1 (Redis 필요)
+
+---
+
+## Phase 1: Knowledge Injection (RAG System)
+
+### P1-T1: ChromaDB Collection Setup
+**목표**: 규제 문서용 벡터 컬렉션 생성
+
+**작업**:
+- [ ] `rag/chroma_client.py` 작성
+  ```python
+  client = chromadb.HttpClient(host=CHROMA_HOST)
+  collection = client.get_or_create_collection("regulatory_docs")
+  ```
+- [ ] Embedding 모델 선택 (OpenAI text-embedding-3-small)
+- [ ] 메타데이터 스키마 정의
+
+**검증**:
+```python
+collection.count()  # 0 (초기 상태)
+```
+
+**차단**: P0-T1 (ChromaDB 실행 필요)
+
+---
+
+### P1-T2: PDF Processing Pipeline
+**목표**: PDF → 청크 → 임베딩 → 저장
+
+**작업**:
+- [ ] `rag/pdf_processor.py` 작성
+  - PyPDF2로 텍스트 추출
+  - RecursiveCharacterTextSplitter (chunk_size=1000)
+- [ ] `data/regulatory/` 폴더에 샘플 PDF 준비
+- [ ] 배치 임베딩 함수 작성
+
+**검증**:
+```bash
+python rag/pdf_processor.py --file data/regulatory/codex_guideline.pdf
+# ChromaDB에 500개 청크 저장 확인
+```
+
+**차단**: P1-T1
+
+---
+
+### P1-T3: RAG Retrieval Function
+**목표**: 쿼리 → 관련 문서 검색
+
+**작업**:
+- [ ] `rag/retriever.py` 작성
+  ```python
+  def retrieve(query: str, top_k=5) -> List[Document]:
+      results = collection.query(query_texts=[query], n_results=top_k)
+      return results
+  ```
+- [ ] Reranking 로직 추가 (옵션)
+- [ ] Citation 포맷팅 함수
+
+**검증**:
+```python
+docs = retrieve("What is substantial equivalence?")
+assert len(docs) == 5
+assert "Codex" in docs[0].metadata['source']
+```
+
+**차단**: P1-T2
+
+---
+
+### P1-T4: Agent RAG Integration
+**목표**: Scientist 에이전트에 RAG Tool 추가
+
+**작업**:
+- [ ] `agents/scientist.py` 수정
+  ```python
+  tools = [rag_search_tool]  # LangChain Tool로 래핑
+  ```
+- [ ] System Prompt 업데이트
+  - "관련 규제를 먼저 검색하세요"
+- [ ] RAG 히트 여부 로깅
+
+**검증**:
+```python
+response = scientist.invoke("대두 알레르기 평가 방법은?")
+assert "[출처: Codex Guideline]" in response
+```
+
+**차단**: P1-T3
+
+---
+
+## Phase 2: Eyes & Ears (Web Search)
+
+### P2-T1: Tavily API Client
+**목표**: Tavily 검색 클라이언트 구현
+
+**작업**:
+- [ ] `search/tavily_client.py` 작성
+  ```python
+  from tavily import TavilyClient
+  client = TavilyClient(api_key=TAVILY_API_KEY)
+  ```
+- [ ] Domain 필터링 설정
+  - include_domains: [".gov", "nature.com", "sciencedirect.com"]
+- [ ] Rate limiting 처리
+
+**검증**:
+```python
+results = client.search("CRISPR off-target effects 2025")
+assert len(results['results']) > 0
+```
+
+**차단**: P0-T3 (API Key 필요)
+
+---
+
+### P2-T2: Search Tool for Agents
+**목표**: LangChain Tool로 래핑
+
+**작업**:
+- [ ] `tools/web_search.py` 작성
+  ```python
+  @tool
+  def web_search(query: str) -> str:
+      """최신 논문 및 규제 동향 검색"""
+      results = tavily_client.search(query)
+      return format_results(results)
+  ```
+- [ ] Citation Rule 강제 (출처 URL 포함)
+- [ ] 검색 결과 캐싱 (Redis)
+
+**검증**:
+```python
+result = web_search.invoke("Calyxt high oleic soybean FDA approval")
+assert "calyxt.com" in result or "fda.gov" in result
+```
+
+**차단**: P2-T1
+
+---
+
+### P2-T3: Agent Search Integration
+**목표**: 모든 에이전트에 검색 권한 부여
+
+**작업**:
+- [ ] `agents/pi.py` - tools 업데이트
+- [ ] `agents/scientist.py` - tools 업데이트
+- [ ] `agents/critic.py` - tools 업데이트
+- [ ] System Prompt 수정
+  - "최신 정보가 필요하면 web_search를 사용하세요"
+
+**검증**:
+```python
+response = pi.invoke("2025년 EU NGT 법안 통과 여부")
+# 실제 웹 검색 후 답변 확인
+```
+
+**차단**: P2-T2
+
+---
+
+### P2-T4: Search Observability
+**목표**: 검색 행위 추적 (LangSmith)
+
+**작업**:
+- [ ] LangSmith 트레이싱 활성화
+  ```python
+  from langsmith import trace
+  @trace
+  def web_search(...):
+  ```
+- [ ] 검색 쿼리 로깅 (DB 저장)
+- [ ] 대시보드 확인 가능 여부 검증
+
+**검증**:
+```
+LangSmith UI에서 검색 쿼리 확인
+```
+
+**차단**: P2-T3
+
+---
+
+## Phase 3: The Brain (Parallel & Dynamic)
+
+### P3-T1: Parallel Meeting Architecture
+**목표**: LangGraph Map-Reduce 패턴 구현
+
+**작업**:
+- [ ] `workflow/parallel_graph.py` 작성
+  ```python
+  def parallel_risk_analysis(state):
+      # 3개 에이전트가 동시에 위험 분석
+      futures = [agent_a.ainvoke(), agent_b.ainvoke(), agent_c.ainvoke()]
+      results = await asyncio.gather(*futures)
+      return {"parallel_views": results}
+  ```
+- [ ] Merge 로직 구현 (PI가 통합)
+- [ ] 노드 간 의존성 정의
+
+**검증**:
+```python
+result = await parallel_graph.ainvoke({"query": "대두 위험 요소"})
+assert len(result['parallel_views']) == 3
+```
+
+**차단**: 없음 (기존 graph.py 리팩토링)
+
+---
+
+### P3-T2: Dynamic Agent Factory
+**목표**: PI가 전문가 프로필 생성
+
+**작업**:
+- [ ] `agents/factory.py` 작성
+  ```python
+  def create_specialist(profile: dict) -> Agent:
+      """
+      profile = {
+          "role": "Plant Metabolomics Expert",
+          "focus": "fatty acid composition",
+          "tools": ["rag_search", "web_search"]
+      }
+      """
+      system_prompt = generate_prompt(profile)
+      return Agent(llm=llm, system=system_prompt, tools=tools)
+  ```
+- [ ] 프로필 템플릿 정의
+
+**검증**:
+```python
+expert = create_specialist({"role": "Allergy Specialist"})
+response = expert.invoke("대두 P34 단백질 분석")
+# 전문적인 답변 확인
+```
+
+**차단**: 없음
+
+---
+
+### P3-T3: PI Decision Logic
+**목표**: PI가 쿼리 분석 후 팀 구성 결정
+
+**작업**:
+- [ ] `agents/pi.py` 수정
+  ```python
+  def decide_team(user_query: str) -> List[dict]:
+      """
+      LLM에게 "이 쿼리에 필요한 전문가는?"이라고 물어봄
+      return [
+          {"role": "Metabolomics Expert", "focus": "lipid analysis"},
+          {"role": "Nutrition Toxicologist", ...}
+      ]
+      """
+  ```
+- [ ] 기본 팀 vs 동적 팀 분기 로직
+
+**검증**:
+```python
+team = decide_team("고올레산 대두 안전성 평가")
+assert any("Metabol" in expert['role'] for expert in team)
+```
+
+**차단**: P3-T2
+
+---
+
+### P3-T4: Dynamic Workflow Execution
+**목표**: 결정된 팀으로 워크플로우 실행
+
+**작업**:
+- [ ] `workflow/dynamic_graph.py` 작성
+  ```python
+  def build_graph(team_profiles: List[dict]):
+      # 팀 구성에 맞춰 그래프 동적 생성
+      specialists = [create_specialist(p) for p in team_profiles]
+      graph.add_node("parallel_meeting", parallel_func(specialists))
+      return graph.compile()
+  ```
+- [ ] 기존 graph.py와 통합
+
+**검증**:
+```python
+graph = build_graph([...])
+result = await graph.ainvoke({"query": "..."})
+```
+
+**차단**: P3-T3
+
+---
+
+### P3-T5: Critic Merge Logic
+**목표**: 병렬 의견 통합 강화
+
+**작업**:
+- [ ] `agents/critic.py` 수정
+  ```python
+  def merge_views(views: List[str]) -> str:
+      """
+      - 중복 제거
+      - 가장 보수적 안전 기준 선택
+      - 근거 부족한 의견 기각
+      """
+  ```
+- [ ] Conflict Resolution 규칙 정의
+
+**검증**:
+```python
+merged = critic.merge_views([view_a, view_b, view_c])
+assert "동물 실험 불필요" in merged  # 합리적 합의
+```
+
+**차단**: P3-T1
+
+---
+
+### P3-T6: End-to-End Parallel Test
+**목표**: 전체 Brain 시스템 통합 테스트
+
+**작업**:
+- [ ] `tests/test_parallel_brain.py` 작성
+  - 쿼리: "고올레산 대두 안전성 평가"
+  - 예상: 대사체학자 + 영양학자 생성
+  - 병렬 회의 실행
+  - 최종 통합 보고서 생성
+- [ ] 5분 이내 실행 시간 검증
+
+**검증**:
+```bash
+pytest tests/test_parallel_brain.py -v
+```
+
+**차단**: P3-T4, P3-T5
+
+---
+
+## Phase 4: The Face (Next.js UI)
+
+### P4-T1: Next.js Project Setup
+**목표**: React 프론트엔드 초기화
+
+**작업**:
+- [ ] `frontend/` 폴더 생성
+  ```bash
+  npx create-next-app@latest frontend --typescript --tailwind
+  ```
+- [ ] FastAPI CORS 설정
+- [ ] Proxy 설정 (Next.js → FastAPI)
+
+**검증**:
+```bash
+cd frontend && npm run dev
+# http://localhost:3000 접속 확인
+```
+
+**차단**: 없음
+
+---
+
+### P4-T2: Live Process Timeline
+**목표**: 에이전트 상태 실시간 시각화
+
+**작업**:
+- [ ] `components/ProcessTimeline.tsx` 작성
+  - Server-Sent Events (SSE) 구독
+  - 타임라인 UI (Tailwind)
+    - "🔍 검색 중..."
+    - "🧠 회의 중..."
+    - "✅ 보고서 생성 완료"
+- [ ] FastAPI SSE 엔드포인트 추가
+
+**검증**:
+```tsx
+// 실시간 업데이트 확인
+[12:01] PI: 팀 구성 중...
+[12:02] 대사체학자: 웹 검색 중...
+[12:03] 병렬 회의 시작...
+```
+
+**차단**: P4-T1
+
+---
+
+### P4-T3: Interactive Report Editor
+**목표**: 마크다운 보고서 수정 가능
+
+**작업**:
+- [ ] `components/ReportEditor.tsx` 작성
+  - React Markdown 렌더링
+  - 인라인 수정 모드
+  - "재검토 요청" 버튼 (특정 섹션)
+- [ ] FastAPI 재검토 API 추가
+  ```python
+  POST /api/report/regenerate
+  {"section": "위험 식별", "feedback": "알레르기 더 자세히"}
   ```
 
-### [ ] P0-T0.2: 환경 설정 및 의존성 관리
-- **담당**: backend-specialist
-- **스펙**: Python 의존성 정의 및 OpenAI API 키 설정
-- **파일**: `requirements.txt`, `.env.example`
-- **의존성 목록**:
-  - `langchain>=0.3.0`
-  - `langgraph>=0.2.0`
-  - `langchain-openai>=0.2.0`
-  - `fastapi>=0.115.0`
-  - `uvicorn>=0.30.0`
-  - `streamlit>=1.39.0`
-  - `python-dotenv>=1.0.0`
-  - `pydantic>=2.0.0`
-  - `httpx>=0.27.0` (Streamlit → FastAPI 통신)
-  - `pytest>=8.0.0`
-  - `pytest-asyncio>=0.24.0`
-- **의존**: P0-T0.1
-
----
-
-## Phase 1: 핵심 인프라
-
-### P1-R1: LLM Utility Resource
-
-#### [ ] P1-R1-T1: OpenAI 모델 초기화 모듈 구현
-- **담당**: backend-specialist
-- **리소스**: llm
-- **파일**: `tests/test_llm.py` → `utils/llm.py`
-- **스펙**:
-  - `get_gpt4o()`: GPT-4o 인스턴스 반환 (PI, Critic용)
-  - `get_gpt4o_mini()`: GPT-4o-mini 인스턴스 반환 (Scientist용)
-  - `.env`에서 `OPENAI_API_KEY` 로드
-  - temperature, max_tokens 등 기본 파라미터 설정
-- **TDD**: RED → GREEN → REFACTOR
-- **병렬**: P1-R2-T1과 병렬 가능
-
----
-
-### P1-R2: Guidelines Data Resource
-
-#### [ ] P1-R2-T1: 규제 가이드라인 텍스트 에셋 구현
-- **담당**: backend-specialist
-- **리소스**: guidelines
-- **파일**: `tests/test_guidelines.py` → `data/guidelines.py`
-- **스펙**: System Prompt에 주입될 4개 텍스트 에셋 정의
-  1. **RESEARCH_OBJECTIVE**: 연구 목표 정의서
-     - "개별 제품이 아닌 카테고리 평가 틀을 만든다"
-  2. **CODEX_PRINCIPLES**: 국제 표준 요약 (Codex Alimentarius)
-     - 분자적 특성, 독성, 알레르기, 영양성 평가 4대 원칙
-  3. **REGULATORY_TRENDS**: 규제 동향 (FDA/EU)
-     - Process-based vs Product-based 접근법 차이
-  4. **CRITIQUE_RUBRIC**: 비평 기준표
-     - 과학적 근거 여부 (1-5점)
-     - 범용성 (카테고리 적용 가능성, 1-5점)
-     - 과도한 규제 여부 (1-5점)
-- **TDD**: RED → GREEN → REFACTOR
-- **병렬**: P1-R1-T1과 병렬 가능
-
----
-
-## Phase 2: 에이전트 시스템
-
-### P2-R1: Scientist (Risk Identifier) Agent
-
-#### [ ] P2-R1-T1: 위험 식별가 에이전트 구현
-- **담당**: backend-specialist
-- **리소스**: scientist_agent
-- **파일**: `tests/test_agents.py::TestScientist` → `agents/scientist.py`
-- **스펙**:
-  - **모델**: GPT-4o-mini
-  - **역할**: NGT 기술의 잠재적 위험 요소 초안 작성
-  - **입력**: `AgentState` (topic, constraints, guidelines context, feedback 등)
-  - **출력**: 위험 요소 목록 + 필요 자료 목록 (Markdown 형식)
-  - **System Prompt 포함**:
-    - RESEARCH_OBJECTIVE
-    - CODEX_PRINCIPLES
-    - REGULATORY_TRENDS
-  - **재작성 로직**: feedback이 존재하면 이전 초안 + feedback을 반영한 수정안 생성
-- **의존**: P1-R1-T1, P1-R2-T1
-- **TDD**: RED → GREEN → REFACTOR
-- **병렬**: P2-R2-T1, P2-R3-T1과 병렬 가능
-
----
-
-### P2-R2: Scientific Critic Agent
-
-#### [ ] P2-R2-T1: 과학 비평가 에이전트 구현
-- **담당**: backend-specialist
-- **리소스**: critic_agent
-- **파일**: `tests/test_agents.py::TestCritic` → `agents/critic.py`
-- **스펙**:
-  - **모델**: GPT-4o
-  - **역할**: Scientist 초안의 과학적 타당성 및 범용성 검증
-  - **입력**: `AgentState` (scientist의 초안, iteration count)
-  - **출력**: `CritiqueResult`
-    - `decision`: "approve" | "revise"
-    - `feedback`: 수정 제안 (decision이 "revise"인 경우)
-    - `scores`: 3항목 채점 결과
-  - **체크리스트 (CRITIQUE_RUBRIC 기반)**:
-    1. 과학적 근거가 있는가? (1-5)
-    2. 특정 제품이 아닌 카테고리 전체에 적용 가능한가? (1-5)
-    3. 불필요하게 과도한 자료를 요구하지 않는가? (1-5)
-  - **승인 조건**: 모든 항목 3점 이상
-- **의존**: P1-R1-T1, P1-R2-T1
-- **TDD**: RED → GREEN → REFACTOR
-- **병렬**: P2-R1-T1, P2-R3-T1과 병렬 가능
-
----
-
-### P2-R3: PI (Principal Investigator) Agent
-
-#### [ ] P2-R3-T1: 연구 책임자 에이전트 구현
-- **담당**: backend-specialist
-- **리소스**: pi_agent
-- **파일**: `tests/test_agents.py::TestPI` → `agents/pi.py`
-- **스펙**:
-  - **모델**: GPT-4o
-  - **역할**: 최종 보고서 작성 및 승인
-  - **입력**: `AgentState` (승인된 초안, topic, constraints)
-  - **출력**: 최종 Markdown 보고서
-  - **보고서 포맷**:
-    ```
-    # 유전자편집식품 표준 안전성 평가 프레임워크 (Final Report)
-    ## 1. 개요 (PI 작성)
-    ## 2. 공통 위험 식별 (Scientist 작성 & Critic 검증)
-    ## 3. 최소 제출 자료 요건 (필수/조건부/면제)
-    ## 4. 결론 및 제언 (PI 작성)
-    ```
-- **의존**: P1-R1-T1, P1-R2-T1
-- **TDD**: RED → GREEN → REFACTOR
-- **병렬**: P2-R1-T1, P2-R2-T1과 병렬 가능
-
----
-
-### P2-R4: LangGraph Workflow
-
-#### [ ] P2-R4-T1: LangGraph StateGraph 워크플로우 구현
-- **담당**: backend-specialist
-- **리소스**: workflow
-- **파일**: `tests/test_workflow.py` → `workflow/graph.py`
-- **스펙**:
-  - **State 정의** (`AgentState`):
-    ```python
-    class AgentState(TypedDict):
-        topic: str                    # 연구 주제
-        constraints: str              # 제약 조건
-        draft: str                    # Scientist 초안
-        critique: CritiqueResult      # Critic 결과
-        iteration: int                # 반복 횟수 (max 2)
-        final_report: str             # PI 최종 보고서
-        messages: list[dict]          # 회의 로그 (UI 표시용)
-    ```
-  - **노드 구성**:
-    - `drafting`: Scientist 에이전트 호출 → 초안 작성
-    - `critique`: Critic 에이전트 호출 → 검토
-    - `finalizing`: PI 에이전트 호출 → 최종 보고서
-  - **엣지 로직**:
-    - `critique` → `drafting`: feedback 존재 & iteration < 2
-    - `critique` → `finalizing`: approve 또는 iteration >= 2
-  - **회의 로그**: 각 노드 실행 시 messages에 에이전트 발언 추가
-    - `[시스템]` 상태 메시지
-    - `[에이전트명]` 에이전트 발언
-- **의존**: P2-R1-T1, P2-R2-T1, P2-R3-T1
-- **TDD**: RED → GREEN → REFACTOR
-
----
-
-## Phase 3: API & UI
-
-### P3-R1: FastAPI Server Resource
-
-#### [ ] P3-R1-T1: FastAPI 서버 구현
-- **담당**: backend-specialist
-- **리소스**: api_server
-- **엔드포인트**:
-  - `POST /api/research` - 워크플로우 실행
-    - Request: `{ "topic": str, "constraints": str }`
-    - Response: `{ "report": str, "messages": list[dict], "iterations": int }`
-  - `POST /api/research/stream` - SSE 스트리밍 (회의 로그 실시간)
-    - Request: `{ "topic": str, "constraints": str }`
-    - Response: Server-Sent Events (각 에이전트 발언을 실시간 전송)
-  - `GET /health` - 헬스체크
-- **파일**: `tests/test_server.py` → `server.py`
-- **스펙**:
-  - CORS 미들웨어 (Streamlit 연동)
-  - LangGraph workflow 호출 및 결과 반환
-  - SSE 스트리밍으로 회의 로그 실시간 전달
-- **의존**: P2-R4-T1
-- **TDD**: RED → GREEN → REFACTOR
-
----
-
-### P3-S1: Streamlit 메인 화면
-
-#### [ ] P3-S1-T1: Streamlit Chat UI 구현
-- **담당**: frontend-specialist
-- **화면**: Streamlit 메인 페이지
-- **레이아웃**: 2-Column (왼쪽: 채팅, 오른쪽: 보고서)
-- **컴포넌트**:
-  - **InputForm**: 연구 주제 + 제약 조건 입력 폼
-  - **ChatLog**: 에이전트 회의 로그 (실시간 스트리밍)
-    - 시스템 메시지: 회색 배경
-    - Scientist 발언: 파란색 아이콘
-    - Critic 발언: 빨간색 아이콘
-    - PI 발언: 초록색 아이콘
-  - **ReportViewer**: 최종 Markdown 보고서 렌더링
-  - **ProgressIndicator**: 현재 단계 표시 (Drafting → Critique → Finalizing)
-- **데이터 요구**: api_server (POST /api/research/stream)
-- **파일**: `app.py`
-- **스펙**:
-  - `st.columns([1, 1])` 으로 2분할 레이아웃
-  - SSE로 회의 로그 실시간 수신 및 표시
-  - 보고서 완료 시 오른쪽 패널에 Markdown 렌더링
-  - 보고서 다운로드 버튼 (`.md` 파일)
-- **의존**: P3-R1-T1
-- **데모 상태**: loading(스피너), streaming(로그 수신 중), complete(보고서 표시), error(에러 표시)
-
-#### [ ] P3-S1-T2: Streamlit UI 통합 테스트
-- **담당**: test-specialist
-- **화면**: Streamlit 메인 페이지
-- **시나리오**:
-  | 이름 | When | Then |
-  |------|------|------|
-  | 주제 입력 및 실행 | 주제 입력 후 실행 버튼 클릭 | 회의 로그 실시간 표시 |
-  | 회의 진행 표시 | 워크플로우 실행 중 | 각 에이전트 발언 순차 표시 |
-  | 보고서 생성 | 워크플로우 완료 | 오른쪽 패널에 보고서 표시 |
-  | 보고서 다운로드 | 다운로드 버튼 클릭 | .md 파일 다운로드 |
-  | 에러 처리 | API 호출 실패 | 에러 메시지 표시 |
-- **파일**: `tests/test_app.py`
-
-#### [ ] P3-S1-V: 연결점 검증
-- **담당**: test-specialist
-- **화면**: Streamlit 메인 페이지
-- **검증 항목**:
-  - [ ] Endpoint: POST /api/research/stream 응답 정상
-  - [ ] Streaming: SSE 이벤트 수신 확인
-  - [ ] Report Render: Markdown 보고서 정상 렌더링
-  - [ ] State Flow: Drafting → Critique → Loop(0~2회) → Finalizing 순서
-  - [ ] Agent Messages: 3개 에이전트 발언 모두 포함
-  - [ ] Download: .md 파일 다운로드 동작
-
----
-
-## Phase 4: 통합 검증
-
-#### [ ] P4-V1: E2E 통합 검증
-- **담당**: test-specialist
-- **스펙**: 전체 시스템 End-to-End 동작 검증
-- **검증 항목**:
-  - [ ] FastAPI 서버 기동 → Streamlit 앱 기동
-  - [ ] 사용자 입력 → LangGraph 워크플로우 실행
-  - [ ] Scientist 초안 → Critic 검토 → 조건부 루프 (최대 2회)
-  - [ ] PI 최종 보고서 생성
-  - [ ] 보고서 포맷: 4개 섹션 (개요/위험 식별/최소 자료 요건/결론)
-  - [ ] 스크립트 시나리오 재현: Over-regulation 지적 → 수정 → 승인 흐름
-- **의존**: P3-S1-T1, P3-S1-T2, P3-S1-V
-- **파일**: `tests/test_e2e.py`
-
----
-
-## 병렬 실행 매트릭스
-
-| Phase | 태스크 그룹 | 병렬 가능 태스크 | 조건 |
-|-------|------------|-----------------|------|
-| P0 | Setup | P0-T0.1 → P0-T0.2 | 순차 |
-| P1 | Infrastructure | P1-R1-T1, P1-R2-T1 | 병렬 가능 |
-| P2 | Agents | P2-R1-T1, P2-R2-T1, P2-R3-T1 | 병렬 가능 |
-| P2 | Workflow | P2-R4-T1 | 에이전트 3개 완료 후 |
-| P3 | Server | P3-R1-T1 | Workflow 완료 후 |
-| P3 | UI | P3-S1-T1 → P3-S1-T2 → P3-S1-V | 순차 (Server 완료 후) |
-| P4 | Verification | P4-V1 | 모든 P3 완료 후 |
-
----
-
-## 실행 순서 요약
-
+**검증**:
 ```
-P0-T0.1 → P0-T0.2
-    ↓
-P1-R1-T1 ←──┐
-             ├── 병렬
-P1-R2-T1 ←──┘
-    ↓
-P2-R1-T1 ←──┐
-P2-R2-T1 ←──┤── 병렬
-P2-R3-T1 ←──┘
-    ↓
-P2-R4-T1 (Workflow: 에이전트 통합)
-    ↓
-P3-R1-T1 (FastAPI Server)
-    ↓
-P3-S1-T1 → P3-S1-T2 → P3-S1-V (Streamlit UI)
-    ↓
-P4-V1 (E2E 검증)
+사용자가 "알레르기" 섹션 클릭 → 재검토 요청 → 업데이트된 내용 반영
+```
+
+**차단**: P4-T1
+
+---
+
+### P4-T4: FastAPI Streaming Response
+**목표**: 보고서 생성 중 점진적 출력
+
+**작업**:
+- [ ] `server.py` 수정
+  ```python
+  @app.post("/api/research/stream")
+  async def stream_research():
+      async def event_generator():
+          async for chunk in graph.astream(...):
+              yield f"data: {json.dumps(chunk)}\n\n"
+      return StreamingResponse(event_generator())
+  ```
+- [ ] Frontend에서 청크 수신 처리
+
+**검증**:
+```
+보고서가 문단별로 실시간으로 화면에 나타남
+```
+
+**차단**: P4-T2
+
+---
+
+### P4-T5: Production Deployment
+**목표**: Docker Compose 전체 스택 배포
+
+**작업**:
+- [ ] `docker-compose.prod.yml` 작성
+  - frontend (Next.js build)
+  - backend (FastAPI)
+  - postgres, chromadb, redis
+- [ ] Nginx 리버스 프록시 설정
+- [ ] 환경 변수 검증 스크립트
+
+**검증**:
+```bash
+docker-compose -f docker-compose.prod.yml up -d
+curl http://localhost/api/health  # 200 OK
+curl http://localhost  # Next.js 화면 로드
+```
+
+**차단**: P4-T4
+
+---
+
+## 🎯 실행 가이드
+
+### 1. 순차 실행 (권장)
+```bash
+# Phase 0 완료 후 Phase 1, 순차 진행
+```
+
+### 2. 병렬 실행 가능 구간
+- P1-T1, P1-T2 (동시 작업 가능)
+- P2-T1, P2-T2 (동시 작업 가능)
+- P4-T1, P4-T2 (동시 작업 가능)
+
+### 3. 크리티컬 패스
+```
+P0-T1 → P1-T1 → P1-T2 → P1-T3 → P1-T4
+                                 ↓
+P2-T1 → P2-T2 → P2-T3 → P3-T1 → P3-T6
+                                 ↓
+P4-T1 → P4-T2 → P4-T4 → P4-T5
 ```
 
 ---
 
-## 태스크 총계
+## 📚 참고 문서
 
-| Phase | 태스크 수 | 유형 |
-|-------|----------|------|
-| P0 | 2 | Setup |
-| P1 | 2 | Resource (인프라) |
-| P2 | 4 | Resource (에이전트 + 워크플로우) |
-| P3 | 4 | Resource 1 + Screen 3 (서버 + UI) |
-| P4 | 1 | Verification |
-| **합계** | **13** | |
+- [MVP README](./README.md)
+- [virtual_lab_final.md](./virtual_lab_final.md) - 상세 기획
+- [virtual_lab_script.md](./virtual_lab_script.md) - 시나리오
+
+---
+
+**생성 도구**: tasks-generator v2.0
+**생성 시각**: 2026-02-08 12:45 KST
