@@ -7,13 +7,27 @@ class Settings(BaseSettings):
     # Required
     OPENAI_API_KEY: str
 
-    # Phase 0 Infrastructure (Optional for MVP mode)
-    POSTGRES_URL: str | None = None
+    # Database (SQLite for MVP, PostgreSQL for Production)
+    DATABASE_URL: str = "sqlite:///./virtual_lab.db"  # SQLite (파일 기반)
+    # DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/virtual_lab"  # Production
+
+    # Vector Database (Pinecone 또는 ChromaDB)
+    VECTOR_DB_TYPE: str = "pinecone"  # "pinecone" 또는 "chromadb"
+
+    # Pinecone Settings
+    PINECONE_API_KEY: str | None = None
+    PINECONE_ENVIRONMENT: str = "us-east-1"  # Pinecone 환경
+    PINECONE_INDEX_NAME: str = "virtual-lab-regulatory-docs"
+
+    # ChromaDB Settings (대안)
     CHROMA_HOST: str = "localhost"
     CHROMA_PORT: int = 8001
+    CHROMA_COLLECTION_NAME: str = "regulatory_docs"
+
+    # Redis Cache
     REDIS_URL: str | None = None
 
-    # Phase 2 Web Search (Optional)
+    # Phase 2 Web Search
     TAVILY_API_KEY: str | None = None
 
     # Optional
@@ -31,8 +45,7 @@ class Settings(BaseSettings):
     LLM_MAX_TOKENS: int = 4096
 
     # RAG Config
-    CHROMA_COLLECTION_NAME: str = "regulatory_docs"
-    EMBEDDING_MODEL: str = "text-embedding-3-small"
+    EMBEDDING_MODEL: str = "text-embedding-3-small"  # OpenAI 임베딩 모델
     CHUNK_SIZE: int = 1000
     CHUNK_OVERLAP: int = 200
     TOP_K: int = 5
@@ -54,6 +67,10 @@ class Settings(BaseSettings):
 
         if self.LANGSMITH_API_KEY and not self.LANGSMITH_API_KEY.startswith("lsv2_"):
             raise ValueError("LANGSMITH_API_KEY must start with 'lsv2_'")
+
+        # Pinecone 사용 시 API 키 필요
+        if self.VECTOR_DB_TYPE == "pinecone" and not self.PINECONE_API_KEY:
+            raise ValueError("PINECONE_API_KEY is required when VECTOR_DB_TYPE='pinecone'")
 
 
 settings = Settings()
