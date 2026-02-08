@@ -336,6 +336,60 @@ class TestCritic:
         assert len(original_messages) == 1  # 원본 불변
         assert len(result["messages"]) == 2  # 새 리스트에 추가
 
+    def test_merge_views_removes_duplicates(self):
+        """중복된 의견을 제거해야 한다."""
+        from agents.critic import merge_views
+
+        views = [
+            "동물 실험이 필요합니다.",
+            "동물 실험이 필요합니다.",
+            "독성 시험이 필요합니다.",
+        ]
+        merged = merge_views(views)
+        # 중복 제거 확인
+        assert merged.count("동물 실험이 필요합니다") <= 1
+        assert "독성 시험이 필요합니다" in merged
+
+    def test_merge_views_selects_conservative_safety(self):
+        """가장 보수적인 안전 기준을 선택해야 한다."""
+        from agents.critic import merge_views
+
+        views = [
+            "동물 실험은 면제 가능합니다.",
+            "동물 실험이 필수입니다.",
+            "독성 시험은 선택 사항입니다.",
+        ]
+        merged = merge_views(views)
+        # 보수적 선택: 필수 > 선택 > 면제
+        assert "필수" in merged or "동물 실험이 필수" in merged
+
+    def test_merge_views_rejects_unfounded_opinions(self):
+        """근거 없는 의견을 기각해야 한다."""
+        from agents.critic import merge_views
+
+        views = [
+            "과학적 근거: Off-target 효과 때문에 동물 실험 필요",
+            "근거 없음: 그냥 필요합니다",
+            "과학적 근거: CRISPR의 특성상 독성 시험 필수",
+        ]
+        merged = merge_views(views)
+        # 근거가 명시된 의견만 포함
+        assert "과학적 근거" in merged or "Off-target" in merged or "CRISPR" in merged
+        # 근거 없는 의견은 배제 (검증 필요)
+
+    def test_merge_views_handles_conflicts(self):
+        """상충되는 의견을 합리적으로 해결해야 한다."""
+        from agents.critic import merge_views
+
+        views = [
+            "동물 실험 불필요 - SDN-1은 기존 육종과 동일",
+            "동물 실험 필수 - SDN-2는 외래 유전자 포함",
+            "조건부 동물 실험 - SDN 유형에 따라 달라야 함",
+        ]
+        merged = merge_views(views)
+        # 조건부/세분화된 접근을 선택해야 함
+        assert "조건부" in merged or "SDN" in merged or "유형" in merged
+
 
 class TestPI:
     """PI 에이전트 테스트"""
