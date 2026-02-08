@@ -14,6 +14,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from data.guidelines import CRITIQUE_RUBRIC
 from utils.llm import get_gpt4o
 from workflow.state import AgentState, CritiqueResult
+from tools.web_search import web_search
 
 
 SYSTEM_PROMPT = f"""
@@ -40,6 +41,9 @@ Scientist가 작성한 초안을 검토하고, 아래 체크리스트에 따라 
     "regulation": 1-5
   }}
 }}
+
+## 도구 사용 지침
+초안의 주장을 검증하기 위해 최신 논문이나 규제 동향을 확인해야 할 경우 web_search 도구를 사용하세요.
 """.strip()
 
 
@@ -48,6 +52,7 @@ def run_critic(state: AgentState) -> dict:
 
     Scientist의 초안을 CRITIQUE_RUBRIC에 따라 검토하고,
     승인(approve) 또는 수정 요청(revise) 판정을 내립니다.
+    web_search 도구를 바인딩하여 주장 검증 가능.
 
     Args:
         state: LangGraph 공유 상태
@@ -55,7 +60,8 @@ def run_critic(state: AgentState) -> dict:
     Returns:
         dict: 업데이트할 상태 필드 (critique, messages)
     """
-    model = get_gpt4o()
+    # 웹 검색 도구 바인딩
+    model = get_gpt4o().bind_tools([web_search])
 
     user_message = f"""
 [Scientist의 초안]
@@ -70,9 +76,33 @@ def run_critic(state: AgentState) -> dict:
         HumanMessage(content=user_message),
     ])
 
+    # Tool call 처리 (web_search 호출 시)
+    if response.tool_calls:
+        # 도구 호출 실행
+        tool_messages = []
+        for tool_call in response.tool_calls:
+            if tool_call["name"] == "web_search":
+                search_result = web_search.invoke(tool_call["args"])
+                tool_messages.append({
+                    "role": "tool",
+                    "name": "web_search",
+                    "content": search_result,
+                })
+
+        # 도구 결과를 포함하여 재호출
+        final_response = model.invoke([
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=user_message),
+            response,
+            *[HumanMessage(content=msg["content"]) for msg in tool_messages]
+        ])
+        response_content = final_response.content
+    else:
+        response_content = response.content
+
     # JSON 파싱
     try:
-        data = json.loads(response.content)
+        data = json.loads(response_content)
         critique = CritiqueResult(
             decision=data["decision"],
             feedback=data.get("feedback", ""),

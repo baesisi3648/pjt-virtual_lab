@@ -11,6 +11,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from data.guidelines import RESEARCH_OBJECTIVE, CODEX_PRINCIPLES, REGULATORY_TRENDS
 from utils.llm import get_gpt4o_mini
 from workflow.state import AgentState
+from tools.web_search import web_search
 
 
 SYSTEM_PROMPT = f"""
@@ -30,6 +31,10 @@ SYSTEM_PROMPT = f"""
 안전성을 입증하기 위해 필요한 자료 목록을 작성하세요.
 
 **중요**: 특정 제품이 아닌 NGT 카테고리 전체에 적용 가능한 범용적 기준을 제시하세요.
+
+## 도구 사용 지침
+최신 논문이나 규제 동향이 필요한 경우 web_search 도구를 사용하세요.
+검색 결과에는 반드시 출처를 포함하여 인용하세요.
 """.strip()
 
 
@@ -38,6 +43,7 @@ def run_scientist(state: AgentState) -> dict:
 
     LLM을 호출하여 NGT 식품의 위험 요소 초안을 작성합니다.
     이전 critique가 존재하면 해당 피드백을 반영하여 수정합니다.
+    web_search 도구를 바인딩하여 최신 정보 검색 가능.
 
     Args:
         state: LangGraph 공유 상태
@@ -45,7 +51,8 @@ def run_scientist(state: AgentState) -> dict:
     Returns:
         dict: 업데이트할 상태 필드 (draft, messages)
     """
-    model = get_gpt4o_mini()
+    # 웹 검색 도구 바인딩
+    model = get_gpt4o_mini().bind_tools([web_search])
 
     # 프롬프트 구성
     user_message = f"""
@@ -71,7 +78,29 @@ def run_scientist(state: AgentState) -> dict:
         HumanMessage(content=user_message),
     ])
 
-    draft = response.content
+    # Tool call 처리 (web_search 호출 시)
+    if response.tool_calls:
+        # 도구 호출 실행
+        tool_messages = []
+        for tool_call in response.tool_calls:
+            if tool_call["name"] == "web_search":
+                search_result = web_search.invoke(tool_call["args"])
+                tool_messages.append({
+                    "role": "tool",
+                    "name": "web_search",
+                    "content": search_result,
+                })
+
+        # 도구 결과를 포함하여 재호출
+        final_response = model.invoke([
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=user_message),
+            response,
+            *[HumanMessage(content=msg["content"]) for msg in tool_messages]
+        ])
+        draft = final_response.content
+    else:
+        draft = response.content
 
     # 메시지 로그 추가 (원본 리스트 불변성 보장)
     messages = list(state.get("messages", []))

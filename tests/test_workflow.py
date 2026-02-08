@@ -8,7 +8,7 @@
 3. 최대 반복 제한 (2회 후 강제 종료)
 """
 import pytest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, MagicMock
 from workflow.state import AgentState, CritiqueResult
 
 
@@ -19,21 +19,25 @@ class TestWorkflowSingleLoop:
     @patch("agents.critic.get_gpt4o")
     @patch("agents.pi.get_gpt4o")
     def test_approve_immediately(self, mock_pi_llm, mock_critic_llm, mock_scientist_llm):
-        # Scientist mock
-        mock_scientist_llm_instance = Mock()
-        mock_scientist_llm_instance.invoke.return_value = Mock(content="초안")
+        # Scientist mock with bind_tools
+        mock_scientist_llm_instance = MagicMock()
+        mock_response = Mock(content="초안", tool_calls=[])
+        mock_scientist_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_scientist_llm.return_value = mock_scientist_llm_instance
 
-        # Critic mock - 즉시 승인
-        mock_critic_llm_instance = Mock()
-        mock_critic_llm_instance.invoke.return_value = Mock(
-            content='{"decision": "approve", "feedback": "", "scores": {"scientific": 4, "universal": 4, "regulation": 4}}'
+        # Critic mock - 즉시 승인, with bind_tools
+        mock_critic_llm_instance = MagicMock()
+        mock_response = Mock(
+            content='{"decision": "approve", "feedback": "", "scores": {"scientific": 4, "universal": 4, "regulation": 4}}',
+            tool_calls=[]
         )
+        mock_critic_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_critic_llm.return_value = mock_critic_llm_instance
 
-        # PI mock
-        mock_pi_llm_instance = Mock()
-        mock_pi_llm_instance.invoke.return_value = Mock(content="# 최종 보고서")
+        # PI mock with bind_tools
+        mock_pi_llm_instance = MagicMock()
+        mock_response = Mock(content="# 최종 보고서", tool_calls=[])
+        mock_pi_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_pi_llm.return_value = mock_pi_llm_instance
 
         from workflow.graph import create_workflow
@@ -63,22 +67,26 @@ class TestWorkflowRevisionLoop:
     @patch("agents.critic.get_gpt4o")
     @patch("agents.pi.get_gpt4o")
     def test_revise_then_approve(self, mock_pi_llm, mock_critic_llm, mock_scientist_llm):
-        # Scientist mock
-        mock_scientist_llm_instance = Mock()
-        mock_scientist_llm_instance.invoke.return_value = Mock(content="수정된 초안")
+        # Scientist mock with bind_tools
+        mock_scientist_llm_instance = MagicMock()
+        mock_response = Mock(content="수정된 초안", tool_calls=[])
+        mock_scientist_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_scientist_llm.return_value = mock_scientist_llm_instance
 
-        # Critic mock (첫 번째: revise, 두 번째: approve)
-        mock_critic_llm_instance = Mock()
-        mock_critic_llm_instance.invoke.side_effect = [
-            Mock(content='{"decision": "revise", "feedback": "범용성 부족", "scores": {}}'),
-            Mock(content='{"decision": "approve", "feedback": "", "scores": {}}'),
+        # Critic mock (첫 번째: revise, 두 번째: approve) with bind_tools
+        mock_critic_llm_instance = MagicMock()
+        mock_critic_with_tools = Mock()
+        mock_critic_with_tools.invoke.side_effect = [
+            Mock(content='{"decision": "revise", "feedback": "범용성 부족", "scores": {}}', tool_calls=[]),
+            Mock(content='{"decision": "approve", "feedback": "", "scores": {}}', tool_calls=[]),
         ]
+        mock_critic_llm_instance.bind_tools.return_value = mock_critic_with_tools
         mock_critic_llm.return_value = mock_critic_llm_instance
 
-        # PI mock
-        mock_pi_llm_instance = Mock()
-        mock_pi_llm_instance.invoke.return_value = Mock(content="# 최종 보고서")
+        # PI mock with bind_tools
+        mock_pi_llm_instance = MagicMock()
+        mock_response = Mock(content="# 최종 보고서", tool_calls=[])
+        mock_pi_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_pi_llm.return_value = mock_pi_llm_instance
 
         from workflow.graph import create_workflow
@@ -107,21 +115,25 @@ class TestWorkflowMaxIterations:
     @patch("agents.critic.get_gpt4o")
     @patch("agents.pi.get_gpt4o")
     def test_stops_at_max_iterations(self, mock_pi_llm, mock_critic_llm, mock_scientist_llm):
-        # Scientist mock
-        mock_scientist_llm_instance = Mock()
-        mock_scientist_llm_instance.invoke.return_value = Mock(content="초안")
+        # Scientist mock with bind_tools
+        mock_scientist_llm_instance = MagicMock()
+        mock_response = Mock(content="초안", tool_calls=[])
+        mock_scientist_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_scientist_llm.return_value = mock_scientist_llm_instance
 
-        # Critic이 계속 revise 반환
-        mock_critic_llm_instance = Mock()
-        mock_critic_llm_instance.invoke.return_value = Mock(
-            content='{"decision": "revise", "feedback": "계속 수정 필요", "scores": {}}'
+        # Critic이 계속 revise 반환, with bind_tools
+        mock_critic_llm_instance = MagicMock()
+        mock_response = Mock(
+            content='{"decision": "revise", "feedback": "계속 수정 필요", "scores": {}}',
+            tool_calls=[]
         )
+        mock_critic_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_critic_llm.return_value = mock_critic_llm_instance
 
-        # PI mock
-        mock_pi_llm_instance = Mock()
-        mock_pi_llm_instance.invoke.return_value = Mock(content="# 보고서")
+        # PI mock with bind_tools
+        mock_pi_llm_instance = MagicMock()
+        mock_response = Mock(content="# 보고서", tool_calls=[])
+        mock_pi_llm_instance.bind_tools.return_value.invoke.return_value = mock_response
         mock_pi_llm.return_value = mock_pi_llm_instance
 
         from workflow.graph import create_workflow

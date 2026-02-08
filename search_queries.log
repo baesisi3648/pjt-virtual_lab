@@ -1,0 +1,70 @@
+2026-02-08 17:28:26 | INFO | SEARCH_QUERY | query='NGT safety assessment'
+2026-02-08 17:28:26 | INFO | SEARCH_SUCCESS | query='NGT safety assessment' | results=1
+2026-02-08 17:28:26 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:28:26 | INFO | SEARCH_SUCCESS | query='test query' | results=3
+2026-02-08 17:28:26 | INFO | SEARCH_QUERY | query='error query'
+2026-02-08 17:28:26 | ERROR | SEARCH_API_ERROR | query='error query' | error='API Error'
+2026-02-08 17:28:26 | INFO | SEARCH_QUERY | query='format test'
+2026-02-08 17:28:26 | INFO | SEARCH_SUCCESS | query='format test' | results=0
+2026-02-08 17:28:26 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:28:26 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 17:29:01 | INFO | SEARCH_QUERY | query='Calyxt high oleic soybean FDA approval'
+2026-02-08 17:29:01 | INFO | SEARCH_SUCCESS | query='Calyxt high oleic soybean FDA approval' | results=2
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='NGT safety assessment'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='NGT safety assessment' | results=1
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='test query' | results=3
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='error query'
+2026-02-08 17:29:04 | ERROR | SEARCH_API_ERROR | query='error query' | error='API Error'
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='format test'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='format test' | results=0
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='Calyxt high oleic soybean FDA approval'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='Calyxt high oleic soybean FDA approval' | results=1
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='NGT safety'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='NGT safety' | results=1
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='NGT'
+2026-02-08 17:29:04 | INFO | SEARCH_SUCCESS | query='NGT' | results=2
+2026-02-08 17:29:04 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:29:04 | ERROR | SEARCH_API_ERROR | query='test query' | error='API Error'
+2026-02-08 17:30:27 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 17:30:27 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=2
+2026-02-08 17:30:50 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 17:30:50 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=2
+2026-02-08 17:30:50 | INFO | SEARCH_QUERY | query='format demo'
+2026-02-08 17:30:50 | INFO | SEARCH_SUCCESS | query='format demo' | results=0
+2026-02-08 17:31:01 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:31:01 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 17:31:23 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:31:23 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 17:31:50 | INFO | SEARCH_QUERY | query='Calyxt high oleic soybean FDA approval'
+2026-02-08 17:31:50 | INFO | SEARCH_SUCCESS | query='Calyxt high oleic soybean FDA approval' | results=2
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='NGT safety assessment'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='NGT safety assessment' | results=1
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='test query' | results=3
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='error query'
+2026-02-08 17:31:54 | ERROR | SEARCH_API_ERROR | query='error query' | error='API Error'
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='format test'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='format test' | results=0
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='Calyxt high oleic soybean FDA approval'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='Calyxt high oleic soybean FDA approval' | results=1
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='NGT safety'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='NGT safety' | results=1
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='NGT'
+2026-02-08 17:31:54 | INFO | SEARCH_SUCCESS | query='NGT' | results=2
+2026-02-08 17:31:54 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:31:54 | ERROR | SEARCH_API_ERROR | query='test query' | error='API Error'
+2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='NGT safety assessment'
+2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='NGT safety assessment' | results=1
+2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='test query'
+2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='test query' | results=3
+2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='error query'
+2026-02-08 17:34:39 | ERROR | SEARCH_API_ERROR | query='error query' | error='API Error'
+2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='format test'
+2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='format test' | results=0
+2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
+2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
