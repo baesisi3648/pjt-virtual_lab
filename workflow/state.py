@@ -27,3 +27,4 @@ class AgentState(TypedDict):
     iteration: int  # 현재 반복 횟수
     final_report: str  # PI가 확정한 최종 보고서
     messages: list[dict]  # 에이전트 간 메시지 로그
+    parallel_views: list[dict]  # 병렬 분석 결과 (Map-Reduce)

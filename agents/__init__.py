@@ -1,10 +1,12 @@
-# @TASK P2-R1 - 에이전트 패키지 초기화
-# @SPEC TASKS.md#P2-R1
+# @TASK P2-R1, P3-T2 - 에이전트 패키지 초기화
+# @SPEC TASKS.md#P2-R1, TASKS.md#P3-T2
 """Virtual Lab Agents
 
-Scientist, Critic, PI 에이전트를 제공합니다.
+Scientist, Critic, PI 에이전트와 Dynamic Agent Factory를 제공합니다.
 """
 from agents.scientist import run_scientist
 from agents.pi import run_pi
+# factory는 순환 import 방지를 위해 직접 import하지 않음
+# 사용 시: from agents.factory import create_specialist
 
 __all__ = ["run_scientist", "run_pi"]

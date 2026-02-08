@@ -7,6 +7,8 @@
 Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로
 최종 Markdown 보고서를 생성합니다.
 """
+import json
+from typing import List
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from utils.llm import get_gpt4o
@@ -41,6 +43,99 @@ Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로 최종 
 **중요**: 명확하고 간결하게, 실무 활용 가능한 형태로 작성하세요.
 반드시 위 4개 섹션을 모두 포함해야 합니다.
 """
+
+
+TEAM_DECISION_PROMPT = """
+당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
+
+## 당신의 임무
+사용자 질문을 분석하여 필요한 전문가 팀을 구성하세요.
+
+## 전문가 팀 구성 원칙
+1. 질문의 핵심 주제를 파악하세요.
+2. 해당 주제에 필요한 전문 분야를 식별하세요.
+3. 각 전문가의 역할(role)과 집중 분야(focus)를 명확히 정의하세요.
+
+## 출력 형식 (JSON)
+반드시 다음과 같은 JSON 배열 형식으로 답변하세요:
+```json
+[
+  {
+    "role": "전문가 역할 (예: Metabolomics Expert)",
+    "focus": "구체적인 집중 분야 (예: lipid composition analysis)"
+  },
+  {
+    "role": "또 다른 전문가 역할",
+    "focus": "구체적인 집중 분야"
+  }
+]
+```
+
+**중요**:
+- JSON 형식만 출력하세요. 다른 설명은 불필요합니다.
+- 최소 1명, 최대 5명의 전문가를 추천하세요.
+- 각 전문가는 질문과 명확한 연관성이 있어야 합니다.
+"""
+
+
+def decide_team(user_query: str) -> List[dict]:
+    """PI가 쿼리 분석 후 팀 구성 결정
+
+    사용자 질문을 GPT-4o에 전달하여 필요한 전문가 팀을 구성합니다.
+    LLM이 질문의 핵심 주제를 분석하고, 필요한 전문가의 역할과 집중 분야를 결정합니다.
+
+    Args:
+        user_query: 사용자 질문
+
+    Returns:
+        List[dict]: 전문가 프로필 리스트
+            각 프로필은 다음 필드를 포함:
+            - role (str): 전문가 역할 (예: "Metabolomics Expert")
+            - focus (str): 집중 분야 (예: "lipid analysis")
+
+    Example:
+        >>> team = decide_team("고올레산 대두의 지방산 조성 안전성 평가")
+        >>> assert any("Metabol" in expert['role'] for expert in team)
+
+    Raises:
+        ValueError: LLM 응답이 유효한 JSON이 아닌 경우
+    """
+    model = get_gpt4o()
+
+    user_message = (
+        f"사용자 질문: {user_query}\n\n"
+        "위 질문에 답변하기 위해 필요한 전문가 팀을 구성하세요.\n"
+        "JSON 배열 형식으로만 답변하세요."
+    )
+
+    response = model.invoke([
+        SystemMessage(content=TEAM_DECISION_PROMPT),
+        HumanMessage(content=user_message),
+    ])
+
+    # JSON 파싱
+    try:
+        # 코드 블록 제거 (```json ... ``` 형식 처리)
+        content = response.content.strip()
+        if content.startswith("```"):
+            # 첫 번째 줄과 마지막 줄 제거
+            lines = content.split("\n")
+            content = "\n".join(lines[1:-1])
+
+        team = json.loads(content)
+
+        # 결과 검증
+        if not isinstance(team, list):
+            raise ValueError("응답이 리스트 형식이 아닙니다.")
+
+        for expert in team:
+            if "role" not in expert or "focus" not in expert:
+                raise ValueError("각 전문가는 role과 focus 필드가 필요합니다.")
+
+        return team
+
+    except json.JSONDecodeError as e:
+        raise ValueError(f"LLM 응답을 JSON으로 파싱할 수 없습니다: {e}\n응답: {response.content}")
 
 
 def run_pi(state: AgentState) -> dict:
