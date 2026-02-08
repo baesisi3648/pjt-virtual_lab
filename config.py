@@ -26,6 +26,14 @@ class Settings(BaseSettings):
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 4096
 
+    # RAG Config
+    CHROMA_COLLECTION_NAME: str = "regulatory_docs"
+    EMBEDDING_MODEL: str = "text-embedding-3-small"
+    CHUNK_SIZE: int = 1000
+    CHUNK_OVERLAP: int = 200
+    TOP_K: int = 5
+    SIMILARITY_THRESHOLD: float = 0.7
+
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).parent / ".env"),
         env_file_encoding='utf-8',
