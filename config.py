@@ -6,11 +6,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # Required
     OPENAI_API_KEY: str
-    POSTGRES_URL: str
-    CHROMA_HOST: str
-    CHROMA_PORT: int
-    TAVILY_API_KEY: str
-    REDIS_URL: str
+
+    # Phase 0 Infrastructure (Optional for MVP mode)
+    POSTGRES_URL: str | None = None
+    CHROMA_HOST: str = "localhost"
+    CHROMA_PORT: int = 8001
+    REDIS_URL: str | None = None
+
+    # Phase 2 Web Search (Optional)
+    TAVILY_API_KEY: str | None = None
 
     # Optional
     LANGSMITH_API_KEY: str | None = None
@@ -42,11 +46,11 @@ class Settings(BaseSettings):
 
     def validate_secrets(self):
         """Validate API keys have correct format"""
-        if not self.TAVILY_API_KEY.startswith("tvly-"):
-            raise ValueError("TAVILY_API_KEY must start with 'tvly-'")
-
         if not self.OPENAI_API_KEY.startswith("sk-"):
             raise ValueError("OPENAI_API_KEY must start with 'sk-'")
+
+        if self.TAVILY_API_KEY and not self.TAVILY_API_KEY.startswith("tvly-"):
+            raise ValueError("TAVILY_API_KEY must start with 'tvly-'")
 
         if self.LANGSMITH_API_KEY and not self.LANGSMITH_API_KEY.startswith("lsv2_"):
             raise ValueError("LANGSMITH_API_KEY must start with 'lsv2_'")
