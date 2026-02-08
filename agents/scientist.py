@@ -15,6 +15,7 @@ from data.guidelines import RESEARCH_OBJECTIVE, CODEX_PRINCIPLES, REGULATORY_TRE
 from utils.llm import get_gpt4o_mini
 from workflow.state import AgentState
 from tools.rag_search import rag_search_tool
+from tools.web_search import web_search
 
 logger = logging.getLogger(__name__)
 
@@ -37,16 +38,18 @@ SYSTEM_PROMPT = f"""
 
 **중요**: 특정 제품이 아닌 NGT 카테고리 전체에 적용 가능한 범용적 기준을 제시하세요.
 
-## RAG 도구 사용 규칙 (P1-T4)
-답변 작성 시 반드시 다음 절차를 따르세요:
-1. **먼저 rag_search_tool을 사용하여 관련 규제 문서를 검색**하세요.
-2. 검색된 규제 기준을 **근거로 활용하여** 답변을 작성하세요.
-3. 답변에 반드시 **출처를 [출처: ...] 형식으로 명시**하세요.
-4. 규제 문서를 찾을 수 없는 경우, 일반적인 과학적 원칙에 기반하여 답변하되 이를 명시하세요.
+## 도구 사용 지침 (Phase 1-2)
+답변 작성 시 다음 두 가지 도구를 활용하세요:
 
-예시:
-- 알레르기 평가 방법을 묻는 질문 → rag_search_tool("알레르기 평가 방법 NGT") 호출
-- 검색 결과를 바탕으로 답변 작성 + [출처: Codex Guideline (2003), p.12] 추가
+1. **rag_search_tool**: 규제 문서 검색 (Codex, FDA 가이드라인 등)
+   - 예: 알레르기 평가 방법 → rag_search_tool("알레르기 평가 방법 NGT")
+
+2. **web_search**: 최신 논문 및 규제 동향 검색
+   - 예: 2025년 EU 규제 동향 → web_search("EU NGT regulation 2025")
+
+**중요**:
+- 먼저 rag_search_tool로 기존 규제를 확인하고, 부족하면 web_search로 최신 정보 보완
+- 모든 답변에 출처를 [출처: ...] 형식으로 명시
 """.strip()
 
 
@@ -55,6 +58,7 @@ def run_scientist(state: AgentState) -> dict:
 
     LLM을 호출하여 NGT 식품의 위험 요소 초안을 작성합니다.
     이전 critique가 존재하면 해당 피드백을 반영하여 수정합니다.
+    web_search 도구를 바인딩하여 최신 정보 검색 가능.
 
     P1-T4 Update:
     - RAG Tool을 bind하여 LLM이 필요 시 규제 문서 검색 가능
@@ -66,9 +70,9 @@ def run_scientist(state: AgentState) -> dict:
     Returns:
         dict: 업데이트할 상태 필드 (draft, messages)
     """
-    # RAG Tool이 bind된 모델 생성
+    # Phase 1-2: RAG + Web Search 도구 바인딩
     model = get_gpt4o_mini()
-    model_with_tools = model.bind_tools([rag_search_tool])
+    model_with_tools = model.bind_tools([rag_search_tool, web_search])
 
     # 프롬프트 구성
     user_message = f"""
@@ -96,18 +100,17 @@ def run_scientist(state: AgentState) -> dict:
         HumanMessage(content=user_message),
     ]
 
-    # Tool 호출을 포함한 재귀적 실행 (최대 3회)
+    # Phase 1-2: Tool 호출을 포함한 재귀적 실행 (최대 3회)
     max_iterations = 3
     for i in range(max_iterations):
         logger.info(f"Scientist iteration {i+1}/{max_iterations}")
         response = model_with_tools.invoke(messages)
 
-        # Tool 호출이 있는지 확인 (없으면 빈 리스트로 처리)
+        # Tool 호출이 있는지 확인
         tool_calls = getattr(response, 'tool_calls', None)
 
-        # tool_calls가 없거나, 빈 리스트이거나, iterable하지 않으면 최종 답변
+        # tool_calls가 없으면 최종 답변
         if not tool_calls or not isinstance(tool_calls, (list, tuple)):
-            # Tool 호출 없음 - 최종 답변
             draft = response.content
             break
 
@@ -117,8 +120,13 @@ def run_scientist(state: AgentState) -> dict:
         for tool_call in tool_calls:
             logger.info(f"Tool called: {tool_call['name']} with args: {tool_call['args']}")
 
-            # Tool 실행
-            tool_result = rag_search_tool.invoke(tool_call["args"])
+            # Tool 실행 (rag_search_tool 또는 web_search)
+            if tool_call["name"] == "rag_search_tool":
+                tool_result = rag_search_tool.invoke(tool_call["args"])
+            elif tool_call["name"] == "web_search":
+                tool_result = web_search.invoke(tool_call["args"])
+            else:
+                tool_result = f"Unknown tool: {tool_call['name']}"
 
             # Tool 결과를 메시지에 추가
             messages.append(
