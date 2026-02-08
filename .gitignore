@@ -40,6 +40,5 @@ worktree/
 # Claude Skills (external)
 claude_skills/
 
-# Claude Memory
-.claude/memory/*.md
-!.claude/memory/project.md
+# Claude Code settings and state
+.claude/
