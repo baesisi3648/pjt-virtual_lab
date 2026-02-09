@@ -227,6 +227,8 @@ def run_research(request: ResearchRequest):
     initial_state: AgentState = {
         "topic": request.topic,
         "constraints": request.constraints,
+        "team": [],
+        "specialist_outputs": [],
         "draft": "",
         "critique": None,
         "iteration": 0,
@@ -381,6 +383,8 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         initial_state: AgentState = {
             "topic": topic,
             "constraints": constraints,
+            "team": [],
+            "specialist_outputs": [],
             "draft": "",
             "critique": None,
             "iteration": 0,
@@ -389,11 +393,11 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "parallel_views": [],
         }
 
-        # Phase 1: Drafting 시작
+        # Phase 1: Planning 시작
         yield send_event("phase", {
-            "phase": "drafting",
-            "agent": "scientist",
-            "message": "Scientist: 위험 요소 분석 중..."
+            "phase": "planning",
+            "agent": "pi",
+            "message": "PI: 연구 주제를 분석하고 전문가 팀을 구성 중..."
         })
 
         await asyncio.sleep(0.1)
@@ -416,16 +420,37 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
                 sse_logger.info(f"Node: {node_name}, keys: {list(node_state.keys())}")
 
-                if node_name == "drafting":
-                    draft_content = node_state.get("draft", "")
-                    # 초안 내용을 메시지로 전송
+                if node_name == "planning":
+                    team = node_state.get("team", [])
+                    team_summary = "\n".join(
+                        [f"- {m.get('role', '전문가')}: {m.get('focus', '')}" for m in team]
+                    )
                     yield send_event("agent", {
-                        "agent": "scientist",
-                        "phase": "drafting",
-                        "message": "초안을 작성했습니다.",
-                        "content": draft_content,
-                        "iteration": iteration_count + 1
+                        "agent": "pi",
+                        "phase": "planning",
+                        "message": f"전문가 팀을 구성했습니다. ({len(team)}명)",
+                        "content": team_summary,
                     })
+                    # researching phase 시작 알림
+                    yield send_event("phase", {
+                        "phase": "researching",
+                        "agent": "specialist",
+                        "message": "전문가 팀이 개별 분석을 수행 중..."
+                    })
+
+                elif node_name == "researching":
+                    specialist_outputs = node_state.get("specialist_outputs", [])
+                    # 각 전문가별 분석 결과를 개별 이벤트로 전송
+                    for so in specialist_outputs:
+                        yield send_event("agent", {
+                            "agent": "specialist",
+                            "phase": "researching",
+                            "message": f"[{so.get('role', '전문가')}] 분석을 완료했습니다.",
+                            "content": so.get("output", ""),
+                            "specialist_name": so.get("role", ""),
+                            "specialist_focus": so.get("focus", ""),
+                            "iteration": iteration_count + 1,
+                        })
 
                 elif node_name == "critique":
                     critique = node_state.get("critique")
@@ -473,6 +498,8 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     final_report = node_state["final_report"]
                 if "messages" in node_state:
                     all_messages = node_state["messages"]
+                if "team" in node_state:
+                    pass  # team은 state에 자동 저장됨
 
         sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, iterations: {iteration_count}")
 

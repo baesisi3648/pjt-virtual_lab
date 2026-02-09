@@ -22,6 +22,8 @@ class AgentState(TypedDict):
 
     topic: str  # 연구 주제
     constraints: str  # 제약 조건
+    team: list[dict]  # PI가 결정한 전문가 팀 (role, focus)
+    specialist_outputs: list[dict]  # 각 전문가 분석 결과
     draft: str  # Scientist가 작성한 초안
     critique: CritiqueResult | None  # Critic의 비평 결과
     iteration: int  # 현재 반복 횟수

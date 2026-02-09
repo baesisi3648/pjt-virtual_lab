@@ -104,7 +104,7 @@ def run_critic(state: AgentState) -> dict:
         logger.warning(f"Critic web search failed: {e}")
 
     # Step 2: 프롬프트 구성
-    user_message = f"""[Scientist의 초안]
+    user_message = f"""[전문가 팀의 통합 분석 초안]
 {state['draft']}
 {web_context}
 

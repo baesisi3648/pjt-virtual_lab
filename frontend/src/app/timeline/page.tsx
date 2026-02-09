@@ -1,22 +1,37 @@
 /**
- * @TASK P4-T2 - Timeline Demo Page
+ * @TASK P4-T2 - Timeline Demo Page (Redesigned)
  * @SPEC TASKS.md#P4-T2
  *
- * ProcessTimeline 컴포넌트를 테스트하는 데모 페이지
+ * BIO-CORE AI LAB design system with workflow visualization
  */
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, use } from 'react';
 import Link from 'next/link';
 import ProcessTimeline from '@/components/ProcessTimeline';
 
-export default function TimelinePage() {
+export default function TimelinePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ topic?: string }>;
+}) {
+  const params = use(searchParams);
   const [topic, setTopic] = useState('');
   const [constraints, setConstraints] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [finalReport, setFinalReport] = useState('');
   const [error, setError] = useState('');
+
+  // Auto-populate and submit if topic parameter exists
+  useEffect(() => {
+    if (params.topic) {
+      setTopic(decodeURIComponent(params.topic));
+      setIsSubmitted(true);
+      setFinalReport('');
+      setError('');
+    }
+  }, [params.topic]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,71 +61,219 @@ export default function TimelinePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-950 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-white">
-            Virtual Lab - Process Timeline
-          </h1>
-          <Link
-            href="/"
-            className="px-4 py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            Home
-          </Link>
+    <div className="min-h-screen bg-[#101922] text-white">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 glass-panel border-b border-white/10">
+        <div className="max-w-[1800px] mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Left: Logo */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-[#137fec]/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#137fec] text-3xl">biotech</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold tracking-tight">BIO-CORE AI LAB</h1>
+                <div className="flex items-center gap-1.5 text-xs text-[#0bda5b]">
+                  <span className="w-2 h-2 rounded-full bg-[#0bda5b] animate-pulse"></span>
+                  System Online
+                </div>
+              </div>
+            </div>
+
+            {/* Center: Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-white/60">
+              <Link href="/" className="hover:text-[#137fec] transition-colors">
+                Dashboard
+              </Link>
+              <span className="material-symbols-outlined text-xs">chevron_right</span>
+              <span>Agents</span>
+              <span className="material-symbols-outlined text-xs">chevron_right</span>
+              <span className="text-white">Research</span>
+            </div>
+
+            {/* Right: Back Link */}
+            <Link
+              href="/"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg glass-panel-hover transition-all"
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              <span className="text-sm">Back to Home</span>
+            </Link>
+          </div>
         </div>
+      </header>
 
-        {/* 입력 폼 */}
+      {/* Main Content */}
+      <main className="max-w-[1800px] mx-auto px-6 py-8">
         {!isSubmitted ? (
-          <div className="max-w-2xl mx-auto bg-gray-900 rounded-lg shadow-lg p-8 border border-gray-800">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="topic"
-                  className="block text-sm font-medium text-gray-300 mb-2"
-                >
-                  연구 주제 *
-                </label>
-                <input
-                  type="text"
-                  id="topic"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="예: CRISPR-Cas9을 이용한 유전자편집 토마토"
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
+          // Before Submission: Two-column layout
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Side: Input Form */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="glass-panel p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="material-symbols-outlined text-[#137fec]">terminal</span>
+                  <h2 className="text-xl font-semibold">Research Console</h2>
+                </div>
 
-              <div>
-                <label
-                  htmlFor="constraints"
-                  className="block text-sm font-medium text-gray-300 mb-2"
-                >
-                  제약 조건 (선택)
-                </label>
-                <textarea
-                  id="constraints"
-                  value={constraints}
-                  onChange={(e) => setConstraints(e.target.value)}
-                  placeholder="예: EU 규제 기준을 중심으로"
-                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  rows={3}
-                />
-              </div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Topic Input */}
+                  <div className="relative">
+                    <label
+                      htmlFor="topic"
+                      className="absolute -top-2.5 left-3 px-2 bg-[#1a232e] text-xs text-white/60"
+                    >
+                      Research Topic *
+                    </label>
+                    <input
+                      type="text"
+                      id="topic"
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="예: CRISPR-Cas9을 이용한 유전자편집 토마토"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-[#137fec] transition-colors"
+                      required
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                연구 시작
-              </button>
-            </form>
+                  {/* Constraints Textarea */}
+                  <div className="relative">
+                    <label
+                      htmlFor="constraints"
+                      className="absolute -top-2.5 left-3 px-2 bg-[#1a232e] text-xs text-white/60"
+                    >
+                      Constraints (Optional)
+                    </label>
+                    <textarea
+                      id="constraints"
+                      value={constraints}
+                      onChange={(e) => setConstraints(e.target.value)}
+                      placeholder="예: EU 규제 기준을 중심으로"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-[#137fec] transition-colors resize-none"
+                      rows={4}
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={!topic.trim()}
+                    className="w-full px-6 py-4 bg-[#137fec] hover:bg-[#137fec]/80 disabled:bg-white/10 disabled:cursor-not-allowed rounded-lg font-semibold transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(19,127,236,0.3)] hover:shadow-[0_0_30px_rgba(19,127,236,0.5)]"
+                  >
+                    <span>EXECUTE</span>
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* Right Side: Workflow Visualization */}
+            <div className="lg:col-span-8">
+              <div className="glass-panel p-8">
+                {/* Title */}
+                <div className="flex justify-center mb-8">
+                  <div className="px-6 py-2 glass-panel-light rounded-full text-sm font-medium text-[#137fec]">
+                    Active Neural Pathway
+                  </div>
+                </div>
+
+                {/* SVG Workflow Diagram */}
+                <div className="relative w-full h-[500px]">
+                  <svg className="w-full h-full" viewBox="0 0 800 500">
+                    {/* Flow Paths */}
+                    {/* PI to Critic */}
+                    <path
+                      d="M 400 100 L 400 200"
+                      stroke="rgba(139, 92, 246, 0.4)"
+                      strokeWidth="2"
+                      fill="none"
+                      className="flow-path"
+                    />
+                    {/* Critic to Specialist 1 */}
+                    <path
+                      d="M 400 250 L 200 350"
+                      stroke="rgba(6, 182, 212, 0.4)"
+                      strokeWidth="2"
+                      fill="none"
+                      className="flow-path"
+                    />
+                    {/* Critic to Specialist 2 */}
+                    <path
+                      d="M 400 250 L 400 350"
+                      stroke="rgba(6, 182, 212, 0.4)"
+                      strokeWidth="2"
+                      fill="none"
+                      className="flow-path"
+                    />
+                    {/* Critic to Specialist 3 */}
+                    <path
+                      d="M 400 250 L 600 350"
+                      stroke="rgba(6, 182, 212, 0.4)"
+                      strokeWidth="2"
+                      fill="none"
+                      className="flow-path"
+                    />
+                  </svg>
+
+                  {/* PI Agent - Top Center */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                    <div className="w-20 h-20 rounded-full bg-[#8b5cf6]/20 flex items-center justify-center border-2 border-[#8b5cf6] animate-pulse-glow-purple">
+                      <span className="material-symbols-outlined text-[#8b5cf6] text-4xl">psychology</span>
+                    </div>
+                    <div className="mt-3 px-4 py-2 glass-panel rounded-lg">
+                      <div className="text-sm font-semibold text-center">PI Agent</div>
+                      <div className="text-xs text-white/40 text-center">Principal Investigator</div>
+                    </div>
+                  </div>
+
+                  {/* Critic - Middle Center */}
+                  <div className="absolute top-[200px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+                    <div className="w-20 h-20 rounded-full bg-[#00f0ff]/20 flex items-center justify-center border-2 border-[#00f0ff] animate-pulse-glow-cyan">
+                      <span className="material-symbols-outlined text-[#00f0ff] text-4xl">fact_check</span>
+                    </div>
+                    <div className="mt-3 px-4 py-2 glass-panel rounded-lg">
+                      <div className="text-sm font-semibold text-center">Critic</div>
+                      <div className="text-xs text-white/40 text-center">Quality Assurance</div>
+                    </div>
+                  </div>
+
+                  {/* Specialist 1 - Bottom Left */}
+                  <div className="absolute top-[350px] left-[100px] flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-full bg-[#137fec]/20 flex items-center justify-center border-2 border-[#137fec] animate-pulse-glow">
+                      <span className="material-symbols-outlined text-[#137fec] text-3xl">biotech</span>
+                    </div>
+                    <div className="mt-3 px-3 py-1.5 glass-panel rounded-lg">
+                      <div className="text-xs font-semibold text-center">Biotech</div>
+                    </div>
+                  </div>
+
+                  {/* Specialist 2 - Bottom Center */}
+                  <div className="absolute top-[350px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-full bg-[#137fec]/20 flex items-center justify-center border-2 border-[#137fec] animate-pulse-glow">
+                      <span className="material-symbols-outlined text-[#137fec] text-3xl">science</span>
+                    </div>
+                    <div className="mt-3 px-3 py-1.5 glass-panel rounded-lg">
+                      <div className="text-xs font-semibold text-center">Science</div>
+                    </div>
+                  </div>
+
+                  {/* Specialist 3 - Bottom Right */}
+                  <div className="absolute top-[350px] right-[100px] flex flex-col items-center">
+                    <div className="w-16 h-16 rounded-full bg-[#137fec]/20 flex items-center justify-center border-2 border-[#137fec] animate-pulse-glow">
+                      <span className="material-symbols-outlined text-[#137fec] text-3xl">medication_liquid</span>
+                    </div>
+                    <div className="mt-3 px-3 py-1.5 glass-panel rounded-lg">
+                      <div className="text-xs font-semibold text-center">Laboratory</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
+          // After Submission: Full-width Timeline
           <>
-            {/* 타임라인 */}
+            {/* Process Timeline */}
             <ProcessTimeline
               topic={topic}
               constraints={constraints}
@@ -118,23 +281,34 @@ export default function TimelinePage() {
               onError={handleError}
             />
 
-            {/* 최종 보고서 */}
+            {/* Final Report */}
             {finalReport && (
-              <div className="mt-8 max-w-4xl mx-auto bg-gray-900 rounded-lg shadow-lg p-8 border border-green-800">
-                <h2 className="text-2xl font-bold mb-4 text-green-400">최종 보고서</h2>
-                <div className="prose prose-invert max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-200">{finalReport}</div>
+              <div className="mt-8 glass-panel border-2 border-[#0bda5b]/30 p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <span className="material-symbols-outlined text-[#0bda5b] text-3xl">task_alt</span>
+                  <h2 className="text-2xl font-bold text-[#0bda5b]">최종 보고서</h2>
                 </div>
-                <div className="mt-6 flex gap-4">
+
+                <div className="prose prose-invert max-w-none mb-6">
+                  <div className="whitespace-pre-wrap text-gray-200 font-mono text-sm bg-black/20 p-6 rounded-lg border border-white/5">
+                    {finalReport}
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  {/* Copy Button */}
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(finalReport);
                       alert('보고서가 클립보드에 복사되었습니다.');
                     }}
-                    className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 transition-colors"
+                    className="px-6 py-3 glass-panel-hover rounded-lg font-medium transition-all flex items-center gap-2"
                   >
-                    복사
+                    <span className="material-symbols-outlined text-sm">content_copy</span>
+                    <span>Copy</span>
                   </button>
+
+                  {/* TXT Download Button */}
                   <button
                     onClick={() => {
                       const now = new Date();
@@ -148,37 +322,43 @@ export default function TimelinePage() {
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
-                    className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    className="px-6 py-3 bg-[#137fec] hover:bg-[#137fec]/80 rounded-lg font-medium transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(19,127,236,0.3)]"
                   >
-                    TXT 다운로드
+                    <span className="material-symbols-outlined text-sm">download</span>
+                    <span>TXT Download</span>
                   </button>
                 </div>
-                <p className="mt-3 text-sm text-gray-500">
+
+                <p className="mt-4 text-sm text-white/40">
                   * 보고서는 서버의 reports/ 폴더에도 자동 저장됩니다.
                 </p>
               </div>
             )}
 
-            {/* 에러 */}
+            {/* Error Display */}
             {error && (
-              <div className="mt-8 max-w-4xl mx-auto bg-red-950 border border-red-800 rounded-lg p-6">
-                <h2 className="text-xl font-bold text-red-400 mb-2">에러 발생</h2>
+              <div className="mt-8 glass-panel border-2 border-red-500/30 p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="material-symbols-outlined text-red-400 text-2xl">error</span>
+                  <h2 className="text-xl font-bold text-red-400">에러 발생</h2>
+                </div>
                 <p className="text-red-300">{error}</p>
               </div>
             )}
 
-            {/* 리셋 버튼 */}
+            {/* Reset Button */}
             <div className="mt-8 text-center">
               <button
                 onClick={handleReset}
-                className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="px-8 py-3 glass-panel-hover rounded-lg font-medium transition-all flex items-center gap-2 mx-auto"
               >
-                새 연구 시작
+                <span className="material-symbols-outlined">restart_alt</span>
+                <span>New Research</span>
               </button>
             </div>
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 }

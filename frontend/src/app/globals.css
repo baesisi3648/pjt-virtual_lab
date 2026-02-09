@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* ===== Design System: Biotech AI Lab ===== */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,18 +10,18 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
 }
 
 .dark {
-  --background: #0a0a0a;
+  --background: #101922;
   --foreground: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #0a0a0a;
+    --background: #101922;
     --foreground: #ededed;
   }
 }
@@ -27,5 +29,101 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #137fec;
+}
+
+/* ===== Glass Morphism ===== */
+.glass-panel {
+  background: rgba(26, 35, 46, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(26, 35, 46, 0.8);
+  border-color: rgba(19, 127, 236, 0.3);
+  box-shadow: 0 0 15px rgba(19, 127, 236, 0.15);
+}
+
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ===== Neon Text ===== */
+.neon-text {
+  text-shadow: 0 0 10px rgba(19, 127, 236, 0.5);
+}
+
+/* ===== Grid Background ===== */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* ===== DNA Background Glow ===== */
+.dna-bg {
+  background: radial-gradient(circle at 50% 50%, rgba(19, 127, 236, 0.08) 0%, transparent 70%);
+}
+
+/* ===== Animations ===== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px 2px rgba(19, 127, 236, 0.3); }
+  50% { box-shadow: 0 0 25px 5px rgba(19, 127, 236, 0.5); }
+}
+@keyframes pulse-glow-purple {
+  0%, 100% { box-shadow: 0 0 15px 2px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 25px 5px rgba(139, 92, 246, 0.5); }
+}
+@keyframes pulse-glow-cyan {
+  0%, 100% { box-shadow: 0 0 15px 2px rgba(6, 182, 212, 0.3); }
+  50% { box-shadow: 0 0 25px 5px rgba(6, 182, 212, 0.5); }
+}
+@keyframes flow-line {
+  0% { stroke-dashoffset: 100; opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.2; }
+}
+
+.animate-pulse-glow { animation: pulse-glow 3s infinite; }
+.animate-pulse-glow-purple { animation: pulse-glow-purple 3s infinite; }
+.animate-pulse-glow-cyan { animation: pulse-glow-cyan 3s infinite; }
+
+.flow-path {
+  stroke-dasharray: 10;
+  animation: flow-line 2s linear infinite;
+}
+
+/* ===== Report Paper Style ===== */
+.report-paper {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: 0 0 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(19, 127, 236, 0.3);
+  color: white;
 }

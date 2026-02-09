@@ -3,12 +3,12 @@
  * @SPEC TASKS.md#P4-T3
  *
  * ReportEditor 컴포넌트 데모 페이지
+ * "Paper Document" style with sidebar navigation
  */
 
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import ReportEditor from '@/components/ReportEditor';
 import { regenerateSection } from '@/lib/api';
 
@@ -48,6 +48,7 @@ export default function ReportDemoPage() {
   const [report, setReport] = useState(SAMPLE_REPORT);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [activeSection, setActiveSection] = useState('executive-summary');
 
   const handleRegenerate = async (request: {
     section: string;
@@ -75,54 +76,177 @@ export default function ReportDemoPage() {
     }
   };
 
+  const navSections = [
+    { id: 'executive-summary', label: 'Executive Summary', icon: 'dashboard' },
+    { id: 'risk-analysis', label: 'Risk Analysis', icon: 'analytics' },
+    { id: 'guideline-assessment', label: 'Guideline Assessment', icon: 'science' },
+    { id: 'update-items', label: 'Update Items', icon: 'genetics' },
+    { id: 'conclusion', label: 'Conclusion', icon: 'verified_user' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-950">
-      <div className="container mx-auto py-8 px-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Report Editor Demo</h1>
-            <p className="text-gray-400">
-              Interactive Report Editor - 마크다운 보고서 수정 및 재검토 요청
-            </p>
+    <div className="min-h-screen bg-[#0f1216]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 glass-panel">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Left: Logo + Breadcrumbs */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3">
+                <span className="material-icons text-[#137fec] text-2xl">biotech</span>
+                <span className="text-lg font-bold">BioLab AI</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <span>Projects</span>
+                <span className="material-icons text-xs">chevron_right</span>
+                <span>Research</span>
+                <span className="material-icons text-xs">chevron_right</span>
+                <span className="text-white">Safety Assessment</span>
+              </div>
+            </div>
+
+            {/* Right: Search + Settings + Avatar */}
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <span className="material-icons absolute left-3 top-2 text-gray-500 text-sm">search</span>
+                <input
+                  type="text"
+                  placeholder="Search reports..."
+                  className="pl-9 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:border-[#137fec]/50 w-64"
+                />
+              </div>
+              <button className="material-icons text-gray-400 hover:text-white transition-colors">
+                settings
+              </button>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#137fec] to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                U
+              </div>
+            </div>
           </div>
-          <Link
-            href="/"
-            className="px-4 py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            Home
-          </Link>
         </div>
+      </header>
 
-        {message && (
-          <div
-            className={`mb-4 p-4 rounded border ${
-              message.includes('실패')
-                ? 'bg-red-950 border-red-800 text-red-300'
-                : 'bg-green-950 border-green-800 text-green-300'
-            }`}
-          >
-            {message}
+      {/* Two-column layout */}
+      <div className="container mx-auto px-6 py-8 flex gap-8">
+        {/* Left Sidebar */}
+        <aside className="w-64 hidden lg:block flex-shrink-0">
+          <div className="sticky top-24 space-y-6">
+            {/* Navigation */}
+            <div className="glass-panel-light rounded-lg p-4">
+              <h2 className="text-xs uppercase tracking-wider text-gray-500 mb-4">Report Sections</h2>
+              <nav className="space-y-2">
+                {navSections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                      activeSection === section.id
+                        ? 'bg-[#137fec]/10 text-[#137fec] border-l-2 border-[#137fec]'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="material-icons text-base">{section.icon}</span>
+                    <span>{section.label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Status Card */}
+            <div className="glass-panel-light rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-500">Status</span>
+                <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded font-semibold">
+                  APPROVED
+                </span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-1.5 mt-3">
+                <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '100%' }}></div>
+              </div>
+            </div>
           </div>
-        )}
+        </aside>
 
-        <div className="bg-gray-900 rounded-lg shadow-lg overflow-hidden border border-gray-800" style={{ height: '70vh' }}>
-          <ReportEditor
-            report={report}
-            onRegenerate={handleRegenerate}
-            isLoading={isLoading}
-          />
-        </div>
+        {/* Main Content Area */}
+        <main className="flex-1 min-w-0">
+          <div className="bg-grid min-h-screen">
+            {/* Floating Toolbar */}
+            <div className="sticky top-24 z-10 mb-6">
+              <div className="glass-panel rounded-lg px-6 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-semibold border border-red-500/30">
+                    CONFIDENTIAL
+                  </span>
+                  <span className="text-sm text-gray-400">Last updated: 2026-02-09</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 glass-panel-light rounded-lg hover:glass-panel-hover transition-all">
+                    <span className="material-icons text-base">share</span>
+                    Share
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-[#137fec] rounded-lg hover:bg-[#0e6bc9] transition-colors">
+                    <span className="material-icons text-base">download</span>
+                    Export PDF
+                  </button>
+                </div>
+              </div>
+            </div>
 
-        <div className="mt-8 p-6 bg-gray-900 rounded-lg border border-gray-800">
-          <h2 className="text-xl font-bold mb-4 text-white">사용 방법</h2>
-          <ol className="list-decimal list-inside space-y-2 text-gray-400">
-            <li>각 섹션 옆의 &quot;재검토 요청&quot; 버튼을 클릭합니다</li>
-            <li>피드백을 입력합니다 (예: &quot;알레르기 더 자세히&quot;)</li>
-            <li>&quot;제출&quot; 버튼을 클릭하면 해당 섹션이 재생성됩니다</li>
-            <li>&quot;편집&quot; 버튼으로 직접 수정도 가능합니다</li>
-          </ol>
-        </div>
+            {/* Status Message */}
+            {message && (
+              <div
+                className={`mb-6 glass-panel rounded-lg px-6 py-4 border-l-4 ${
+                  message.includes('실패')
+                    ? 'border-red-500 bg-red-500/10'
+                    : 'border-green-500 bg-green-500/10'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`material-icons ${message.includes('실패') ? 'text-red-400' : 'text-green-400'}`}>
+                    {message.includes('실패') ? 'error' : 'check_circle'}
+                  </span>
+                  <span className={message.includes('실패') ? 'text-red-300' : 'text-green-300'}>
+                    {message}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Paper Document Container */}
+            <div className="relative">
+              {/* Decorative corner borders */}
+              <div className="report-paper rounded-lg shadow-2xl overflow-hidden relative">
+                {/* Top-left corner */}
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-[#137fec]/30"></div>
+                {/* Top-right corner */}
+                <div className="absolute top-0 right-0 w-12 h-12 border-t-4 border-r-4 border-[#137fec]/30"></div>
+                {/* Bottom-left corner */}
+                <div className="absolute bottom-0 left-0 w-12 h-12 border-b-4 border-l-4 border-[#137fec]/30"></div>
+                {/* Bottom-right corner */}
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-[#137fec]/30"></div>
+
+                {/* Report Editor Component */}
+                <div className="min-h-[800px]">
+                  <ReportEditor
+                    report={report}
+                    onRegenerate={handleRegenerate}
+                    isLoading={isLoading}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="mt-6 glass-panel rounded-lg px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#137fec]"></div>
+                  <span className="text-gray-400">재생성 중...</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );

@@ -187,6 +187,48 @@ def decide_team(user_query: str) -> List[dict]:
         raise ValueError(f"LLM 응답을 JSON으로 파싱할 수 없습니다: {e}\n응답: {response}")
 
 
+def run_pi_planning(state: AgentState) -> dict:
+    """PI가 연구 주제를 분석하고 전문가 팀을 구성합니다."""
+    print(f"\n{'#'*80}")
+    print(f"[PI PLANNING] Starting PI planning phase")
+    print(f"  Topic: {state.get('topic', 'N/A')}")
+    print(f"{'#'*80}\n")
+
+    topic = state["topic"]
+    constraints = state.get("constraints", "")
+
+    # decide_team()으로 팀 구성
+    try:
+        team = decide_team(f"{topic}\n제약 조건: {constraints}")
+        logger.info(f"PI decided team: {len(team)} specialists")
+    except Exception as e:
+        logger.warning(f"decide_team failed: {e}, using default team")
+        team = [
+            {"role": "NGT 분자생물학 전문가", "focus": "유전자편집 과정의 off-target 효과 및 분자적 특성 분석"},
+            {"role": "식품안전성 평가 전문가", "focus": "독성, 알레르기, 영양성 평가 방법론"},
+            {"role": "규제과학 전문가", "focus": "국제 규제 프레임워크 비교 및 지침 적용 가능성 분석"},
+        ]
+
+    # 팀 구성 내용을 메시지로 기록
+    team_summary = "\n".join(
+        [f"- **{m['role']}**: {m['focus']}" for m in team]
+    )
+    messages = list(state.get("messages", []))
+    messages.append({
+        "role": "pi",
+        "content": f"연구 팀을 구성했습니다.\n\n{team_summary}",
+    })
+
+    print(f"[PI PLANNING] Team composed: {len(team)} specialists")
+    for m in team:
+        print(f"  - {m['role']}: {m['focus']}")
+
+    return {
+        "team": team,
+        "messages": messages,
+    }
+
+
 def run_pi(state: AgentState) -> dict:
     """PI 에이전트 실행 - OpenAI 직접 호출"""
     print(f"\n{'#'*80}")
@@ -204,19 +246,34 @@ def run_pi(state: AgentState) -> dict:
     except Exception as e:
         logger.warning(f"PI web search failed: {e}")
 
-    # Step 2: 프롬프트 구성
+    # Step 2: 전문가 분석 결과 통합
+    specialist_context = ""
+    specialist_outputs = state.get("specialist_outputs", [])
+    if specialist_outputs:
+        specialist_sections = []
+        for so in specialist_outputs:
+            specialist_sections.append(
+                f"### [{so.get('role', '전문가')}] ({so.get('focus', '')})\n{so.get('output', '')}"
+            )
+        specialist_context = "\n\n---\n\n".join(specialist_sections)
+
+    # Step 3: 프롬프트 구성
     user_message = (
         f"연구 주제: {state['topic']}\n"
         f"제약 조건: {state['constraints']}\n\n"
-        f"[승인된 초안]\n{state['draft']}\n"
+        f"[승인된 통합 초안]\n{state['draft']}\n\n"
+    )
+    if specialist_context:
+        user_message += f"[각 전문가 개별 분석 결과]\n{specialist_context}\n\n"
+    user_message += (
         f"{web_context}\n\n"
-        "위 초안을 바탕으로 최종 보고서를 Markdown 형식으로 작성하세요.\n"
+        "위 초안과 전문가 분석 결과를 종합하여 최종 보고서를 Markdown 형식으로 작성하세요.\n"
         "반드시 4개 파트(1. 위험 식별, 2. 지침 적용 가능성 평가, 3. 지침 업데이트 항목, 4. 종합 결론)와\n"
         "모든 하위 항목(1-1~1-3, 2-1~2-6, 3-1~3-3, 4-1~4-6)을 빠짐없이 포함해야 합니다.\n"
         "각 항목은 충분한 분량으로 분석적으로 서술하세요."
     )
 
-    # Step 3: OpenAI 직접 호출 (NO LangChain)
+    # Step 4: OpenAI 직접 호출 (NO LangChain)
     print(f"\n{'#'*80}")
     print(f"[PI] Calling OpenAI API via call_gpt4o")
     print(f"{'#'*80}\n")
@@ -238,9 +295,11 @@ def run_pi(state: AgentState) -> dict:
 
     # 메시지 로그
     messages = list(state.get("messages", []))
+    team = state.get("team", [])
+    team_names = ", ".join([m.get("role", "전문가") for m in team]) if team else "전문가 팀"
     messages.append({
         "role": "pi",
-        "content": "최종 보고서를 작성했습니다.",
+        "content": f"팀 회의를 주재하고 {team_names}의 분석 결과를 종합하여 최종 보고서를 작성했습니다.",
     })
 
     return {

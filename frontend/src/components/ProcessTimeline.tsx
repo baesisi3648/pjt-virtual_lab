@@ -3,6 +3,11 @@
  *
  * 에이전트 간 대화를 채팅 형태로 실시간 표시하는 컴포넌트
  * Server-Sent Events (SSE)를 사용하여 백엔드로부터 이벤트를 스트리밍
+ *
+ * REDESIGN: Biotech AI Lab 디자인 시스템 적용
+ * - Material Symbols 아이콘 사용
+ * - glass-panel CSS 클래스 활용
+ * - 에이전트별 네온 테두리 효과
  */
 
 'use client';
@@ -14,14 +19,16 @@ interface TimelineEvent {
   type: 'start' | 'phase' | 'agent' | 'decision' | 'iteration' | 'complete' | 'error';
   timestamp: number;
   message: string;
-  agent?: 'scientist' | 'critic' | 'pi';
-  phase?: 'drafting' | 'critique' | 'finalizing';
+  agent?: 'scientist' | 'critic' | 'pi' | 'specialist';
+  phase?: 'planning' | 'researching' | 'drafting' | 'critique' | 'finalizing';
   decision?: 'approve' | 'revise';
   iteration?: number;
   report?: string;
   content?: string;
   scores?: Record<string, number>;
   error?: string;
+  specialist_name?: string;
+  specialist_focus?: string;
 }
 
 // Props 타입
@@ -32,34 +39,46 @@ interface ProcessTimelineProps {
   onError?: (error: string) => void;
 }
 
-// 에이전트별 설정
-const AGENT_CONFIG = {
+// 에이전트별 설정 (Material Symbols 아이콘)
+const AGENT_CONFIG: Record<string, {
+  icon: string;
+  name: string;
+  role: string;
+  color: string;
+  borderColor: string;
+  iconBg: string;
+}> = {
   scientist: {
-    icon: '🔬',
+    icon: 'science',
     name: 'Scientist',
     role: '과학 전문가',
     color: 'text-blue-400',
-    bgColor: 'bg-blue-950/50',
-    borderColor: 'border-blue-800/60',
-    accentColor: 'bg-blue-500',
+    borderColor: 'border-blue-500/30',
+    iconBg: 'bg-blue-500/20',
   },
   critic: {
-    icon: '🔍',
+    icon: 'fact_check',
     name: 'Critic',
     role: '검증 비평가',
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-950/50',
-    borderColor: 'border-amber-800/60',
-    accentColor: 'bg-amber-500',
+    color: 'text-cyan-400',
+    borderColor: 'border-cyan-500/30',
+    iconBg: 'bg-cyan-500/20',
   },
   pi: {
-    icon: '👔',
+    icon: 'psychology',
     name: 'PI',
     role: '총괄 책임자',
-    color: 'text-green-400',
-    bgColor: 'bg-green-950/50',
-    borderColor: 'border-green-800/60',
-    accentColor: 'bg-green-500',
+    color: 'text-purple-400',
+    borderColor: 'border-purple-500/30',
+    iconBg: 'bg-purple-500/20',
+  },
+  specialist: {
+    icon: 'biotech',
+    name: 'Specialist',
+    role: '전문가',
+    color: 'text-emerald-400',
+    borderColor: 'border-emerald-500/30',
+    iconBg: 'bg-emerald-500/20',
   },
 };
 
@@ -183,34 +202,35 @@ export default function ProcessTimeline({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* 헤더 */}
-      <div className="bg-gray-900 rounded-t-lg border border-gray-800 px-6 py-4">
+      {/* 헤더 - glass-panel with terminal icon */}
+      <div className="glass-panel rounded-t-lg px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-white">연구 진행 상황</h2>
+            <span className="material-symbols-outlined text-cyan-400 text-2xl">terminal</span>
+            <h2 className="text-xl font-bold text-white neon-text">System Log</h2>
             {isStreaming && (
-              <span className="flex items-center gap-1.5 text-xs bg-blue-900/50 text-blue-300 px-2.5 py-1 rounded-full border border-blue-800/50">
+              <span className="flex items-center gap-1.5 text-xs glass-panel-light text-cyan-300 px-3 py-1.5 rounded-full border border-cyan-500/30">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                 </span>
-                진행 중
+                STREAMING
               </span>
             )}
           </div>
-          <span className="text-xs text-gray-500">
-            {events.filter(e => e.type === 'agent' || e.type === 'decision').length}개 메시지
+          <span className="glass-panel-light px-3 py-1 rounded-full text-xs text-gray-400 font-mono border border-white/5">
+            {events.filter(e => e.type === 'agent' || e.type === 'decision').length} messages
           </span>
         </div>
       </div>
 
       {/* 메시지 영역 */}
-      <div className="bg-gray-950 border-x border-gray-800 px-6 py-4 space-y-4 max-h-[600px] overflow-y-auto">
+      <div className="glass-panel border-x-0 rounded-none px-6 py-4 space-y-4 max-h-[600px] overflow-y-auto bg-grid">
         {events.length === 0 && isStreaming && (
           <div className="flex items-center justify-center py-12 text-gray-500">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-3"></div>
-              <p>에이전트에 연결 중...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400 mx-auto mb-3"></div>
+              <p className="font-mono text-sm">Connecting to agents...</p>
             </div>
           </div>
         )}
@@ -229,31 +249,31 @@ export default function ProcessTimeline({
         {isStreaming && events.length > 0 && events[events.length - 1].type !== 'complete' && (
           <div className="flex items-center gap-3 px-4 py-3">
             <div className="flex gap-1">
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
             </div>
-            <span className="text-sm text-gray-500">에이전트가 작업 중입니다...</span>
+            <span className="text-sm text-gray-400 font-mono">에이전트가 작업 중입니다...</span>
           </div>
         )}
 
         <div ref={timelineEndRef} />
       </div>
 
-      {/* 하단 상태바 */}
-      <div className="bg-gray-900 rounded-b-lg border border-gray-800 px-6 py-3">
+      {/* 하단 상태바 - glass-panel */}
+      <div className="glass-panel rounded-b-lg px-6 py-3">
         {currentReport ? (
-          <div className="flex items-center gap-2 text-green-400 text-sm">
-            <span>✅</span>
+          <div className="flex items-center gap-2 text-green-400 text-sm font-mono">
+            <span className="material-symbols-outlined text-lg">check_circle</span>
             <span>연구 완료 - 보고서 {currentReport.length.toLocaleString()}자 생성됨</span>
           </div>
         ) : isStreaming ? (
-          <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <div className="animate-pulse h-2 w-2 rounded-full bg-blue-400"></div>
+          <div className="flex items-center gap-2 text-gray-400 text-sm font-mono">
+            <div className="animate-pulse h-2 w-2 rounded-full bg-cyan-400"></div>
             <span>워크플로우 실행 중...</span>
           </div>
         ) : (
-          <div className="text-gray-500 text-sm">대기 중</div>
+          <div className="text-gray-500 text-sm font-mono">IDLE</div>
         )}
       </div>
     </div>
@@ -289,8 +309,9 @@ function MessageItem({
     if (event.type === 'start') {
       return (
         <div className="flex justify-center">
-          <div className="bg-gray-800/50 text-gray-400 text-xs px-4 py-1.5 rounded-full border border-gray-700/50">
-            🚀 {event.message}
+          <div className="glass-panel-light text-gray-400 text-xs px-4 py-2 rounded-full border border-white/10 font-mono">
+            <span className="material-symbols-outlined text-sm align-middle mr-1">rocket_launch</span>
+            {event.message}
           </div>
         </div>
       );
@@ -298,8 +319,9 @@ function MessageItem({
     if (event.type === 'iteration') {
       return (
         <div className="flex justify-center">
-          <div className="bg-amber-900/30 text-amber-400 text-xs px-4 py-1.5 rounded-full border border-amber-800/40">
-            🔄 {event.message}
+          <div className="glass-panel text-amber-400 text-xs px-4 py-2 rounded-full border border-amber-500/30 font-mono">
+            <span className="material-symbols-outlined text-sm align-middle mr-1">sync</span>
+            {event.message}
           </div>
         </div>
       );
@@ -307,19 +329,23 @@ function MessageItem({
     if (event.type === 'complete') {
       return (
         <div className="flex justify-center">
-          <div className="bg-green-900/30 text-green-400 text-xs px-4 py-1.5 rounded-full border border-green-800/40">
-            ✅ {event.message}
+          <div className="glass-panel text-green-400 text-xs px-4 py-2 rounded-full border border-green-500/30 font-mono">
+            <span className="material-symbols-outlined text-sm align-middle mr-1">check_circle</span>
+            {event.message}
           </div>
         </div>
       );
     }
     if (event.type === 'error') {
       return (
-        <div className="bg-red-950/50 border border-red-800/60 rounded-lg p-4">
-          <p className="text-red-400 font-medium">❌ 오류 발생</p>
-          <p className="text-red-300 text-sm mt-1">{event.message}</p>
+        <div className="glass-panel border-l-4 border-red-500 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-red-400">error</span>
+            <p className="text-red-400 font-bold font-mono">ERROR</p>
+          </div>
+          <p className="text-red-300 text-sm">{event.message}</p>
           {event.error && (
-            <pre className="text-red-300/70 text-xs mt-2 overflow-x-auto">{event.error}</pre>
+            <pre className="text-red-300/70 text-xs mt-2 overflow-x-auto font-mono bg-black/20 p-2 rounded">{event.error}</pre>
           )}
         </div>
       );
@@ -327,14 +353,14 @@ function MessageItem({
     // phase 이벤트
     return (
       <div className="flex justify-center">
-        <div className="bg-gray-800/50 text-gray-400 text-xs px-4 py-1.5 rounded-full border border-gray-700/50">
+        <div className="glass-panel-light text-gray-400 text-xs px-4 py-2 rounded-full border border-white/5 font-mono">
           {event.message}
         </div>
       </div>
     );
   }
 
-  // 에이전트 메시지 (채팅 버블)
+  // 에이전트 메시지 (채팅 버블 with glass-panel)
   const hasContent = event.content && event.content.length > 0;
   const contentPreview = event.content
     ? event.content.length > 300
@@ -342,27 +368,37 @@ function MessageItem({
       : event.content
     : '';
 
+  // 전문가(specialist)의 경우 동적 이름 표시
+  const displayName = event.specialist_name || agentConfig.name;
+  const displayRole = event.specialist_focus || agentConfig.role;
+
   return (
-    <div className={`rounded-lg border ${agentConfig.borderColor} ${agentConfig.bgColor} overflow-hidden`}>
+    <div className={`glass-panel rounded-lg border-l-4 ${agentConfig.borderColor} overflow-hidden glass-panel-hover transition-all duration-200`}>
       {/* 메시지 헤더 */}
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className="text-2xl">{agentConfig.icon}</div>
+        {/* 에이전트 아이콘 (Material Symbols in colored circle) */}
+        <div className={`flex items-center justify-center w-10 h-10 rounded-full ${agentConfig.iconBg} border ${agentConfig.borderColor}`}>
+          <span className={`material-symbols-outlined ${agentConfig.color} text-xl`}>
+            {agentConfig.icon}
+          </span>
+        </div>
+
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className={`font-semibold ${agentConfig.color}`}>{agentConfig.name}</span>
-            <span className="text-xs text-gray-500">{agentConfig.role}</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`font-bold ${agentConfig.color} font-mono text-sm`}>{displayName}</span>
+            <span className="text-xs text-gray-500">{displayRole}</span>
             {event.iteration != null && (
-              <span className="text-xs bg-gray-700/50 text-gray-400 px-2 py-0.5 rounded">
-                {event.iteration}회차
+              <span className="text-xs glass-panel-light text-gray-400 px-2 py-0.5 rounded border border-white/5 font-mono">
+                Iteration {event.iteration}
               </span>
             )}
           </div>
-          <p className="text-gray-200 text-sm mt-0.5">{event.message}</p>
+          <p className="text-gray-200 text-sm mt-1">{event.message}</p>
         </div>
         <span className="text-xs text-gray-500 font-mono shrink-0">{formatTime(event.timestamp)}</span>
       </div>
 
-      {/* Critic 점수 표시 */}
+      {/* Critic 점수 표시 (horizontal badges) */}
       {event.scores && Object.keys(event.scores).length > 0 && (
         <div className="px-4 pb-3">
           <div className="flex flex-wrap gap-2">
@@ -373,24 +409,31 @@ function MessageItem({
                 regulation: '규제 비례성',
                 completeness: '구조적 완전성',
               };
-              const scoreColor = value >= 4 ? 'text-green-400 bg-green-900/40 border-green-800/50' :
-                value >= 3 ? 'text-yellow-400 bg-yellow-900/40 border-yellow-800/50' :
-                  'text-red-400 bg-red-900/40 border-red-800/50';
+              // Score-based coloring
+              const scoreClass = value >= 4
+                ? 'glass-panel text-green-400 border-green-500/40'
+                : value >= 3
+                  ? 'glass-panel text-yellow-400 border-yellow-500/40'
+                  : 'glass-panel text-red-400 border-red-500/40';
               return (
-                <span key={key} className={`text-xs px-2.5 py-1 rounded border ${scoreColor}`}>
-                  {label[key] || key}: {value}/5
+                <span key={key} className={`text-xs px-3 py-1.5 rounded font-mono ${scoreClass}`}>
+                  {label[key] || key}: <strong>{value}/5</strong>
                 </span>
               );
             })}
           </div>
           {/* 승인/수정 뱃지 */}
           {event.decision && (
-            <div className="mt-2">
-              <span className={`inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full font-medium ${event.decision === 'approve'
-                  ? 'bg-green-900/50 text-green-300 border border-green-700/50'
-                  : 'bg-red-900/50 text-red-300 border border-red-700/50'
-                }`}>
-                {event.decision === 'approve' ? '✅ 승인' : '📝 수정 요청'}
+            <div className="mt-3">
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full font-bold font-mono border ${
+                event.decision === 'approve'
+                  ? 'glass-panel text-green-300 border-green-500/40'
+                  : 'glass-panel text-red-300 border-red-500/40'
+              }`}>
+                <span className="material-symbols-outlined text-base">
+                  {event.decision === 'approve' ? 'check_circle' : 'edit_note'}
+                </span>
+                {event.decision === 'approve' ? 'APPROVED' : 'REVISION REQUESTED'}
               </span>
             </div>
           )}
@@ -399,25 +442,27 @@ function MessageItem({
 
       {/* 상세 내용 (접기/펼치기) */}
       {hasContent && (
-        <div className="border-t border-gray-700/30">
+        <div className="border-t border-white/5">
           <button
             onClick={onToggle}
-            className="w-full px-4 py-2 text-left text-xs text-gray-400 hover:text-gray-300 hover:bg-gray-800/30 transition-colors flex items-center gap-1"
+            className="w-full px-4 py-2.5 text-left text-xs text-gray-400 hover:text-cyan-300 hover:bg-white/5 transition-all flex items-center gap-2 font-mono"
           >
-            <span className={`transition-transform ${isExpanded ? 'rotate-90' : ''}`}>▶</span>
+            <span className={`material-symbols-outlined text-sm transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+              play_arrow
+            </span>
             {isExpanded ? '내용 접기' : '상세 내용 보기'}
             <span className="text-gray-600 ml-1">({event.content!.length.toLocaleString()}자)</span>
           </button>
           {isExpanded && (
             <div className="px-4 pb-4">
-              <div className="bg-gray-900/50 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap max-h-96 overflow-y-auto leading-relaxed border border-gray-700/30">
+              <div className="glass-panel-light rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap max-h-96 overflow-y-auto leading-relaxed border border-white/5 font-mono">
                 {event.content}
               </div>
             </div>
           )}
           {!isExpanded && contentPreview && (
             <div className="px-4 pb-3">
-              <p className="text-xs text-gray-500 line-clamp-2">{contentPreview}</p>
+              <p className="text-xs text-gray-500 line-clamp-2 font-mono">{contentPreview}</p>
             </div>
           )}
         </div>
