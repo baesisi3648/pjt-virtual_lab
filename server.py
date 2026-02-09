@@ -417,10 +417,13 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                 sse_logger.info(f"Node: {node_name}, keys: {list(node_state.keys())}")
 
                 if node_name == "drafting":
+                    draft_content = node_state.get("draft", "")
+                    # 초안 내용을 메시지로 전송
                     yield send_event("agent", {
                         "agent": "scientist",
                         "phase": "drafting",
-                        "message": "Scientist: 초안 작성 완료",
+                        "message": "초안을 작성했습니다.",
+                        "content": draft_content,
                         "iteration": iteration_count + 1
                     })
 
@@ -430,25 +433,22 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         decision = critique.decision
                         sse_logger.info(f"Critic decision: {decision}, scores: {critique.scores}")
 
-                        yield send_event("agent", {
-                            "agent": "critic",
-                            "phase": "critique",
-                            "message": f"Critic: 검토 완료 (점수: {critique.scores})",
-                            "iteration": iteration_count + 1
-                        })
-
                         if decision == "revise":
-                            feedback_preview = (critique.feedback[:100] + "...") if len(critique.feedback) > 100 else critique.feedback
                             yield send_event("decision", {
                                 "agent": "critic",
                                 "decision": "revise",
-                                "message": f"Critic: 수정 필요 - {feedback_preview}"
+                                "message": "수정이 필요합니다.",
+                                "content": critique.feedback,
+                                "scores": critique.scores,
+                                "iteration": iteration_count + 1
                             })
                         else:
                             yield send_event("decision", {
                                 "agent": "critic",
                                 "decision": "approve",
-                                "message": "Critic: 승인"
+                                "message": "초안을 승인합니다.",
+                                "scores": critique.scores,
+                                "iteration": iteration_count + 1
                             })
 
                 elif node_name == "increment":
@@ -456,14 +456,16 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     sse_logger.info(f"Iteration incremented to {iteration_count}")
                     yield send_event("iteration", {
                         "iteration": iteration_count,
-                        "message": f"반복 {iteration_count}회차 시작"
+                        "message": f"{iteration_count}회차 수정을 시작합니다."
                     })
 
                 elif node_name == "finalizing":
+                    final = node_state.get("final_report", "")
                     yield send_event("agent", {
                         "agent": "pi",
                         "phase": "finalizing",
-                        "message": "PI: 최종 보고서 작성 중..."
+                        "message": "최종 보고서를 작성했습니다.",
+                        "content": final,
                     })
 
                 # 각 노드의 결과에서 필요한 값 수집
