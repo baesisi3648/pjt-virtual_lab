@@ -114,12 +114,13 @@ body {
   animation: flow-line 2s linear infinite;
 }
 
-/* ===== Report Paper Style ===== */
+/* ===== Report Paper Style (Dark) ===== */
 .report-paper {
-  background-color: #f8fafc;
-  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-color: rgba(26, 35, 46, 0.8);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 20px 20px;
   box-shadow: 0 0 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ===== Selection ===== */
