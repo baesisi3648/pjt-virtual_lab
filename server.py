@@ -8,7 +8,20 @@ Streamlit 프론트엔드와 CORS를 통해 연동됩니다.
 """
 import asyncio
 import json
+import logging
+import os
+import sys
 from typing import AsyncGenerator
+
+# __pycache__ 사용 방지 - 캐시된 .pyc가 오래된 코드를 로드하는 것을 방지
+sys.dont_write_bytecode = True
+os.environ["PYTHONDONTWRITEBYTECACHE"] = "1"
+
+# LangChain/LangSmith auto-instrumentation 비활성화
+# - LangSmith tracing이 OpenAI SDK를 auto-instrument하여
+#   tool_calls 관련 문제를 일으킬 수 있음
+os.environ["LANGCHAIN_TRACING_V2"] = "false"
+os.environ["LANGCHAIN_TRACING"] = "false"
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,11 +30,51 @@ from pydantic import BaseModel
 
 from workflow.graph import create_workflow
 from workflow.state import AgentState
-from celery_app import app as celery_app
-from tasks.research_task import run_research as celery_run_research, health_check
 
+# Celery는 선택적 (Redis 없이도 서버 시작 가능)
+try:
+    from celery_app import app as celery_app
+    from tasks.research_task import run_research as celery_run_research, health_check
+    CELERY_AVAILABLE = True
+except Exception:
+    CELERY_AVAILABLE = False
+
+# 로깅 설정
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+)
 
 app = FastAPI(title="Virtual Lab API")
+
+# 서버 시작 시 로드된 모듈 검증
+startup_logger = logging.getLogger("startup")
+startup_logger.info("=" * 60)
+startup_logger.info("Virtual Lab Server Starting - Module Verification")
+import agents.scientist as _sci_mod
+import agents.critic as _cri_mod
+import agents.pi as _pi_mod
+import utils.llm as _llm_mod
+startup_logger.info(f"  scientist.py: {_sci_mod.__file__}")
+startup_logger.info(f"  critic.py:    {_cri_mod.__file__}")
+startup_logger.info(f"  pi.py:        {_pi_mod.__file__}")
+startup_logger.info(f"  llm.py:       {_llm_mod.__file__}")
+# 핵심 체크: bind_tools나 ChatOpenAI가 에이전트에 없는지 확인
+import inspect
+for mod_name, mod in [("scientist", _sci_mod), ("critic", _cri_mod), ("pi", _pi_mod)]:
+    src = inspect.getsource(mod)
+    if "bind_tools" in src or "ChatOpenAI" in src:
+        startup_logger.error(f"  DANGER: {mod_name} still has bind_tools/ChatOpenAI!")
+    else:
+        startup_logger.info(f"  OK: {mod_name} - no bind_tools/ChatOpenAI")
+# LLM 모듈이 httpx 직접 호출을 사용하는지 확인
+llm_src = inspect.getsource(_llm_mod)
+if "httpx" in llm_src and "from openai import" not in llm_src:
+    startup_logger.info("  OK: llm.py - using raw httpx (no OpenAI SDK)")
+else:
+    startup_logger.warning("  WARNING: llm.py - may still use OpenAI SDK")
+startup_logger.info(f"  LANGCHAIN_TRACING_V2={os.environ.get('LANGCHAIN_TRACING_V2', 'not set')}")
+startup_logger.info("=" * 60)
 
 # CORS 설정 (Streamlit + Next.js 연동)
 # 개발 환경: 모든 오리진 허용
@@ -92,6 +145,40 @@ def health_check_endpoint():
     return {"status": "ok"}
 
 
+@app.get("/api/debug/modules")
+def debug_modules():
+    """서버에 로드된 모듈 상태 진단 (디버깅용)"""
+    import inspect
+    import time
+    import agents.scientist as sci
+    import agents.critic as cri
+    import agents.pi as pi
+    import utils.llm as llm_mod
+
+    results = {"timestamp": time.time(), "modules": {}}
+
+    for name, mod in [("scientist", sci), ("critic", cri), ("pi", pi), ("llm", llm_mod)]:
+        src = inspect.getsource(mod)
+        results["modules"][name] = {
+            "file": mod.__file__,
+            "has_bind_tools": "bind_tools" in src,
+            "has_ChatOpenAI": "ChatOpenAI" in src,
+            "has_call_gpt4o": "call_gpt4o" in src,
+            "has_openai_sdk": "from openai import" in src or "OpenAI(" in src,
+            "source_length": len(src),
+        }
+
+    # LLM 빠른 테스트 (실제 OpenAI 호출)
+    try:
+        from utils.llm import call_gpt4o_mini
+        test_result = call_gpt4o_mini("Say 'OK'", "Test", max_tokens=5)
+        results["llm_test"] = {"status": "ok", "response": test_result[:50]}
+    except Exception as e:
+        results["llm_test"] = {"status": "error", "error": str(e)}
+
+    return results
+
+
 @app.post("/api/research", response_model=ResearchResponse)
 def run_research(request: ResearchRequest):
     """워크플로우 실행
@@ -111,6 +198,7 @@ def run_research(request: ResearchRequest):
         "iteration": 0,
         "final_report": "",
         "messages": [],
+        "parallel_views": [],
     }
 
     # 실행
@@ -125,11 +213,9 @@ def run_research(request: ResearchRequest):
 
 @app.post("/api/research/async", response_model=AsyncResearchResponse)
 async def submit_async_research(request: AsyncResearchRequest):
-    """비동기 연구 작업 제출
-
-    장시간 소요되는 연구 작업을 Celery를 통해 백그라운드에서 실행합니다.
-    task_id를 반환하며, /api/task/{task_id}로 상태를 조회할 수 있습니다.
-    """
+    """비동기 연구 작업 제출"""
+    if not CELERY_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Celery not available (Redis required)")
     try:
         task = celery_run_research.delay(request.query)
         return AsyncResearchResponse(
@@ -146,16 +232,9 @@ async def submit_async_research(request: AsyncResearchRequest):
 
 @app.get("/api/task/{task_id}", response_model=TaskStatusResponse)
 async def get_task_status(task_id: str):
-    """태스크 상태 조회
-
-    Celery 태스크의 현재 상태와 결과를 조회합니다.
-
-    상태 종류:
-    - PENDING: 대기 중
-    - PROGRESS: 진행 중
-    - SUCCESS: 완료
-    - FAILURE: 실패
-    """
+    """태스크 상태 조회"""
+    if not CELERY_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Celery not available")
     try:
         task = celery_app.AsyncResult(task_id)
 
@@ -199,12 +278,10 @@ async def get_task_status(task_id: str):
 
 @app.get("/api/celery/health")
 async def celery_health_check():
-    """Celery 워커 헬스체크
-
-    Celery 워커가 정상 작동하는지 확인합니다.
-    """
+    """Celery 워커 헬스체크"""
+    if not CELERY_AVAILABLE:
+        return {"status": "unavailable", "celery_status": "not_configured", "message": "Celery not available"}
     try:
-        # Simple task to check if worker is alive
         result = health_check.delay()
         # Wait max 5 seconds
         response = result.get(timeout=5)
@@ -222,26 +299,32 @@ async def celery_health_check():
 
 
 # P4-T2: SSE 엔드포인트
+import logging
+import traceback
+
+sse_logger = logging.getLogger("sse")
+
+
 async def generate_research_events(topic: str, constraints: str) -> AsyncGenerator[str, None]:
-    """연구 프로세스 이벤트를 SSE 형식으로 스트리밍합니다.
+    """연구 프로세스 이벤트를 SSE 형식으로 스트리밍합니다."""
+    import time
 
-    Args:
-        topic: 연구 주제
-        constraints: 제약 조건
-
-    Yields:
-        str: SSE 형식의 이벤트 문자열 (data: {...}\n\n)
-    """
     def send_event(event_type: str, data: dict):
         """SSE 이벤트 전송 헬퍼"""
         event_data = {
             "type": event_type,
-            "timestamp": asyncio.get_event_loop().time(),
+            "timestamp": time.time(),
             **data
         }
         return f"data: {json.dumps(event_data, ensure_ascii=False)}\n\n"
 
     try:
+        print(f"\n{'*'*80}")
+        print(f"[SSE STREAM] Starting research workflow stream")
+        print(f"  Topic: {topic}")
+        print(f"  Constraints: {constraints}")
+        print(f"{'*'*80}\n")
+
         # 시작 이벤트
         yield send_event("start", {
             "message": "연구 프로세스를 시작합니다...",
@@ -249,7 +332,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         })
 
         # 워크플로우 생성
+        print(f"[SSE STREAM] Creating workflow graph...")
         workflow = create_workflow()
+        print(f"[SSE STREAM] Workflow graph created successfully\n")
 
         # 초기 상태
         initial_state: AgentState = {
@@ -260,93 +345,119 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "iteration": 0,
             "final_report": "",
             "messages": [],
+            "parallel_views": [],
         }
 
         # Phase 1: Drafting 시작
         yield send_event("phase", {
             "phase": "drafting",
             "agent": "scientist",
-            "message": "🔬 Scientist: 위험 요소 분석 중..."
+            "message": "Scientist: 위험 요소 분석 중..."
         })
 
-        await asyncio.sleep(0.1)  # 이벤트 전송 보장
+        await asyncio.sleep(0.1)
 
         # 워크플로우 실행 (스트림 모드)
-        # LangGraph의 stream() 메서드는 동기 API이므로 asyncio.to_thread로 실행
         iteration_count = 0
-        final_result = None
+        final_report = ""
+        all_messages: list[dict] = []
 
-        # 동기 stream을 비동기 generator로 변환
+        sse_logger.info(f"Starting workflow stream for topic: {topic}")
+        print(f"[SSE STREAM] Starting workflow.stream() iteration...\n")
+
         for event in workflow.stream(initial_state):
-            # 노드별 이벤트 전송
             for node_name, node_state in event.items():
+                print(f"\n{'*'*80}")
+                print(f"[SSE STREAM] Node event received")
+                print(f"  Node: {node_name}")
+                print(f"  State keys: {list(node_state.keys())}")
+                print(f"{'*'*80}\n")
+
+                sse_logger.info(f"Node: {node_name}, keys: {list(node_state.keys())}")
+
                 if node_name == "drafting":
                     yield send_event("agent", {
                         "agent": "scientist",
                         "phase": "drafting",
-                        "message": "🔬 Scientist: 초안 작성 완료",
-                        "iteration": iteration_count + 1
-                    })
-                elif node_name == "critique":
-                    yield send_event("agent", {
-                        "agent": "critic",
-                        "phase": "critique",
-                        "message": "🔍 Critic: 초안 검토 중...",
+                        "message": "Scientist: 초안 작성 완료",
                         "iteration": iteration_count + 1
                     })
 
-                    # Critique 결과 확인
-                    if node_state.get("critique"):
-                        critique = node_state["critique"]
+                elif node_name == "critique":
+                    critique = node_state.get("critique")
+                    if critique:
                         decision = critique.decision
+                        sse_logger.info(f"Critic decision: {decision}, scores: {critique.scores}")
+
+                        yield send_event("agent", {
+                            "agent": "critic",
+                            "phase": "critique",
+                            "message": f"Critic: 검토 완료 (점수: {critique.scores})",
+                            "iteration": iteration_count + 1
+                        })
 
                         if decision == "revise":
+                            feedback_preview = (critique.feedback[:100] + "...") if len(critique.feedback) > 100 else critique.feedback
                             yield send_event("decision", {
                                 "agent": "critic",
                                 "decision": "revise",
-                                "message": "❌ Critic: 수정 필요",
-                                "feedback": critique.feedback[:100] + "..."
+                                "message": f"Critic: 수정 필요 - {feedback_preview}"
                             })
                         else:
                             yield send_event("decision", {
                                 "agent": "critic",
                                 "decision": "approve",
-                                "message": "✅ Critic: 승인"
+                                "message": "Critic: 승인"
                             })
 
                 elif node_name == "increment":
                     iteration_count += 1
+                    sse_logger.info(f"Iteration incremented to {iteration_count}")
                     yield send_event("iteration", {
                         "iteration": iteration_count,
-                        "message": f"🔄 반복 {iteration_count}회차 시작"
+                        "message": f"반복 {iteration_count}회차 시작"
                     })
 
                 elif node_name == "finalizing":
                     yield send_event("agent", {
                         "agent": "pi",
                         "phase": "finalizing",
-                        "message": "👔 PI: 최종 보고서 작성 중..."
+                        "message": "PI: 최종 보고서 작성 중..."
                     })
 
-                # 최종 상태 저장
-                final_result = node_state
+                # 각 노드의 결과에서 필요한 값 수집
+                if "final_report" in node_state and node_state["final_report"]:
+                    final_report = node_state["final_report"]
+                if "messages" in node_state:
+                    all_messages = node_state["messages"]
 
-        # 워크플로우 최종 상태 가져오기
-        result = final_result if final_result else workflow.invoke(initial_state)
+        sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, iterations: {iteration_count}")
 
         # 완료 이벤트
         yield send_event("complete", {
-            "message": "✅ 연구 프로세스 완료",
-            "report": result["final_report"],
-            "iterations": result["iteration"],
-            "messages": result["messages"]
+            "message": "연구 프로세스 완료",
+            "report": final_report,
+            "iterations": iteration_count,
+            "messages": all_messages
         })
 
     except Exception as e:
-        # 에러 이벤트
+        error_detail = traceback.format_exc()
+
+        print(f"\n{'!'*80}")
+        print(f"[SSE STREAM ERROR] Exception caught in SSE stream!")
+        print(f"  Exception type: {type(e).__name__}")
+        print(f"  Exception message: {e}")
+        print(f"  Traceback:")
+        print(error_detail)
+        print(f"{'!'*80}\n")
+
+        sse_logger.error(f"SSE Error: {error_detail}")
+
+        # 에러 이벤트 - 상세 정보 포함
         yield send_event("error", {
             "message": f"에러 발생: {str(e)}",
-            "error": str(e)
+            "error": f"{type(e).__name__}: {str(e)}\n{error_detail}"
         })
 
 
@@ -389,15 +500,11 @@ def regenerate_section(request: RegenerateRequest):
     Returns:
         업데이트된 보고서 전체
     """
-    from agents.scientist import ScientistAgent
-    from config import Config
+    from utils.llm import call_gpt4o_mini
 
     try:
-        # Scientist 에이전트 생성
-        scientist = ScientistAgent(Config.OPENAI_MODEL)
-
-        # 재생성 프롬프트 작성
-        prompt = f"""다음 보고서의 '{request.section}' 섹션을 사용자 피드백에 따라 개선하세요.
+        system_prompt = "당신은 보고서 편집 전문가입니다."
+        user_message = f"""다음 보고서의 '{request.section}' 섹션을 사용자 피드백에 따라 개선하세요.
 
 <현재 보고서>
 {request.current_report}
@@ -414,21 +521,10 @@ def regenerate_section(request: RegenerateRequest):
 4. 마크다운 형식을 유지하세요
 5. 전체 보고서 구조를 유지하세요
 
-<개선된 전체 보고서를 출력하세요>
+개선된 전체 보고서를 출력하세요.
 """
 
-        # 에이전트 실행 (간단한 직접 호출)
-        # 실제로는 scientist의 LLM을 직접 호출
-        from langchain_openai import ChatOpenAI
-        from langchain_core.messages import HumanMessage
-
-        llm = ChatOpenAI(
-            model=Config.OPENAI_MODEL,
-            temperature=0.3,
-        )
-
-        response = llm.invoke([HumanMessage(content=prompt)])
-        updated_report = response.content
+        updated_report = call_gpt4o_mini(system_prompt, user_message, temperature=0.3)
 
         return RegenerateResponse(
             updated_report=updated_report,

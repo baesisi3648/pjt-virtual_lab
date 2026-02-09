@@ -68,3 +68,713 @@
 2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='format test' | results=0
 2026-02-08 17:34:39 | INFO | SEARCH_QUERY | query='P2-T4 acceptance test'
 2026-02-08 17:34:39 | INFO | SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+2026-02-08 22:23:47 | INFO | SEARCH_QUERY | query='Codex Alimentarius unintended modifications'
+2026-02-08 22:23:52 | INFO | SEARCH_SUCCESS | query='Codex Alimentarius unintended modifications' | results=5
+2026-02-08 22:23:52 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 Codex guidelines'
+2026-02-08 22:23:58 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 Codex guidelines' | results=5
+2026-02-08 22:24:08 | INFO | SEARCH_QUERY | query='EFSA Guidance on novel food authorization 2023'
+2026-02-08 22:24:12 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on novel food authorization 2023' | results=5
+2026-02-08 22:24:12 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment 2023'
+2026-02-08 22:24:16 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment 2023' | results=5
+2026-02-08 22:24:25 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects latest research'
+2026-02-08 22:24:31 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects latest research' | results=5
+2026-02-08 22:24:31 | INFO | SEARCH_QUERY | query='NGT food safety evaluation Codex EFSA FDA guidelines'
+2026-02-08 22:24:34 | INFO | SEARCH_SUCCESS | query='NGT food safety evaluation Codex EFSA FDA guidelines' | results=5
+2026-02-08 22:24:59 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 22:25:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 22:25:03 | INFO | SEARCH_QUERY | query='NGT toxicity allergenicity evaluation guidelines'
+2026-02-08 22:25:06 | INFO | SEARCH_SUCCESS | query='NGT toxicity allergenicity evaluation guidelines' | results=5
+2026-02-08 22:25:06 | INFO | SEARCH_QUERY | query='NGT nutritional changes safety assessment'
+2026-02-08 22:25:11 | INFO | SEARCH_SUCCESS | query='NGT nutritional changes safety assessment' | results=5
+2026-02-08 22:25:11 | INFO | SEARCH_QUERY | query='NGT environmental impact studies'
+2026-02-08 22:25:17 | INFO | SEARCH_SUCCESS | query='NGT environmental impact studies' | results=5
+2026-02-08 22:25:26 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications evidence'
+2026-02-08 22:25:30 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications evidence' | results=5
+2026-02-08 22:25:30 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 safety'
+2026-02-08 22:25:35 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 safety' | results=5
+2026-02-08 22:25:35 | INFO | SEARCH_QUERY | query='allergenicity new proteins NGT safety'
+2026-02-08 22:25:40 | INFO | SEARCH_SUCCESS | query='allergenicity new proteins NGT safety' | results=5
+2026-02-08 22:25:40 | INFO | SEARCH_QUERY | query='toxicity metabolic changes NGT safety'
+2026-02-08 22:25:43 | INFO | SEARCH_SUCCESS | query='toxicity metabolic changes NGT safety' | results=5
+2026-02-08 22:25:43 | INFO | SEARCH_QUERY | query='nutritional changes NGT safety'
+2026-02-08 22:25:48 | INFO | SEARCH_SUCCESS | query='nutritional changes NGT safety' | results=5
+2026-02-08 22:26:00 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications risks'
+2026-02-08 22:26:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications risks' | results=5
+2026-02-08 22:26:03 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 22:26:06 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=5
+2026-02-08 22:26:06 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:26:11 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:26:21 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 22:26:22 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=5
+2026-02-08 22:26:22 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:26:24 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:26:24 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 22:26:27 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 22:26:38 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:26:39 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:26:39 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety assessment guidelines'
+2026-02-08 22:26:43 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety assessment guidelines' | results=5
+2026-02-08 22:26:52 | INFO | SEARCH_QUERY | query='Off-target effects CRISPR-Cas9 scientific studies'
+2026-02-08 22:26:56 | INFO | SEARCH_SUCCESS | query='Off-target effects CRISPR-Cas9 scientific studies' | results=5
+2026-02-08 22:26:56 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:26:57 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:26:57 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety assessment guidelines'
+2026-02-08 22:26:59 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety assessment guidelines' | results=5
+2026-02-08 22:27:08 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications off-target effects'
+2026-02-08 22:27:12 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications off-target effects' | results=5
+2026-02-08 22:27:12 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:27:13 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:27:13 | INFO | SEARCH_QUERY | query='Codex EFSA FDA guidelines NGT food safety'
+2026-02-08 22:27:18 | INFO | SEARCH_SUCCESS | query='Codex EFSA FDA guidelines NGT food safety' | results=5
+2026-02-08 22:27:29 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications frequency natural mutations'
+2026-02-08 22:27:33 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications frequency natural mutations' | results=5
+2026-02-08 22:27:33 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:27:36 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:27:36 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity new proteins metabolites safety assessment'
+2026-02-08 22:27:39 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity new proteins metabolites safety assessment' | results=5
+2026-02-08 22:27:39 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity amino acid sequence similarity assessment'
+2026-02-08 22:27:44 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity amino acid sequence similarity assessment' | results=5
+2026-02-08 22:27:44 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 safety assessment'
+2026-02-08 22:27:48 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 safety assessment' | results=5
+2026-02-08 22:27:48 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 22:27:49 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 22:27:49 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes food safety'
+2026-02-08 22:27:54 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes food safety' | results=5
+2026-02-08 22:28:04 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:28:08 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:28:08 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 guidelines'
+2026-02-08 22:28:12 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 guidelines' | results=5
+2026-02-08 22:28:12 | INFO | SEARCH_QUERY | query='safety assessment framework for NGT food'
+2026-02-08 22:28:16 | INFO | SEARCH_SUCCESS | query='safety assessment framework for NGT food' | results=5
+2026-02-08 22:28:26 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects study'
+2026-02-08 22:28:29 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects study' | results=5
+2026-02-08 22:28:29 | INFO | SEARCH_QUERY | query='NGT food safety regulation EU 2025'
+2026-02-08 22:28:32 | INFO | SEARCH_SUCCESS | query='NGT food safety regulation EU 2025' | results=5
+2026-02-08 22:28:41 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications risks'
+2026-02-08 22:28:42 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications risks' | results=5
+2026-02-08 22:28:42 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:28:43 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:28:43 | INFO | SEARCH_QUERY | query='NGT food safety assessment EU guidelines 2025'
+2026-02-08 22:28:46 | INFO | SEARCH_SUCCESS | query='NGT food safety assessment EU guidelines 2025' | results=5
+2026-02-08 22:28:57 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific evidence'
+2026-02-08 22:29:01 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific evidence' | results=5
+2026-02-08 22:29:01 | INFO | SEARCH_QUERY | query='CRISPR off-target effects EFSA FDA guidelines'
+2026-02-08 22:29:04 | INFO | SEARCH_SUCCESS | query='CRISPR off-target effects EFSA FDA guidelines' | results=5
+2026-02-08 22:29:04 | INFO | SEARCH_QUERY | query='NGT safety assessment framework EU NGT Regulation 2025'
+2026-02-08 22:29:08 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework EU NGT Regulation 2025' | results=5
+2026-02-08 22:29:20 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications risks Codex EFSA FDA'
+2026-02-08 22:29:23 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications risks Codex EFSA FDA' | results=5
+2026-02-08 22:29:23 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects risks Codex EFSA FDA'
+2026-02-08 22:29:27 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects risks Codex EFSA FDA' | results=5
+2026-02-08 22:29:27 | INFO | SEARCH_QUERY | query='toxic metabolites from gene editing Codex EFSA FDA'
+2026-02-08 22:29:31 | INFO | SEARCH_SUCCESS | query='toxic metabolites from gene editing Codex EFSA FDA' | results=5
+2026-02-08 22:29:31 | INFO | SEARCH_QUERY | query='allergenicity of new proteins in gene-edited foods Codex EFSA FDA'
+2026-02-08 22:29:34 | INFO | SEARCH_SUCCESS | query='allergenicity of new proteins in gene-edited foods Codex EFSA FDA' | results=5
+2026-02-08 22:29:34 | INFO | SEARCH_QUERY | query='gene stability in gene-edited organisms Codex EFSA FDA'
+2026-02-08 22:29:39 | INFO | SEARCH_SUCCESS | query='gene stability in gene-edited organisms Codex EFSA FDA' | results=5
+2026-02-08 22:29:55 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:29:56 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:29:56 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 22:29:58 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 22:30:09 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:30:10 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:30:10 | INFO | SEARCH_QUERY | query='NGT food safety assessment framework'
+2026-02-08 22:30:13 | INFO | SEARCH_SUCCESS | query='NGT food safety assessment framework' | results=5
+2026-02-08 22:30:13 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:30:15 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:30:33 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended mutations scientific evidence'
+2026-02-08 22:30:36 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended mutations scientific evidence' | results=5
+2026-02-08 22:30:36 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:30:38 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:30:38 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 altered protein expression risk'
+2026-02-08 22:30:41 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 altered protein expression risk' | results=5
+2026-02-08 22:30:41 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 metabolite changes safety'
+2026-02-08 22:30:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 metabolite changes safety' | results=5
+2026-02-08 22:30:45 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity risk'
+2026-02-08 22:30:48 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity risk' | results=5
+2026-02-08 22:35:53 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods 2021'
+2026-02-08 22:35:57 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods 2021' | results=5
+2026-02-08 22:35:57 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:36:00 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:36:10 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 safety'
+2026-02-08 22:36:11 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 safety' | results=5
+2026-02-08 22:36:11 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:36:12 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:36:12 | INFO | SEARCH_QUERY | query='NGT safety assessment framework universality'
+2026-02-08 22:36:17 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework universality' | results=5
+2026-02-08 22:36:27 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific evidence'
+2026-02-08 22:36:28 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific evidence' | results=5
+2026-02-08 22:36:28 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:36:29 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:36:29 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity allergenicity scientific evidence'
+2026-02-08 22:36:34 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity allergenicity scientific evidence' | results=5
+2026-02-08 22:36:34 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes scientific evidence'
+2026-02-08 22:36:38 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes scientific evidence' | results=5
+2026-02-08 22:36:38 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 environmental risks scientific evidence'
+2026-02-08 22:36:43 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 environmental risks scientific evidence' | results=5
+2026-02-08 22:36:43 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:36:44 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:36:53 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific evidence'
+2026-02-08 22:36:55 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific evidence' | results=5
+2026-02-08 22:36:55 | INFO | SEARCH_QUERY | query='EFSA Guidance on NGT safety assessment'
+2026-02-08 22:36:58 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on NGT safety assessment' | results=5
+2026-02-08 22:37:08 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:37:09 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:37:09 | INFO | SEARCH_QUERY | query='unintended modifications in gene editing safety'
+2026-02-08 22:37:13 | INFO | SEARCH_SUCCESS | query='unintended modifications in gene editing safety' | results=5
+2026-02-08 22:37:13 | INFO | SEARCH_QUERY | query='CRISPR new protein toxicity evaluation'
+2026-02-08 22:37:16 | INFO | SEARCH_SUCCESS | query='CRISPR new protein toxicity evaluation' | results=5
+2026-02-08 22:37:16 | INFO | SEARCH_QUERY | query='metabolite changes in gene editing safety'
+2026-02-08 22:37:20 | INFO | SEARCH_SUCCESS | query='metabolite changes in gene editing safety' | results=5
+2026-02-08 22:37:20 | INFO | SEARCH_QUERY | query='nutrient composition changes due to genetic editing safety'
+2026-02-08 22:37:23 | INFO | SEARCH_SUCCESS | query='nutrient composition changes due to genetic editing safety' | results=5
+2026-02-08 22:37:23 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 safety assessment guidelines'
+2026-02-08 22:37:26 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 safety assessment guidelines' | results=5
+2026-02-08 22:37:36 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:37:37 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:37:37 | INFO | SEARCH_QUERY | query='EFSA Guidance on novel food authorization NGT'
+2026-02-08 22:37:42 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on novel food authorization NGT' | results=5
+2026-02-08 22:37:42 | INFO | SEARCH_QUERY | query='International regulations on NGT safety assessment'
+2026-02-08 22:37:46 | INFO | SEARCH_SUCCESS | query='International regulations on NGT safety assessment' | results=5
+2026-02-08 22:37:55 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:37:56 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:37:56 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity and allergenicity assessments'
+2026-02-08 22:38:00 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity and allergenicity assessments' | results=5
+2026-02-08 22:38:00 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:38:01 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:46:09 | INFO | SEARCH_QUERY | query='Codex NGT safety guidelines'
+2026-02-08 22:46:13 | INFO | SEARCH_SUCCESS | query='Codex NGT safety guidelines' | results=5
+2026-02-08 22:46:13 | INFO | SEARCH_QUERY | query='EFSA NGT safety assessment framework'
+2026-02-08 22:46:17 | INFO | SEARCH_SUCCESS | query='EFSA NGT safety assessment framework' | results=5
+2026-02-08 22:46:17 | INFO | SEARCH_QUERY | query='FDA NGT safety assessment'
+2026-02-08 22:46:21 | INFO | SEARCH_SUCCESS | query='FDA NGT safety assessment' | results=5
+2026-02-08 22:46:21 | INFO | SEARCH_QUERY | query='EU NGT safety assessment requirements'
+2026-02-08 22:46:25 | INFO | SEARCH_SUCCESS | query='EU NGT safety assessment requirements' | results=5
+2026-02-08 22:46:34 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:46:35 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:46:35 | INFO | SEARCH_QUERY | query='EU regulations NGT food safety assessment'
+2026-02-08 22:46:39 | INFO | SEARCH_SUCCESS | query='EU regulations NGT food safety assessment' | results=5
+2026-02-08 22:46:52 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:46:53 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:46:53 | INFO | SEARCH_QUERY | query='EFSA guidelines on NGT food safety assessment'
+2026-02-08 22:46:56 | INFO | SEARCH_SUCCESS | query='EFSA guidelines on NGT food safety assessment' | results=5
+2026-02-08 22:47:05 | INFO | SEARCH_QUERY | query='CRISPR unintended modifications risks'
+2026-02-08 22:47:09 | INFO | SEARCH_SUCCESS | query='CRISPR unintended modifications risks' | results=5
+2026-02-08 22:47:09 | INFO | SEARCH_QUERY | query='off-target effects CRISPR safety'
+2026-02-08 22:47:12 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR safety' | results=5
+2026-02-08 22:47:12 | INFO | SEARCH_QUERY | query='novel metabolites risk CRISPR'
+2026-02-08 22:47:16 | INFO | SEARCH_SUCCESS | query='novel metabolites risk CRISPR' | results=5
+2026-02-08 22:47:16 | INFO | SEARCH_QUERY | query='CRISPR allergenicity risk'
+2026-02-08 22:47:19 | INFO | SEARCH_SUCCESS | query='CRISPR allergenicity risk' | results=5
+2026-02-08 22:47:19 | INFO | SEARCH_QUERY | query='nutritional changes CRISPR'
+2026-02-08 22:47:22 | INFO | SEARCH_SUCCESS | query='nutritional changes CRISPR' | results=5
+2026-02-08 22:47:22 | INFO | SEARCH_QUERY | query='EFSA Guidance novel food safety assessment'
+2026-02-08 22:47:25 | INFO | SEARCH_SUCCESS | query='EFSA Guidance novel food safety assessment' | results=5
+2026-02-08 22:47:35 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:47:36 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:47:36 | INFO | SEARCH_QUERY | query='EU regulation CRISPR-Cas9 safety assessment 2023'
+2026-02-08 22:47:39 | INFO | SEARCH_SUCCESS | query='EU regulation CRISPR-Cas9 safety assessment 2023' | results=5
+2026-02-08 22:47:39 | INFO | SEARCH_QUERY | query='SDN-1 SDN-2 SDN-3 differences in regulation'
+2026-02-08 22:47:43 | INFO | SEARCH_SUCCESS | query='SDN-1 SDN-2 SDN-3 differences in regulation' | results=5
+2026-02-08 22:47:52 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications off-target effects'
+2026-02-08 22:47:53 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications off-target effects' | results=5
+2026-02-08 22:47:53 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety assessment EFSA FDA guidelines'
+2026-02-08 22:47:57 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety assessment EFSA FDA guidelines' | results=5
+2026-02-08 22:48:08 | INFO | SEARCH_QUERY | query='NGT safety assessment framework Codex EFSA FDA'
+2026-02-08 22:48:11 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework Codex EFSA FDA' | results=5
+2026-02-08 22:48:11 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety'
+2026-02-08 22:48:14 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety' | results=5
+2026-02-08 22:48:14 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety'
+2026-02-08 22:48:17 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety' | results=5
+2026-02-08 22:48:17 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 novel protein expression risk'
+2026-02-08 22:48:20 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 novel protein expression risk' | results=5
+2026-02-08 22:48:20 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 metabolite changes risk'
+2026-02-08 22:48:24 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 metabolite changes risk' | results=5
+2026-02-08 22:48:24 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 ecological impact'
+2026-02-08 22:48:27 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 ecological impact' | results=5
+2026-02-08 22:48:37 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific review'
+2026-02-08 22:48:40 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific review' | results=5
+2026-02-08 22:48:40 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific review'
+2026-02-08 22:48:43 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific review' | results=5
+2026-02-08 22:48:43 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 gene stability studies'
+2026-02-08 22:48:47 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 gene stability studies' | results=5
+2026-02-08 22:48:47 | INFO | SEARCH_QUERY | query='NGT toxicity and allergenicity assessment guidelines'
+2026-02-08 22:48:51 | INFO | SEARCH_SUCCESS | query='NGT toxicity and allergenicity assessment guidelines' | results=5
+2026-02-08 22:48:51 | INFO | SEARCH_QUERY | query='environmental impact of gene editing in agriculture'
+2026-02-08 22:48:55 | INFO | SEARCH_SUCCESS | query='environmental impact of gene editing in agriculture' | results=5
+2026-02-08 22:49:04 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 22:49:05 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 22:49:05 | INFO | SEARCH_QUERY | query='EFSA guidance NGT safety assessment'
+2026-02-08 22:49:09 | INFO | SEARCH_SUCCESS | query='EFSA guidance NGT safety assessment' | results=5
+2026-02-08 22:49:09 | INFO | SEARCH_QUERY | query='proportionality in NGT safety regulations'
+2026-02-08 22:49:13 | INFO | SEARCH_SUCCESS | query='proportionality in NGT safety regulations' | results=5
+2026-02-08 22:49:21 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety evaluation Codex EFSA'
+2026-02-08 22:49:24 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety evaluation Codex EFSA' | results=5
+2026-02-08 22:49:24 | INFO | SEARCH_QUERY | query='NGT safety assessment guidelines Codex EFSA FDA'
+2026-02-08 22:49:28 | INFO | SEARCH_SUCCESS | query='NGT safety assessment guidelines Codex EFSA FDA' | results=5
+2026-02-08 22:49:43 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 22:49:44 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 22:49:44 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:49:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:49:45 | INFO | SEARCH_QUERY | query='NGT allergenicity evaluation guidelines'
+2026-02-08 22:49:49 | INFO | SEARCH_SUCCESS | query='NGT allergenicity evaluation guidelines' | results=5
+2026-02-08 22:50:02 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety'
+2026-02-08 22:50:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety' | results=5
+2026-02-08 22:50:03 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity and allergenicity assessment'
+2026-02-08 22:50:07 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity and allergenicity assessment' | results=5
+2026-02-08 22:50:07 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes study'
+2026-02-08 22:50:12 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes study' | results=5
+2026-02-08 22:50:12 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 ecological impact'
+2026-02-08 22:50:13 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 ecological impact' | results=5
+2026-02-08 22:50:13 | INFO | SEARCH_QUERY | query='EFSA guidance novel food 2021'
+2026-02-08 22:50:16 | INFO | SEARCH_SUCCESS | query='EFSA guidance novel food 2021' | results=5
+2026-02-08 22:50:25 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:50:26 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:50:26 | INFO | SEARCH_QUERY | query='EFSA guidance NGT food safety'
+2026-02-08 22:50:30 | INFO | SEARCH_SUCCESS | query='EFSA guidance NGT food safety' | results=5
+2026-02-08 22:50:30 | INFO | SEARCH_QUERY | query='SDN-1 SDN-2 SDN-3 safety assessment'
+2026-02-08 22:50:34 | INFO | SEARCH_SUCCESS | query='SDN-1 SDN-2 SDN-3 safety assessment' | results=5
+2026-02-08 22:50:42 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment EFSA'
+2026-02-08 22:50:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment EFSA' | results=5
+2026-02-08 22:50:45 | INFO | SEARCH_QUERY | query='EFSA guidelines NGT food safety evaluation'
+2026-02-08 22:50:48 | INFO | SEARCH_SUCCESS | query='EFSA guidelines NGT food safety evaluation' | results=5
+2026-02-08 22:51:00 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 22:51:02 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 22:51:02 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 22:51:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 22:51:03 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 metabolite changes safety assessment'
+2026-02-08 22:51:08 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 metabolite changes safety assessment' | results=5
+2026-02-08 22:51:08 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity safety assessment'
+2026-02-08 22:51:11 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity safety assessment' | results=5
+2026-02-08 22:51:11 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes safety assessment'
+2026-02-08 22:51:14 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes safety assessment' | results=5
+2026-02-08 22:51:14 | INFO | SEARCH_QUERY | query='EU CRISPR-Cas9 tomato safety assessment guidelines'
+2026-02-08 22:51:18 | INFO | SEARCH_SUCCESS | query='EU CRISPR-Cas9 tomato safety assessment guidelines' | results=5
+2026-02-08 22:51:31 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications EFSA guidance'
+2026-02-08 22:51:35 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications EFSA guidance' | results=5
+2026-02-08 22:51:35 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 protein toxicity safety assessment'
+2026-02-08 22:51:38 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 protein toxicity safety assessment' | results=5
+2026-02-08 22:51:38 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity risk EFSA guidance'
+2026-02-08 22:51:43 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity risk EFSA guidance' | results=5
+2026-02-08 22:51:43 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes safety assessment'
+2026-02-08 22:51:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes safety assessment' | results=5
+2026-02-08 22:51:45 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 gene flow risk EFSA guidance'
+2026-02-08 22:51:50 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 gene flow risk EFSA guidance' | results=5
+2026-02-08 22:52:00 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 22:52:02 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 22:52:02 | INFO | SEARCH_QUERY | query='EFSA guidelines CRISPR-Cas9 safety assessment'
+2026-02-08 22:52:07 | INFO | SEARCH_SUCCESS | query='EFSA guidelines CRISPR-Cas9 safety assessment' | results=5
+2026-02-08 22:52:17 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety evaluation'
+2026-02-08 22:52:20 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety evaluation' | results=5
+2026-02-08 22:52:20 | INFO | SEARCH_QUERY | query='EFSA Guidance on NGT food safety assessment'
+2026-02-08 22:52:25 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on NGT food safety assessment' | results=5
+2026-02-08 23:05:01 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety data'
+2026-02-08 23:05:04 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety data' | results=5
+2026-02-08 23:05:04 | INFO | SEARCH_QUERY | query='EFSA Guidance novel food application NGT'
+2026-02-08 23:05:07 | INFO | SEARCH_SUCCESS | query='EFSA Guidance novel food application NGT' | results=5
+2026-02-08 23:05:07 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended mutations food safety'
+2026-02-08 23:05:11 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended mutations food safety' | results=5
+2026-02-08 23:05:20 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 23:05:24 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=5
+2026-02-08 23:05:24 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:05:27 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:05:37 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 safety assessment'
+2026-02-08 23:05:40 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 safety assessment' | results=5
+2026-02-08 23:05:40 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:05:43 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:05:53 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects'
+2026-02-08 23:05:56 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects' | results=5
+2026-02-08 23:05:56 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:05:58 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:06:07 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:06:08 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:06:08 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food in.pdf'
+2026-02-08 23:06:12 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food in.pdf' | results=5
+2026-02-08 23:06:21 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods'
+2026-02-08 23:06:24 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods' | results=5
+2026-02-08 23:06:24 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:06:25 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:06:35 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:06:36 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:06:36 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:06:40 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:06:51 | INFO | SEARCH_QUERY | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:06:56 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:06:56 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications and off-target effects'
+2026-02-08 23:07:00 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications and off-target effects' | results=5
+2026-02-08 23:07:00 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety assessment framework'
+2026-02-08 23:07:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety assessment framework' | results=5
+2026-02-08 23:07:13 | INFO | SEARCH_QUERY | query='NGT safety assessment framework EU NGT Regulation 2025'
+2026-02-08 23:07:16 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework EU NGT Regulation 2025' | results=5
+2026-02-08 23:07:16 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:07:17 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:07:27 | INFO | SEARCH_QUERY | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food, EFSA, 2021'
+2026-02-08 23:07:31 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food, EFSA, 2021' | results=5
+2026-02-08 23:07:31 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 23:07:34 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 23:20:40 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-08 23:20:44 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-08 23:20:51 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-08 23:20:54 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-08 23:20:58 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-08 23:20:59 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-08 23:21:07 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-08 23:21:09 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-08 23:21:13 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-08 23:21:16 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-08 23:21:24 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-08 23:21:26 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-08 23:21:29 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety framework final report 2025'
+2026-02-08 23:21:33 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety framework final report 2025' | results=5
+2026-02-08 23:38:00 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety'
+2026-02-08 23:38:03 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety' | results=5
+2026-02-08 23:38:03 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 food safety'
+2026-02-08 23:38:06 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 food safety' | results=5
+2026-02-08 23:38:06 | INFO | SEARCH_QUERY | query='novel food allergenicity assessment CRISPR'
+2026-02-08 23:38:10 | INFO | SEARCH_SUCCESS | query='novel food allergenicity assessment CRISPR' | results=5
+2026-02-08 23:38:10 | INFO | SEARCH_QUERY | query='NGT nutritional changes safety assessment'
+2026-02-08 23:38:13 | INFO | SEARCH_SUCCESS | query='NGT nutritional changes safety assessment' | results=5
+2026-02-08 23:38:24 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 23:38:28 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 23:38:28 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity assessment guidelines EFSA FDA'
+2026-02-08 23:38:33 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity assessment guidelines EFSA FDA' | results=5
+2026-02-08 23:38:33 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity assessment guidelines EFSA FDA'
+2026-02-08 23:38:36 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity assessment guidelines EFSA FDA' | results=5
+2026-02-08 23:38:36 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes assessment guidelines EFSA FDA'
+2026-02-08 23:38:40 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes assessment guidelines EFSA FDA' | results=5
+2026-02-08 23:38:40 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 gene stability assessment scientific evidence'
+2026-02-08 23:38:44 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 gene stability assessment scientific evidence' | results=5
+2026-02-08 23:38:55 | INFO | SEARCH_QUERY | query='Codex guidelines on unintended modifications in NGT'
+2026-02-08 23:38:58 | INFO | SEARCH_SUCCESS | query='Codex guidelines on unintended modifications in NGT' | results=5
+2026-02-08 23:38:58 | INFO | SEARCH_QUERY | query='EFSA guidelines on toxicity of novel proteins CRISPR'
+2026-02-08 23:39:01 | INFO | SEARCH_SUCCESS | query='EFSA guidelines on toxicity of novel proteins CRISPR' | results=5
+2026-02-08 23:39:01 | INFO | SEARCH_QUERY | query='FDA allergenicity assessment CRISPR'
+2026-02-08 23:39:05 | INFO | SEARCH_SUCCESS | query='FDA allergenicity assessment CRISPR' | results=5
+2026-02-08 23:39:05 | INFO | SEARCH_QUERY | query='CRISPR nutritional changes safety assessment'
+2026-02-08 23:39:09 | INFO | SEARCH_SUCCESS | query='CRISPR nutritional changes safety assessment' | results=5
+2026-02-08 23:39:09 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:39:12 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:39:12 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:39:15 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:39:26 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:39:29 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:39:29 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods'
+2026-02-08 23:39:32 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods' | results=5
+2026-02-08 23:39:42 | INFO | SEARCH_QUERY | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:39:45 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:39:45 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 food safety'
+2026-02-08 23:39:47 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 food safety' | results=5
+2026-02-08 23:39:47 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 23:39:51 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 23:40:02 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:40:03 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:40:03 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:40:05 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:40:19 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 23:40:22 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 23:40:22 | INFO | SEARCH_QUERY | query='EFSA guidelines NGT food safety assessment'
+2026-02-08 23:40:25 | INFO | SEARCH_SUCCESS | query='EFSA guidelines NGT food safety assessment' | results=5
+2026-02-08 23:40:25 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 safety requirements'
+2026-02-08 23:40:29 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 safety requirements' | results=5
+2026-02-08 23:40:37 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended mutations scientific evidence'
+2026-02-08 23:40:42 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended mutations scientific evidence' | results=5
+2026-02-08 23:40:42 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 protein toxicity safety assessment'
+2026-02-08 23:40:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 protein toxicity safety assessment' | results=5
+2026-02-08 23:40:45 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity assessment guidelines'
+2026-02-08 23:40:49 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity assessment guidelines' | results=5
+2026-02-08 23:40:49 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional composition changes safety'
+2026-02-08 23:40:53 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional composition changes safety' | results=5
+2026-02-08 23:40:53 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 gene stability issues'
+2026-02-08 23:40:57 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 gene stability issues' | results=5
+2026-02-08 23:41:07 | INFO | SEARCH_QUERY | query='Codex guidelines on NGT safety assessment'
+2026-02-08 23:41:11 | INFO | SEARCH_SUCCESS | query='Codex guidelines on NGT safety assessment' | results=5
+2026-02-08 23:41:11 | INFO | SEARCH_QUERY | query='EFSA guidelines on CRISPR-Cas9 food safety'
+2026-02-08 23:41:16 | INFO | SEARCH_SUCCESS | query='EFSA guidelines on CRISPR-Cas9 food safety' | results=5
+2026-02-08 23:41:16 | INFO | SEARCH_QUERY | query='FDA guidelines on CRISPR-Cas9 food safety'
+2026-02-08 23:41:19 | INFO | SEARCH_SUCCESS | query='FDA guidelines on CRISPR-Cas9 food safety' | results=5
+2026-02-08 23:41:29 | INFO | SEARCH_QUERY | query='NGT safety assessment framework EU NGT Regulation 2025'
+2026-02-08 23:41:32 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework EU NGT Regulation 2025' | results=5
+2026-02-08 23:41:43 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects food safety'
+2026-02-08 23:41:47 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects food safety' | results=5
+2026-02-08 23:41:47 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications food safety'
+2026-02-08 23:41:50 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications food safety' | results=5
+2026-02-08 23:41:50 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 protein toxicity food safety'
+2026-02-08 23:41:53 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 protein toxicity food safety' | results=5
+2026-02-08 23:41:53 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 allergenicity food safety'
+2026-02-08 23:41:56 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 allergenicity food safety' | results=5
+2026-02-08 23:41:56 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes food safety'
+2026-02-08 23:42:00 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes food safety' | results=5
+2026-02-08 23:42:10 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:42:12 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:42:12 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:42:13 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:42:23 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 23:42:26 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=5
+2026-02-08 23:42:26 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety study'
+2026-02-08 23:42:30 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety study' | results=5
+2026-02-08 23:42:30 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:42:32 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:43:13 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific evidence'
+2026-02-08 23:43:16 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific evidence' | results=5
+2026-02-08 23:43:16 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 23:43:19 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 23:43:19 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 toxicity allergenicity safety assessments'
+2026-02-08 23:43:22 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 toxicity allergenicity safety assessments' | results=5
+2026-02-08 23:43:22 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 genetic stability studies'
+2026-02-08 23:43:26 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 genetic stability studies' | results=5
+2026-02-08 23:43:26 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 ecological impact research'
+2026-02-08 23:43:29 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 ecological impact research' | results=5
+2026-02-08 23:43:39 | INFO | SEARCH_QUERY | query='NGT safety assessment framework'
+2026-02-08 23:43:40 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework' | results=5
+2026-02-08 23:43:40 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 23:43:41 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 23:43:41 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety regulation guidelines'
+2026-02-08 23:43:44 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety regulation guidelines' | results=5
+2026-02-08 23:43:54 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 23:43:56 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 23:43:56 | INFO | SEARCH_QUERY | query='NGT safety assessment framework universality'
+2026-02-08 23:44:00 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework universality' | results=5
+2026-02-08 23:44:00 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 safety assessment proportionality'
+2026-02-08 23:44:03 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 safety assessment proportionality' | results=5
+2026-02-08 23:44:12 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications off-target effects'
+2026-02-08 23:44:15 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications off-target effects' | results=5
+2026-02-08 23:44:15 | INFO | SEARCH_QUERY | query='NGT toxicity and allergenicity risks'
+2026-02-08 23:44:19 | INFO | SEARCH_SUCCESS | query='NGT toxicity and allergenicity risks' | results=5
+2026-02-08 23:44:19 | INFO | SEARCH_QUERY | query='NGT nutritional changes and ecological impact'
+2026-02-08 23:44:23 | INFO | SEARCH_SUCCESS | query='NGT nutritional changes and ecological impact' | results=5
+2026-02-08 23:44:46 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:44:47 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:44:47 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:44:48 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:44:58 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 23:44:59 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 23:44:59 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:45:01 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:45:01 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods'
+2026-02-08 23:45:02 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods' | results=5
+2026-02-08 23:45:12 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 23:45:13 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 23:45:13 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:45:15 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:45:15 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:45:16 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:45:30 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:45:32 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:45:32 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food in'
+2026-02-08 23:45:35 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food in' | results=5
+2026-02-08 23:45:50 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-08 23:45:51 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-08 23:45:51 | INFO | SEARCH_QUERY | query='toxicology assessment new proteins NGT'
+2026-02-08 23:45:55 | INFO | SEARCH_SUCCESS | query='toxicology assessment new proteins NGT' | results=5
+2026-02-08 23:45:55 | INFO | SEARCH_QUERY | query='allergenicity assessment new proteins NGT'
+2026-02-08 23:45:58 | INFO | SEARCH_SUCCESS | query='allergenicity assessment new proteins NGT' | results=5
+2026-02-08 23:45:58 | INFO | SEARCH_QUERY | query='nutritional changes assessment NGT'
+2026-02-08 23:46:03 | INFO | SEARCH_SUCCESS | query='nutritional changes assessment NGT' | results=5
+2026-02-08 23:46:03 | INFO | SEARCH_QUERY | query='genetic stability assessment NGT'
+2026-02-08 23:46:07 | INFO | SEARCH_SUCCESS | query='genetic stability assessment NGT' | results=5
+2026-02-08 23:46:25 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 tomato safety assessment framework'
+2026-02-08 23:46:29 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 tomato safety assessment framework' | results=5
+2026-02-08 23:46:29 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:46:31 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:46:31 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food in.pdf'
+2026-02-08 23:46:34 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food in.pdf' | results=5
+2026-02-08 23:46:44 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended mutations safety EU NGT Regulation 2025'
+2026-02-08 23:46:47 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended mutations safety EU NGT Regulation 2025' | results=5
+2026-02-08 23:46:47 | INFO | SEARCH_QUERY | query='novel food protein toxicity allergenicity assessment'
+2026-02-08 23:46:52 | INFO | SEARCH_SUCCESS | query='novel food protein toxicity allergenicity assessment' | results=5
+2026-02-08 23:46:52 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods nutritional assessment'
+2026-02-08 23:46:55 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods nutritional assessment' | results=5
+2026-02-08 23:47:05 | INFO | SEARCH_QUERY | query='NGT genetic modification safety assessment guidelines Codex EFSA FDA'
+2026-02-08 23:47:08 | INFO | SEARCH_SUCCESS | query='NGT genetic modification safety assessment guidelines Codex EFSA FDA' | results=5
+2026-02-08 23:47:08 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific studies'
+2026-02-08 23:47:09 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific studies' | results=5
+2026-02-08 23:47:22 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended mutations NGT safety Codex EFSA FDA'
+2026-02-08 23:47:25 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended mutations NGT safety Codex EFSA FDA' | results=5
+2026-02-08 23:47:25 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:47:27 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:47:40 | INFO | SEARCH_QUERY | query='Off-target effects CRISPR-Cas9 safety assessment'
+2026-02-08 23:47:44 | INFO | SEARCH_SUCCESS | query='Off-target effects CRISPR-Cas9 safety assessment' | results=5
+2026-02-08 23:47:44 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:47:45 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:47:45 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:47:47 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:48:03 | INFO | SEARCH_QUERY | query='off-target effects CRISPR-Cas9 safety assessment 2023'
+2026-02-08 23:48:06 | INFO | SEARCH_SUCCESS | query='off-target effects CRISPR-Cas9 safety assessment 2023' | results=5
+2026-02-08 23:48:06 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:48:08 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:48:08 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:48:09 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:48:09 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 new protein toxicity allergenicity'
+2026-02-08 23:48:12 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 new protein toxicity allergenicity' | results=5
+2026-02-08 23:48:12 | INFO | SEARCH_QUERY | query='genetic diversity reduction NGT safety'
+2026-02-08 23:48:15 | INFO | SEARCH_SUCCESS | query='genetic diversity reduction NGT safety' | results=5
+2026-02-08 23:48:32 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:48:34 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:48:34 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:48:35 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:48:52 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:48:54 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:48:54 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:48:55 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:49:06 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-08 23:49:07 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-08 23:49:07 | INFO | SEARCH_QUERY | query='NGT safety assessment EFSA EU guidelines'
+2026-02-08 23:49:11 | INFO | SEARCH_SUCCESS | query='NGT safety assessment EFSA EU guidelines' | results=5
+2026-02-08 23:49:23 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-08 23:49:25 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-08 23:49:25 | INFO | SEARCH_QUERY | query='NGT unintended mutations safety assessment'
+2026-02-08 23:49:32 | INFO | SEARCH_SUCCESS | query='NGT unintended mutations safety assessment' | results=5
+2026-02-08 23:49:32 | INFO | SEARCH_QUERY | query='NGT safety assessment molecular characterization requirements'
+2026-02-08 23:49:35 | INFO | SEARCH_SUCCESS | query='NGT safety assessment molecular characterization requirements' | results=5
+2026-02-08 23:49:35 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:49:36 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:49:36 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:49:38 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:49:59 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects latest research 2023'
+2026-02-08 23:50:04 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects latest research 2023' | results=5
+2026-02-08 23:50:04 | INFO | SEARCH_QUERY | query='NGT off-target mutation frequency comparison to natural mutations'
+2026-02-08 23:50:09 | INFO | SEARCH_SUCCESS | query='NGT off-target mutation frequency comparison to natural mutations' | results=5
+2026-02-08 23:50:09 | INFO | SEARCH_QUERY | query='NGT toxicity and allergenicity assessment guidelines Codex EFSA FDA'
+2026-02-08 23:50:13 | INFO | SEARCH_SUCCESS | query='NGT toxicity and allergenicity assessment guidelines Codex EFSA FDA' | results=5
+2026-02-08 23:50:13 | INFO | SEARCH_QUERY | query='NGT nutritional assessment guidelines Codex EFSA FDA'
+2026-02-08 23:50:16 | INFO | SEARCH_SUCCESS | query='NGT nutritional assessment guidelines Codex EFSA FDA' | results=5
+2026-02-08 23:50:16 | INFO | SEARCH_QUERY | query='Genetic diversity impact of gene editing technology 2023'
+2026-02-08 23:50:19 | INFO | SEARCH_SUCCESS | query='Genetic diversity impact of gene editing technology 2023' | results=5
+2026-02-08 23:50:27 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects Codex EFSA FDA guidelines'
+2026-02-08 23:50:30 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects Codex EFSA FDA guidelines' | results=5
+2026-02-08 23:50:30 | INFO | SEARCH_QUERY | query='NGT safety framework universality'
+2026-02-08 23:50:34 | INFO | SEARCH_SUCCESS | query='NGT safety framework universality' | results=5
+2026-02-08 23:50:34 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 safety assessment proportionality'
+2026-02-08 23:50:38 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 safety assessment proportionality' | results=5
+2026-02-08 23:50:49 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:50:50 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:50:50 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:50:52 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:51:07 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications evidence'
+2026-02-08 23:51:13 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications evidence' | results=5
+2026-02-08 23:51:13 | INFO | SEARCH_QUERY | query='NGT toxicity expression risks'
+2026-02-08 23:51:17 | INFO | SEARCH_SUCCESS | query='NGT toxicity expression risks' | results=5
+2026-02-08 23:51:17 | INFO | SEARCH_QUERY | query='NGT allergenicity assessment frameworks'
+2026-02-08 23:51:22 | INFO | SEARCH_SUCCESS | query='NGT allergenicity assessment frameworks' | results=5
+2026-02-08 23:51:22 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes evidence'
+2026-02-08 23:51:25 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes evidence' | results=5
+2026-02-08 23:51:25 | INFO | SEARCH_QUERY | query='Ecological impact of NGT foods'
+2026-02-08 23:51:29 | INFO | SEARCH_SUCCESS | query='Ecological impact of NGT foods' | results=5
+2026-02-08 23:51:29 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:51:31 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:51:42 | INFO | SEARCH_QUERY | query='Off-target effects CRISPR-Cas9 safety assessment'
+2026-02-08 23:51:44 | INFO | SEARCH_SUCCESS | query='Off-target effects CRISPR-Cas9 safety assessment' | results=5
+2026-02-08 23:51:44 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:51:45 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-08 23:51:45 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:51:46 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:52:03 | INFO | SEARCH_QUERY | query='Codex Alimentarius NGT safety assessment principles'
+2026-02-08 23:52:07 | INFO | SEARCH_SUCCESS | query='Codex Alimentarius NGT safety assessment principles' | results=5
+2026-02-08 23:52:07 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-08 23:52:09 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-08 23:52:09 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food'
+2026-02-08 23:52:10 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food' | results=5
+2026-02-08 23:52:28 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications scientific evidence'
+2026-02-08 23:52:29 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications scientific evidence' | results=5
+2026-02-08 23:52:29 | INFO | SEARCH_QUERY | query='NGT safety assessment framework universality'
+2026-02-08 23:52:30 | INFO | SEARCH_SUCCESS | query='NGT safety assessment framework universality' | results=5
+2026-02-08 23:52:30 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-08 23:52:31 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-09 00:21:18 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-09 00:21:21 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-09 00:21:21 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods'
+2026-02-09 00:21:26 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods' | results=5
+2026-02-09 00:23:48 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-09 00:23:51 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-09 00:23:51 | INFO | SEARCH_QUERY | query='EFSA Guidance on Novel Foods.pdf'
+2026-02-09 00:23:56 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on Novel Foods.pdf' | results=5
+2026-02-09 00:33:14 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-09 00:33:17 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-09 00:33:26 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-09 00:33:29 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-09 00:33:33 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-09 00:33:34 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-09 00:33:42 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-09 00:33:44 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-09 00:33:48 | INFO | SEARCH_QUERY | query='NGT food safety NGT regulation 2025'
+2026-02-09 00:33:49 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT regulation 2025' | results=5
+2026-02-09 00:33:58 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety regulation verification'
+2026-02-09 00:34:00 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety regulation verification' | results=5
+2026-02-09 00:34:04 | INFO | SEARCH_QUERY | query='NGT food safety NGT safety framework final report 2025'
+2026-02-09 00:34:07 | INFO | SEARCH_SUCCESS | query='NGT food safety NGT safety framework final report 2025' | results=5
+2026-02-09 00:39:12 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-09 00:39:16 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-09 00:39:16 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-09 00:39:18 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-09 00:48:18 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 00:48:22 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 00:48:30 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 00:48:35 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 00:48:38 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 00:48:40 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 00:48:48 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 00:48:50 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 00:48:54 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 00:48:55 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 00:49:03 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 00:49:04 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 00:49:06 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety framework final report 2025'
+2026-02-09 00:49:10 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety framework final report 2025' | results=5
+2026-02-09 01:07:54 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 01:07:56 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 01:08:10 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 01:08:11 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 01:08:16 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 01:08:17 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 01:08:26 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 01:08:28 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 01:08:31 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT regulation 2025'
+2026-02-09 01:08:32 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT regulation 2025' | results=5
+2026-02-09 01:08:41 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety regulation verification'
+2026-02-09 01:08:43 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety regulation verification' | results=5
+2026-02-09 01:08:47 | INFO | SEARCH_QUERY | query='NGT safety assessment NGT safety framework final report 2025'
+2026-02-09 01:08:49 | INFO | SEARCH_SUCCESS | query='NGT safety assessment NGT safety framework final report 2025' | results=5
+2026-02-09 01:15:07 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects food safety'
+2026-02-09 01:15:10 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects food safety' | results=5
+2026-02-09 01:15:10 | INFO | SEARCH_QUERY | query='NGT safety assessment guidelines Codex EFSA FDA'
+2026-02-09 01:15:14 | INFO | SEARCH_SUCCESS | query='NGT safety assessment guidelines Codex EFSA FDA' | results=5
+2026-02-09 01:34:55 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025.pdf'
+2026-02-09 01:34:58 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025.pdf' | results=5
+2026-02-09 01:34:58 | INFO | SEARCH_QUERY | query='EFSA Guidance on novel food applications'
+2026-02-09 01:35:01 | INFO | SEARCH_SUCCESS | query='EFSA Guidance on novel food applications' | results=5
+2026-02-09 02:15:42 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects scientific evidence'
+2026-02-09 02:15:45 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects scientific evidence' | results=5
+2026-02-09 02:15:45 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025 pdf'
+2026-02-09 02:15:48 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025 pdf' | results=5
+2026-02-09 02:15:48 | INFO | SEARCH_QUERY | query='Guidance on the scientific requirements for an application for authorisation of a novel food pdf'
+2026-02-09 02:15:53 | INFO | SEARCH_SUCCESS | query='Guidance on the scientific requirements for an application for authorisation of a novel food pdf' | results=5
+2026-02-09 02:56:48 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 unintended modifications safety assessment'
+2026-02-09 02:56:51 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 unintended modifications safety assessment' | results=5
+2026-02-09 02:56:51 | INFO | SEARCH_QUERY | query='new protein expression toxicity allergenicity NGT'
+2026-02-09 02:56:55 | INFO | SEARCH_SUCCESS | query='new protein expression toxicity allergenicity NGT' | results=5
+2026-02-09 02:56:55 | INFO | SEARCH_QUERY | query='genetic stability gene editing NGT'
+2026-02-09 02:57:00 | INFO | SEARCH_SUCCESS | query='genetic stability gene editing NGT' | results=5
+2026-02-09 09:47:23 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 off-target effects safety assessment'
+2026-02-09 09:47:26 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 off-target effects safety assessment' | results=5
+2026-02-09 09:47:26 | INFO | SEARCH_QUERY | query='EU NGT Regulation 2025'
+2026-02-09 09:47:29 | INFO | SEARCH_SUCCESS | query='EU NGT Regulation 2025' | results=5
+2026-02-09 09:47:29 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 nutritional changes safety assessment'
+2026-02-09 09:47:32 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 nutritional changes safety assessment' | results=5
+2026-02-09 09:56:19 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 09:56:24 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 10:30:46 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 10:30:50 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 10:42:10 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 10:42:11 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 10:42:21 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification'
+2026-02-09 10:42:23 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification' | results=5
+2026-02-09 10:42:26 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 10:42:27 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 10:42:34 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification'
+2026-02-09 10:42:36 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification' | results=5
+2026-02-09 10:42:38 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 10:42:39 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 10:42:47 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification'
+2026-02-09 10:42:49 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety regulation verification' | results=5
+2026-02-09 10:42:51 | INFO | SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety framework final report 2025'
+2026-02-09 10:42:54 | INFO | SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety framework final report 2025' | results=5

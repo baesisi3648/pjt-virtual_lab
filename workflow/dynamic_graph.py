@@ -76,10 +76,8 @@ def synthesize_specialist_views(state: DynamicWorkflowState) -> dict:
     Returns:
         dict: final_synthesis가 포함된 상태 업데이트
     """
-    from langchain_core.messages import SystemMessage, HumanMessage
-    from utils.llm import get_gpt4o
+    from utils.llm import call_gpt4o
 
-    model = get_gpt4o()
     query = state["query"]
     team_profiles = state["team_profiles"]
     specialist_responses = state["specialist_responses"]
@@ -125,13 +123,10 @@ def synthesize_specialist_views(state: DynamicWorkflowState) -> dict:
 위 전문가들의 분석을 종합하여 최종 보고서를 작성하세요.
 """.strip()
 
-    response = model.invoke([
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_message),
-    ])
+    final_synthesis = call_gpt4o(system_prompt, user_message)
 
     return {
-        "final_synthesis": response.content,
+        "final_synthesis": final_synthesis,
     }
 
 

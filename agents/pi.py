@@ -1,23 +1,20 @@
-# @TASK P2-R3-T1 - 연구 책임자(PI) 에이전트 구현
-# @SPEC TASKS.md#P2-R3-T1
-# @TEST tests/test_agents.py::TestPI
-"""PI (Principal Investigator) Agent - GPT-4o
+"""PI (Principal Investigator) Agent
 
 연구 프로젝트의 총괄 책임자 역할을 수행합니다.
-Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로
-최종 Markdown 보고서를 생성합니다.
+OpenAI SDK 직접 호출 방식으로 tool_calls 문제를 방지합니다.
 """
 import json
+import logging
 from typing import List
-from langchain_core.messages import HumanMessage, SystemMessage
 
-from utils.llm import get_gpt4o
+from utils.llm import call_gpt4o
 from workflow.state import AgentState
 from tools.web_search import web_search
 
+logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """
-당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
+
+SYSTEM_PROMPT = """당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
 
 ## 당신의 임무
 Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로 최종 보고서를 작성하세요.
@@ -44,91 +41,48 @@ Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로 최종 
 **중요**: 명확하고 간결하게, 실무 활용 가능한 형태로 작성하세요.
 반드시 위 4개 섹션을 모두 포함해야 합니다.
 
-## 도구 사용 지침
-최종 보고서에 최신 규제 동향이나 논문을 추가로 인용해야 할 경우 web_search 도구를 사용하세요.
+참고 정보가 제공된 경우 이를 활용하여 보고서의 근거를 강화하세요.
 """
 
 
-TEAM_DECISION_PROMPT = """
-당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
+TEAM_DECISION_PROMPT = """당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
 
 ## 당신의 임무
 사용자 질문을 분석하여 필요한 전문가 팀을 구성하세요.
-
-## 전문가 팀 구성 원칙
-1. 질문의 핵심 주제를 파악하세요.
-2. 해당 주제에 필요한 전문 분야를 식별하세요.
-3. 각 전문가의 역할(role)과 집중 분야(focus)를 명확히 정의하세요.
 
 ## 출력 형식 (JSON)
 반드시 다음과 같은 JSON 배열 형식으로 답변하세요:
 ```json
 [
   {
-    "role": "전문가 역할 (예: Metabolomics Expert)",
-    "focus": "구체적인 집중 분야 (예: lipid composition analysis)"
-  },
-  {
-    "role": "또 다른 전문가 역할",
+    "role": "전문가 역할",
     "focus": "구체적인 집중 분야"
   }
 ]
 ```
 
-**중요**:
-- JSON 형식만 출력하세요. 다른 설명은 불필요합니다.
-- 최소 1명, 최대 5명의 전문가를 추천하세요.
-- 각 전문가는 질문과 명확한 연관성이 있어야 합니다.
+**중요**: JSON 형식만 출력하세요. 최소 1명, 최대 5명.
 """
 
 
 def decide_team(user_query: str) -> List[dict]:
-    """PI가 쿼리 분석 후 팀 구성 결정
-
-    사용자 질문을 GPT-4o에 전달하여 필요한 전문가 팀을 구성합니다.
-    LLM이 질문의 핵심 주제를 분석하고, 필요한 전문가의 역할과 집중 분야를 결정합니다.
-
-    Args:
-        user_query: 사용자 질문
-
-    Returns:
-        List[dict]: 전문가 프로필 리스트
-            각 프로필은 다음 필드를 포함:
-            - role (str): 전문가 역할 (예: "Metabolomics Expert")
-            - focus (str): 집중 분야 (예: "lipid analysis")
-
-    Example:
-        >>> team = decide_team("고올레산 대두의 지방산 조성 안전성 평가")
-        >>> assert any("Metabol" in expert['role'] for expert in team)
-
-    Raises:
-        ValueError: LLM 응답이 유효한 JSON이 아닌 경우
-    """
-    model = get_gpt4o()
-
+    """PI가 쿼리 분석 후 팀 구성 결정"""
     user_message = (
         f"사용자 질문: {user_query}\n\n"
         "위 질문에 답변하기 위해 필요한 전문가 팀을 구성하세요.\n"
         "JSON 배열 형식으로만 답변하세요."
     )
 
-    response = model.invoke([
-        SystemMessage(content=TEAM_DECISION_PROMPT),
-        HumanMessage(content=user_message),
-    ])
+    response = call_gpt4o(TEAM_DECISION_PROMPT, user_message)
 
-    # JSON 파싱
     try:
-        # 코드 블록 제거 (```json ... ``` 형식 처리)
-        content = response.content.strip()
+        content = response.strip()
         if content.startswith("```"):
-            # 첫 번째 줄과 마지막 줄 제거
             lines = content.split("\n")
             content = "\n".join(lines[1:-1])
 
         team = json.loads(content)
 
-        # 결과 검증
         if not isinstance(team, list):
             raise ValueError("응답이 리스트 형식이 아닙니다.")
 
@@ -139,65 +93,58 @@ def decide_team(user_query: str) -> List[dict]:
         return team
 
     except json.JSONDecodeError as e:
-        raise ValueError(f"LLM 응답을 JSON으로 파싱할 수 없습니다: {e}\n응답: {response.content}")
+        raise ValueError(f"LLM 응답을 JSON으로 파싱할 수 없습니다: {e}\n응답: {response}")
 
 
 def run_pi(state: AgentState) -> dict:
-    """PI 에이전트 실행 - 최종 보고서 생성
+    """PI 에이전트 실행 - OpenAI 직접 호출"""
+    print(f"\n{'#'*80}")
+    print(f"[PI] Starting PI agent")
+    print(f"  Draft length: {len(state.get('draft', ''))} chars")
+    print(f"  Iteration: {state.get('iteration', 0)}")
+    print(f"{'#'*80}\n")
 
-    승인된 Scientist 초안을 바탕으로 GPT-4o를 호출하여
-    4개 섹션(개요, 위험 식별, 최소 자료 요건, 결론)으로 구성된
-    최종 Markdown 보고서를 생성합니다.
-    web_search 도구를 바인딩하여 최신 정보 보강 가능.
+    # Step 1: 웹 검색으로 최신 정보 보강
+    web_context = ""
+    try:
+        web_result = web_search.invoke({"query": f"{state['topic']} NGT safety framework final report 2025"})
+        web_context = f"\n\n## [웹 검색 결과 - 최신 정보]\n{web_result}"
+        logger.info("PI web search completed")
+    except Exception as e:
+        logger.warning(f"PI web search failed: {e}")
 
-    Args:
-        state: LangGraph 에이전트 공유 상태
-
-    Returns:
-        dict: final_report와 messages가 포함된 상태 업데이트
-    """
-    # 웹 검색 도구 바인딩
-    model = get_gpt4o().bind_tools([web_search])
-
+    # Step 2: 프롬프트 구성
     user_message = (
         f"연구 주제: {state['topic']}\n"
         f"제약 조건: {state['constraints']}\n\n"
-        f"[승인된 초안]\n{state['draft']}\n\n"
+        f"[승인된 초안]\n{state['draft']}\n"
+        f"{web_context}\n\n"
         "위 초안을 바탕으로 최종 보고서를 Markdown 형식으로 작성하세요.\n"
         "4개 섹션(개요, 위험 식별, 최소 자료 요건, 결론)을 모두 포함해야 합니다."
     )
 
-    response = model.invoke([
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=user_message),
-    ])
+    # Step 3: OpenAI 직접 호출 (NO LangChain)
+    print(f"\n{'#'*80}")
+    print(f"[PI] Calling OpenAI API via call_gpt4o")
+    print(f"{'#'*80}\n")
 
-    # Tool call 처리 (web_search 호출 시)
-    if response.tool_calls:
-        # 도구 호출 실행
-        tool_messages = []
-        for tool_call in response.tool_calls:
-            if tool_call["name"] == "web_search":
-                search_result = web_search.invoke(tool_call["args"])
-                tool_messages.append({
-                    "role": "tool",
-                    "name": "web_search",
-                    "content": search_result,
-                })
+    logger.info("PI: Calling OpenAI directly...")
 
-        # 도구 결과를 포함하여 재호출
-        final_response = model.invoke([
-            SystemMessage(content=SYSTEM_PROMPT),
-            HumanMessage(content=user_message),
-            response,
-            *[HumanMessage(content=msg["content"]) for msg in tool_messages]
-        ])
-        final_report = final_response.content
-    else:
-        final_report = response.content
+    try:
+        final_report = call_gpt4o(SYSTEM_PROMPT, user_message)
+        print(f"\n{'#'*80}")
+        print(f"[PI] OpenAI call succeeded")
+        print(f"  Report length: {len(final_report)} chars")
+        print(f"{'#'*80}\n")
+    except Exception as e:
+        print(f"\n{'!'*80}")
+        print(f"[PI ERROR] Failed to call OpenAI!")
+        print(f"  Exception: {type(e).__name__}: {e}")
+        print(f"{'!'*80}\n")
+        raise
 
-    # 메시지 로그 (원본 불변을 위해 copy)
-    messages = state.get("messages", []).copy()
+    # 메시지 로그
+    messages = list(state.get("messages", []))
     messages.append({
         "role": "pi",
         "content": "최종 보고서를 작성했습니다.",

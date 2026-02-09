@@ -53,7 +53,7 @@ from typing import Any
 from langgraph.graph import StateGraph, END
 
 from workflow.state import AgentState
-from utils.llm import get_gpt4o, get_gpt4o_mini
+from utils.llm import call_gpt4o, call_gpt4o_mini
 
 
 async def analyze_as_scientist(topic: str, constraints: str) -> dict:
@@ -66,10 +66,7 @@ async def analyze_as_scientist(topic: str, constraints: str) -> dict:
     Returns:
         dict: agent_name과 analysis가 포함된 분석 결과
     """
-    from langchain_core.messages import SystemMessage, HumanMessage
     from data.guidelines import RESEARCH_OBJECTIVE, CODEX_PRINCIPLES
-
-    model = get_gpt4o_mini()
 
     system_prompt = f"""
 당신은 유전자편집식품(NGT)의 기술적 위험을 분석하는 과학자입니다.
@@ -91,14 +88,14 @@ Off-target 효과, 유전적 안정성 등 기술적 관점에서 분석하세�
 위 주제에 대해 기술적 위험 요소를 분석하세요.
 """.strip()
 
-    response = await model.ainvoke([
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_message),
-    ])
+    loop = asyncio.get_event_loop()
+    response = await loop.run_in_executor(
+        None, call_gpt4o_mini, system_prompt, user_message
+    )
 
     return {
         "agent_name": "scientist",
-        "analysis": response.content,
+        "analysis": response,
     }
 
 
@@ -112,10 +109,7 @@ async def analyze_as_critic(topic: str, constraints: str) -> dict:
     Returns:
         dict: agent_name과 analysis가 포함된 분석 결과
     """
-    from langchain_core.messages import SystemMessage, HumanMessage
     from data.guidelines import CRITIQUE_RUBRIC
-
-    model = get_gpt4o()
 
     system_prompt = f"""
 당신은 과학적 타당성을 검증하는 비평가입니다.
@@ -134,14 +128,14 @@ async def analyze_as_critic(topic: str, constraints: str) -> dict:
 위 주제에 대해 규제 검증 관점에서 위험 요소를 분석하세요.
 """.strip()
 
-    response = await model.ainvoke([
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_message),
-    ])
+    loop = asyncio.get_event_loop()
+    response = await loop.run_in_executor(
+        None, call_gpt4o, system_prompt, user_message
+    )
 
     return {
         "agent_name": "critic",
-        "analysis": response.content,
+        "analysis": response,
     }
 
 
@@ -155,10 +149,7 @@ async def analyze_as_pi(topic: str, constraints: str) -> dict:
     Returns:
         dict: agent_name과 analysis가 포함된 분석 결과
     """
-    from langchain_core.messages import SystemMessage, HumanMessage
     from data.guidelines import REGULATORY_TRENDS
-
-    model = get_gpt4o()
 
     system_prompt = f"""
 당신은 연구 프로젝트를 총괄하는 책임자(PI)입니다.
@@ -177,14 +168,14 @@ async def analyze_as_pi(topic: str, constraints: str) -> dict:
 위 주제에 대해 정책 실행 관점에서 위험 요소를 분석하세요.
 """.strip()
 
-    response = await model.ainvoke([
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_message),
-    ])
+    loop = asyncio.get_event_loop()
+    response = await loop.run_in_executor(
+        None, call_gpt4o, system_prompt, user_message
+    )
 
     return {
         "agent_name": "pi",
-        "analysis": response.content,
+        "analysis": response,
     }
 
 
@@ -241,19 +232,13 @@ def merge_parallel_views(state: AgentState) -> dict:
     Returns:
         dict: final_report가 포함된 상태 업데이트
     """
-    from langchain_core.messages import SystemMessage, HumanMessage
     from agents.critic import merge_views
-
-    model = get_gpt4o()
 
     # 병렬 분석 결과 수집
     views = state.get("parallel_views", [])
 
     # 1단계: Critic의 merge_views 로직으로 의견 통합
-    # 각 에이전트의 분석을 텍스트 리스트로 변환
     analysis_texts = [view["analysis"] for view in views]
-
-    # 중복 제거, 보수적 안전 기준 선택, 근거 기반 필터링 수행
     merged_analysis = merge_views(analysis_texts)
 
     # 2단계: PI에게 통합된 분석을 기반으로 최종 보고서 작성 요청
@@ -307,12 +292,7 @@ def merge_parallel_views(state: AgentState) -> dict:
 위 통합된 분석을 기반으로 최종 보고서를 작성하세요.
 """.strip()
 
-    response = model.invoke([
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_message),
-    ])
-
-    final_report = response.content
+    final_report = call_gpt4o(system_prompt, user_message)
 
     # 메시지 로그 추가
     messages = list(state.get("messages", []))

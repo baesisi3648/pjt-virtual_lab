@@ -1,5 +1,5 @@
 /**
- * @TASK P4-T3 - Report Editor Demo Page
+ * @TASK P4-T3 - Report Editor Demo Page (Dark Mode)
  * @SPEC TASKS.md#P4-T3
  *
  * ReportEditor 컴포넌트 데모 페이지
@@ -8,6 +8,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import ReportEditor from '@/components/ReportEditor';
 import { regenerateSection } from '@/lib/api';
 
@@ -63,11 +64,11 @@ export default function ReportDemoPage() {
       });
 
       setReport(response.updated_report);
-      setMessage(`✅ ${response.message}`);
+      setMessage(`${response.message}`);
     } catch (error) {
       console.error('재생성 실패:', error);
       setMessage(
-        `❌ 재생성 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`
+        `재생성 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`
       );
     } finally {
       setIsLoading(false);
@@ -75,28 +76,37 @@ export default function ReportDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Report Editor Demo</h1>
-          <p className="text-gray-600">
-            Interactive Report Editor - 마크다운 보고서 수정 및 재검토 요청
-          </p>
+    <div className="min-h-screen bg-gray-950">
+      <div className="container mx-auto py-8 px-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Report Editor Demo</h1>
+            <p className="text-gray-400">
+              Interactive Report Editor - 마크다운 보고서 수정 및 재검토 요청
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="px-4 py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            Home
+          </Link>
         </div>
 
         {message && (
           <div
-            className={`mb-4 p-4 rounded ${
-              message.startsWith('✅')
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
+            className={`mb-4 p-4 rounded border ${
+              message.includes('실패')
+                ? 'bg-red-950 border-red-800 text-red-300'
+                : 'bg-green-950 border-green-800 text-green-300'
             }`}
           >
             {message}
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '70vh' }}>
+        <div className="bg-gray-900 rounded-lg shadow-lg overflow-hidden border border-gray-800" style={{ height: '70vh' }}>
           <ReportEditor
             report={report}
             onRegenerate={handleRegenerate}
@@ -104,13 +114,13 @@ export default function ReportDemoPage() {
           />
         </div>
 
-        <div className="mt-8 p-6 bg-blue-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-4">사용 방법</h2>
-          <ol className="list-decimal list-inside space-y-2 text-gray-700">
-            <li>각 섹션 옆의 "재검토 요청" 버튼을 클릭합니다</li>
-            <li>피드백을 입력합니다 (예: "알레르기 더 자세히")</li>
-            <li>"제출" 버튼을 클릭하면 해당 섹션이 재생성됩니다</li>
-            <li>"편집" 버튼으로 직접 수정도 가능합니다</li>
+        <div className="mt-8 p-6 bg-gray-900 rounded-lg border border-gray-800">
+          <h2 className="text-xl font-bold mb-4 text-white">사용 방법</h2>
+          <ol className="list-decimal list-inside space-y-2 text-gray-400">
+            <li>각 섹션 옆의 &quot;재검토 요청&quot; 버튼을 클릭합니다</li>
+            <li>피드백을 입력합니다 (예: &quot;알레르기 더 자세히&quot;)</li>
+            <li>&quot;제출&quot; 버튼을 클릭하면 해당 섹션이 재생성됩니다</li>
+            <li>&quot;편집&quot; 버튼으로 직접 수정도 가능합니다</li>
           </ol>
         </div>
       </div>

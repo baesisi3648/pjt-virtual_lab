@@ -7,7 +7,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import ProcessTimeline from '@/components/ProcessTimeline';
 
 export default function TimelinePage() {
@@ -36,21 +37,38 @@ export default function TimelinePage() {
     setError('');
   };
 
+  const handleComplete = useCallback((report: string) => {
+    setFinalReport(report);
+  }, []);
+
+  const handleError = useCallback((err: string) => {
+    setError(err);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-950 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-900">
-          Virtual Lab - Process Timeline
-        </h1>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold text-white">
+            Virtual Lab - Process Timeline
+          </h1>
+          <Link
+            href="/"
+            className="px-4 py-2 text-sm bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            Home
+          </Link>
+        </div>
 
         {/* 입력 폼 */}
         {!isSubmitted ? (
-          <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+          <div className="max-w-2xl mx-auto bg-gray-900 rounded-lg shadow-lg p-8 border border-gray-800">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
                   htmlFor="topic"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-gray-300 mb-2"
                 >
                   연구 주제 *
                 </label>
@@ -60,7 +78,7 @@ export default function TimelinePage() {
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="예: CRISPR-Cas9을 이용한 유전자편집 토마토"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -68,7 +86,7 @@ export default function TimelinePage() {
               <div>
                 <label
                   htmlFor="constraints"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-gray-300 mb-2"
                 >
                   제약 조건 (선택)
                 </label>
@@ -77,7 +95,7 @@ export default function TimelinePage() {
                   value={constraints}
                   onChange={(e) => setConstraints(e.target.value)}
                   placeholder="예: EU 규제 기준을 중심으로"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
                 />
               </div>
@@ -96,20 +114,16 @@ export default function TimelinePage() {
             <ProcessTimeline
               topic={topic}
               constraints={constraints}
-              onComplete={(report) => {
-                setFinalReport(report);
-              }}
-              onError={(err) => {
-                setError(err);
-              }}
+              onComplete={handleComplete}
+              onError={handleError}
             />
 
             {/* 최종 보고서 */}
             {finalReport && (
-              <div className="mt-8 max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-                <h2 className="text-2xl font-bold mb-4 text-gray-900">최종 보고서</h2>
-                <div className="prose max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-700">{finalReport}</div>
+              <div className="mt-8 max-w-4xl mx-auto bg-gray-900 rounded-lg shadow-lg p-8 border border-green-800">
+                <h2 className="text-2xl font-bold mb-4 text-green-400">최종 보고서</h2>
+                <div className="prose prose-invert max-w-none">
+                  <div className="whitespace-pre-wrap text-gray-200">{finalReport}</div>
                 </div>
                 <div className="mt-6 flex gap-4">
                   <button
@@ -117,9 +131,9 @@ export default function TimelinePage() {
                       navigator.clipboard.writeText(finalReport);
                       alert('보고서가 클립보드에 복사되었습니다.');
                     }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 transition-colors"
                   >
-                    📋 복사
+                    복사
                   </button>
                   <button
                     onClick={() => {
@@ -131,9 +145,9 @@ export default function TimelinePage() {
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-600 transition-colors"
                   >
-                    💾 다운로드
+                    다운로드
                   </button>
                 </div>
               </div>
@@ -141,9 +155,9 @@ export default function TimelinePage() {
 
             {/* 에러 */}
             {error && (
-              <div className="mt-8 max-w-4xl mx-auto bg-red-50 border border-red-200 rounded-lg p-6">
-                <h2 className="text-xl font-bold text-red-800 mb-2">에러 발생</h2>
-                <p className="text-red-700">{error}</p>
+              <div className="mt-8 max-w-4xl mx-auto bg-red-950 border border-red-800 rounded-lg p-6">
+                <h2 className="text-xl font-bold text-red-400 mb-2">에러 발생</h2>
+                <p className="text-red-300">{error}</p>
               </div>
             )}
 
@@ -151,7 +165,7 @@ export default function TimelinePage() {
             <div className="mt-8 text-center">
               <button
                 onClick={handleReset}
-                className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                className="px-6 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
               >
                 새 연구 시작
               </button>

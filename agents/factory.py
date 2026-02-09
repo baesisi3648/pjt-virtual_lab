@@ -7,9 +7,8 @@
 LangChain ChatOpenAI 인스턴스를 래핑한 에이전트를 반환합니다.
 """
 from typing import Any
-from langchain_core.messages import SystemMessage, HumanMessage
 
-from utils.llm import get_gpt4o
+from utils.llm import call_gpt4o
 
 
 def generate_system_prompt(profile: dict) -> str:
@@ -44,13 +43,11 @@ def generate_system_prompt(profile: dict) -> str:
 class SpecialistAgent:
     """동적으로 생성된 전문가 에이전트"""
 
-    def __init__(self, llm: Any, system_prompt: str):
+    def __init__(self, system_prompt: str):
         """
         Args:
-            llm: ChatOpenAI 인스턴스
             system_prompt: System Prompt
         """
-        self.llm = llm
         self.system_prompt = system_prompt
 
     def invoke(self, query: str) -> str:
@@ -62,13 +59,7 @@ class SpecialistAgent:
         Returns:
             str: LLM 응답 내용
         """
-        messages = [
-            SystemMessage(content=self.system_prompt),
-            HumanMessage(content=query),
-        ]
-
-        response = self.llm.invoke(messages)
-        return response.content
+        return call_gpt4o(self.system_prompt, query)
 
 
 def create_specialist(profile: dict) -> SpecialistAgent:
@@ -107,8 +98,5 @@ def create_specialist(profile: dict) -> SpecialistAgent:
     # System Prompt 생성
     system_prompt = generate_system_prompt(profile)
 
-    # GPT-4o 모델 사용
-    llm = get_gpt4o()
-
     # 에이전트 생성 및 반환
-    return SpecialistAgent(llm=llm, system_prompt=system_prompt)
+    return SpecialistAgent(system_prompt=system_prompt)

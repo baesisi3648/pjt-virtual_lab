@@ -1,0 +1,14 @@
+Collecting pinecone-client
+  Using cached pinecone_client-6.0.0-py3-none-any.whl.metadata (3.4 kB)
+Collecting PyPDF2
+  Downloading pypdf2-3.0.1-py3-none-any.whl.metadata (6.8 kB)
+Requirement already satisfied: certifi>=2019.11.17 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from pinecone-client) (2025.8.3)
+Requirement already satisfied: pinecone-plugin-interface<0.0.8,>=0.0.7 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from pinecone-client) (0.0.7)
+Requirement already satisfied: python-dateutil>=2.5.3 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from pinecone-client) (2.9.0.post0)
+Requirement already satisfied: typing-extensions>=3.7.4 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from pinecone-client) (4.15.0)
+Requirement already satisfied: urllib3>=1.26.5 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from pinecone-client) (2.5.0)
+Requirement already satisfied: six>=1.5 in c:\users\硅己快\appdata\local\programs\python\python313\lib\site-packages (from python-dateutil>=2.5.3->pinecone-client) (1.17.0)
+Using cached pinecone_client-6.0.0-py3-none-any.whl (6.7 kB)
+Downloading pypdf2-3.0.1-py3-none-any.whl (232 kB)
+Installing collected packages: PyPDF2, pinecone-client
+Successfully installed PyPDF2-3.0.1 pinecone-client-6.0.0

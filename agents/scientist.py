@@ -1,18 +1,13 @@
-# @TASK P2-R1-T1 - Scientist (Risk Identifier) 에이전트 구현
-# @SPEC TASKS.md#P2-R1-T1
-# @TEST tests/test_agents.py::TestScientist
-"""Scientist (Risk Identifier) Agent - GPT-4o-mini
+"""Scientist (Risk Identifier) Agent
 
 NGT 식품의 잠재적 위험 요소를 식별하고, 안전성 입증을 위한
 최소 제출 자료 목록을 작성하는 과학 전문가 에이전트입니다.
-
-P1-T4 Update: RAG Tool 통합 - 규제 문서 검색 기능 추가
+OpenAI SDK 직접 호출 방식으로 tool_calls 문제를 방지합니다.
 """
 import logging
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, ToolMessage
 
 from data.guidelines import RESEARCH_OBJECTIVE, CODEX_PRINCIPLES, REGULATORY_TRENDS
-from utils.llm import get_gpt4o_mini
+from utils.llm import call_gpt4o_mini
 from workflow.state import AgentState
 from tools.rag_search import rag_search_tool
 from tools.web_search import web_search
@@ -20,8 +15,7 @@ from tools.web_search import web_search
 logger = logging.getLogger(__name__)
 
 
-SYSTEM_PROMPT = f"""
-당신은 유전자편집식품(NGT)의 안전성 위험 요소를 식별하는 과학 전문가입니다.
+SYSTEM_PROMPT = f"""당신은 유전자편집식품(NGT)의 안전성 위험 요소를 식별하는 과학 전문가입니다.
 
 ## 연구 목표
 {RESEARCH_OBJECTIVE}
@@ -38,53 +32,50 @@ SYSTEM_PROMPT = f"""
 
 **중요**: 특정 제품이 아닌 NGT 카테고리 전체에 적용 가능한 범용적 기준을 제시하세요.
 
-## 도구 사용 지침 (Phase 1-2)
-답변 작성 시 다음 두 가지 도구를 활용하세요:
-
-1. **rag_search_tool**: 규제 문서 검색 (Codex, FDA 가이드라인 등)
-   - 예: 알레르기 평가 방법 → rag_search_tool("알레르기 평가 방법 NGT")
-
-2. **web_search**: 최신 논문 및 규제 동향 검색
-   - 예: 2025년 EU 규제 동향 → web_search("EU NGT regulation 2025")
-
-**중요**:
-- 먼저 rag_search_tool로 기존 규제를 확인하고, 부족하면 web_search로 최신 정보 보완
-- 모든 답변에 출처를 [출처: ...] 형식으로 명시
+답변 작성 시 아래에 제공되는 규제 문서 검색 결과와 웹 검색 결과를 반드시 참고하세요.
+모든 답변에 출처를 [출처: ...] 형식으로 명시하세요.
 """.strip()
 
 
 def run_scientist(state: AgentState) -> dict:
-    """Scientist 에이전트 실행 (P1-T4: RAG Tool 통합)
+    """Scientist 에이전트 실행 - OpenAI 직접 호출"""
+    print(f"\n{'#'*80}")
+    print(f"[SCIENTIST] Starting Scientist agent")
+    print(f"  Topic: {state.get('topic', 'N/A')}")
+    print(f"  Constraints: {state.get('constraints', 'N/A')}")
+    print(f"  Iteration: {state.get('iteration', 0)}")
+    print(f"{'#'*80}\n")
 
-    LLM을 호출하여 NGT 식품의 위험 요소 초안을 작성합니다.
-    이전 critique가 존재하면 해당 피드백을 반영하여 수정합니다.
-    web_search 도구를 바인딩하여 최신 정보 검색 가능.
+    topic = state['topic']
+    constraints = state['constraints']
 
-    P1-T4 Update:
-    - RAG Tool을 bind하여 LLM이 필요 시 규제 문서 검색 가능
-    - Tool 호출 시 자동으로 재귀적 실행 (최대 3회)
+    # Step 1: RAG 검색 (규제 문서)
+    rag_context = ""
+    try:
+        rag_result = rag_search_tool.invoke({"query": f"{topic} NGT safety assessment"})
+        rag_context = f"\n\n## [RAG 검색 결과 - 규제 문서]\n{rag_result}"
+        logger.info(f"RAG search completed for: {topic}")
+    except Exception as e:
+        logger.warning(f"RAG search failed: {e}")
 
-    Args:
-        state: LangGraph 공유 상태
+    # Step 2: 웹 검색 (최신 정보)
+    web_context = ""
+    try:
+        web_result = web_search.invoke({"query": f"{topic} NGT regulation 2025"})
+        web_context = f"\n\n## [웹 검색 결과 - 최신 정보]\n{web_result}"
+        logger.info(f"Web search completed for: {topic}")
+    except Exception as e:
+        logger.warning(f"Web search failed: {e}")
 
-    Returns:
-        dict: 업데이트할 상태 필드 (draft, messages)
-    """
-    # Phase 1-2: RAG + Web Search 도구 바인딩
-    model = get_gpt4o_mini()
-    model_with_tools = model.bind_tools([rag_search_tool, web_search])
-
-    # 프롬프트 구성
-    user_message = f"""
-연구 주제: {state['topic']}
-제약 조건: {state['constraints']}
+    # Step 3: 프롬프트 구성
+    user_message = f"""연구 주제: {topic}
+제약 조건: {constraints}
 
 위 주제에 대해 다음을 작성하세요:
 1. NGT 기술의 잠재적 위험 요소 (범용적으로)
 2. 안전성 입증을 위한 최소 제출 자료 목록
-
-**반드시 먼저 rag_search_tool을 사용하여 관련 규제 문서를 검색한 후 답변하세요.**
-""".strip()
+{rag_context}
+{web_context}"""
 
     # 이전 비평 의견이 있으면 프롬프트에 반영
     if state.get("critique"):
@@ -94,61 +85,29 @@ def run_scientist(state: AgentState) -> dict:
             f"위 의견을 반영하여 수정하세요."
         )
 
-    # 메시지 체인 (Tool 호출 포함)
-    messages = [
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=user_message),
-    ]
+    # Step 4: OpenAI 직접 호출 (NO LangChain)
+    print(f"\n{'#'*80}")
+    print(f"[SCIENTIST] Calling OpenAI API via call_gpt4o_mini")
+    print(f"{'#'*80}\n")
 
-    # Phase 1-2: Tool 호출을 포함한 재귀적 실행 (최대 3회)
-    max_iterations = 3
-    for i in range(max_iterations):
-        logger.info(f"Scientist iteration {i+1}/{max_iterations}")
-        response = model_with_tools.invoke(messages)
+    logger.info("Scientist: Calling OpenAI directly...")
 
-        # Tool 호출이 있는지 확인
-        tool_calls = getattr(response, 'tool_calls', None)
+    try:
+        draft = call_gpt4o_mini(SYSTEM_PROMPT, user_message)
+        print(f"\n{'#'*80}")
+        print(f"[SCIENTIST] OpenAI call succeeded")
+        print(f"  Draft length: {len(draft)} chars")
+        print(f"{'#'*80}\n")
+    except Exception as e:
+        print(f"\n{'!'*80}")
+        print(f"[SCIENTIST ERROR] Failed to call OpenAI!")
+        print(f"  Exception: {type(e).__name__}: {e}")
+        print(f"{'!'*80}\n")
+        raise
 
-        # tool_calls가 없으면 최종 답변
-        if not tool_calls or not isinstance(tool_calls, (list, tuple)):
-            draft = response.content
-            break
-
-        # Tool 호출 있음 - Tool 실행 후 결과를 메시지에 추가
-        messages.append(response)
-
-        for tool_call in tool_calls:
-            logger.info(f"Tool called: {tool_call['name']} with args: {tool_call['args']}")
-
-            # Tool 실행 (rag_search_tool 또는 web_search)
-            if tool_call["name"] == "rag_search_tool":
-                tool_result = rag_search_tool.invoke(tool_call["args"])
-            elif tool_call["name"] == "web_search":
-                tool_result = web_search.invoke(tool_call["args"])
-            else:
-                tool_result = f"Unknown tool: {tool_call['name']}"
-
-            # Tool 결과를 메시지에 추가
-            messages.append(
-                ToolMessage(
-                    content=tool_result,
-                    tool_call_id=tool_call["id"],
-                )
-            )
-
-        # 다음 iteration에서 LLM이 Tool 결과를 보고 최종 답변 생성
-    else:
-        # 최대 반복 도달 - 마지막 응답 사용
-        logger.warning(f"Max iterations ({max_iterations}) reached without final answer")
-        draft = response.content if hasattr(response, 'content') else "답변 생성 실패"
-
-    # 메시지 로그 추가 (원본 리스트 불변성 보장)
+    # 메시지 로그
     state_messages = list(state.get("messages", []))
-
-    # draft 미리보기 생성 (안전하게)
-    draft_str = str(draft) if draft else ""
-    draft_preview = draft_str[:200] + "..." if len(draft_str) > 200 else draft_str
-
+    draft_preview = draft[:200] + "..." if len(draft) > 200 else draft
     state_messages.append({
         "role": "scientist",
         "content": f"위험 요소 초안을 작성했습니다.\n\n{draft_preview}",

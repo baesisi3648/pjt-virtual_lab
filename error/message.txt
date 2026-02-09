@@ -1,0 +1,295 @@
+./restart_server.bat
+============================================
+  Virtual Lab Server Restart Script
+============================================
+
+[1/5] Killing old Python processes...       
+'netstat'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+timeout: invalid time interval ‘/t’       
+Try 'timeout --help' for more information.
+[2/5] Deleting __pycache__ files...
+  Done.
+[3/5] Setting environment...
+[4/5] Disabling LangChain tracing...        
+[5/5] Starting new server...
+
+============================================
+  Server starting at http://localhost:8000  
+  Press Ctrl+C to stop
+============================================
+
+INFO:     Will watch for changes in these directories: ['C:\\Users\\배성우\\Desktop\\pjt-virtual_lab']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [47252] using WatchFiles
+2026-02-09 09:54:56,774 [startup] INFO: ============================================================
+2026-02-09 09:54:56,774 [startup] INFO: Virtual Lab Server Starting - Module Verification
+2026-02-09 09:54:56,774 [startup] INFO:   scientist.py: C:\Users\배성우\Desktop\pjt-virtual_lab\agents\scientist.py
+2026-02-09 09:54:56,775 [startup] INFO:   critic.py:    C:\Users\배성우\Desktop\pjt-virtual_lab\agents\critic.py
+2026-02-09 09:54:56,775 [startup] INFO:   pi.py:        C:\Users\배성우\Desktop\pjt-virtual_lab\agents\pi.py
+2026-02-09 09:54:56,775 [startup] INFO:   llm.py:       C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py
+2026-02-09 09:54:56,776 [startup] INFO:   OK: scientist - no bind_tools/ChatOpenAI
+2026-02-09 09:54:56,777 [startup] INFO:   OK: critic - no bind_tools/ChatOpenAI
+2026-02-09 09:54:56,778 [startup] INFO:   OK: pi - no bind_tools/ChatOpenAI
+2026-02-09 09:54:56,779 [startup] INFO:   OK: llm.py - using raw httpx (no OpenAI SDK)
+2026-02-09 09:54:56,779 [startup] INFO:   LANGCHAIN_TRACING_V2=false
+2026-02-09 09:54:56,779 [startup] INFO: ============================================================
+INFO:     Started server process [29240]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:54357 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54358 - "POST /api/research/stream HTTP/1.1" 200 OK
+
+********************************************************************************
+[SSE STREAM] Starting research workflow stream
+  Topic: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+  Constraints:
+********************************************************************************
+
+[SSE STREAM] Creating workflow graph...
+[SSE STREAM] Workflow graph created successfully
+
+INFO:     127.0.0.1:54366 - "POST /api/research/stream HTTP/1.1" 200 OK
+
+********************************************************************************
+[SSE STREAM] Starting research workflow stream
+  Topic: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+  Constraints:
+********************************************************************************
+
+[SSE STREAM] Creating workflow graph...
+[SSE STREAM] Workflow graph created successfully
+
+2026-02-09 09:56:01,730 [sse] INFO: Starting workflow stream for topic: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+[SSE STREAM] Starting workflow.stream() iteration...
+
+
+################################################################################
+[SCIENTIST] Starting Scientist agent
+  Topic: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+  Constraints:
+  Iteration: 0
+################################################################################
+
+2026-02-09 09:56:01,734 [tools.rag_search] INFO: RAG Search (pinecone): CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT safety assessment
+2026-02-09 09:56:17,478 [rag.pinecone_client] INFO: ✅ Pinecone 연결: virtual-lab
+2026-02-09 09:56:18,431 [httpx] INFO: HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2026-02-09 09:56:19,319 [rag.pinecone_client] INFO: 🔍 검색 완료: 5개 문서 발견
+2026-02-09 09:56:19,319 [tools.rag_search] INFO: RAG Hit: 5 documents
+2026-02-09 09:56:19,319 [agents.scientist] INFO: RAG search completed for: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+2026-02-09 09:56:19,321 [tools.web_search] INFO: SEARCH_QUERY | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025'
+2026-02-09 09:56:24,399 [tools.web_search] INFO: SEARCH_SUCCESS | query='CRISPR-Cas9 유전자편집 토마토 안전성 평가 NGT regulation 2025' | results=5
+2026-02-09 09:56:24,430 [agents.scientist] INFO: Web search completed for: CRISPR-Cas9 유전자편집 토마토 안전성 평가
+
+################################################################################
+[SCIENTIST] Calling OpenAI API via call_gpt4o_mini
+################################################################################
+
+2026-02-09 09:56:24,508 [agents.scientist] INFO: Scientist: Calling OpenAI directly...
+
+================================================================================
+[LLM REQUEST] Starting OpenAI API call
+  Model: gpt-4o-mini
+  Messages count: 2
+  System prompt: 3451 chars
+  User message: 15317 chars
+  Temperature: 0.7, Max tokens: 4096
+  Payload keys: ['model', 'messages', 'temperature', 'max_tokens']
+  Has 'tools' in payload: False
+================================================================================
+
+2026-02-09 09:56:24,528 [utils.llm] INFO: [LLM] httpx POST: model=gpt-4o-mini, msg_count=2
+2026-02-09 09:56:24,529 [utils.llm] INFO: [LLM] System prompt: 3451 chars
+2026-02-09 09:56:24,529 [utils.llm] INFO: [LLM] User message: 15317 chars
+2026-02-09 09:56:25,866 [httpx] INFO: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+
+================================================================================
+[LLM RESPONSE] Received response from OpenAI
+  Status code: 401
+  Response headers: {'date': 'Mon, 09 Feb 2026 00:56:26 GMT', 'content-type': 'text/plain', 'content-length': '269', 'connection': 'keep-alive', 'x-openai-ide-error-code': 'invalid_api_key', 'x-openai-authorization-error': '401', 'x-error-json': 'ewogICJlcnJvciI6IHsKICAgICJtZXNzYWdlIjogIkluY29ycmVjdCBBUEkga2V5IHByb3ZpZGVkOiBzay1wcm9qLSoqKioqKioqKioqdi4uLi4gWW91IGNhbiBmaW5kIHlvdXIgQVBJIGtleSBhdCBodHRwczovL3BsYXRmb3JtLm9wZW5haS5jb20vYWNjb3VudC9hcGkta2V5cy4iLAogICAgInR5cGUiOiAiaW52YWxpZF9yZXF1ZXN0X2Vycm9yIiwKICAgICJjb2RlIjogImludmFsaWRfYXBpX2tleSIsCiAgICAicGFyYW0iOiBudWxsCiAgfSwKICAic3RhdHVzIjogNDAxCn0=', 'x-request-id': 'req_317cc52f0d574f70bc234858859f7f6c', 'x-datadog-trace-id': '15069549242108782860', 'x-datadog-parent-id': '12251370756530405656', 'x-datadog-sampling-priority': '0', 'x-openai-internal-caller': 'unknown_through_ide', 'x-openai-proxy-wasm': 'v0.1', 'server': 'cloudflare', 'cf-cache-status': 'DYNAMIC', 'set-cookie': '__cf_bm=RovFh43dEZOWP8S5pkAAh6Aq_rsLErWd6pWsY1HGs_U-1770598586.624707-1.0.1.1-RXjLoinvr_fxewYrBCqi01Eipe5vWMNsvhFgEnn.soQpLIkIvYv7ImO8kINsHXMTgc_.OpR40ANM6RFXLiZbreVI4GOy_i_wXH.jpt1qFDEOjx_.Xp2QF6tySsZEdnvr; HttpOnly; Secure; Path=/; Domain=api.openai.com; Expires=Mon, 09 Feb 2026 01:26:26 GMT, _cfuvid=6MldV71CPibuP9lbczlQHPlT2Tlac81iNu7zjI7EpNA-1770598586.624707-1.0.1.1-8o_NFb2Wr7PvzfJH6UKLnVf73sCbl_SvL0_1vhNiKMk; HttpOnly; SameSite=None; Secure; Path=/; Domain=api.openai.com', 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'x-content-type-options': 'nosniff', 'cf-ray': '9caf682e6908d1d9-ICN', 'alt-svc': 'h3=":443"; ma=86400'}
+================================================================================
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[LLM ERROR] OpenAI API returned error!
+  Status: 401
+  Error body: {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+2026-02-09 09:56:25,870 [utils.llm] ERROR: [LLM] OpenAI API HTTP 401: {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[LLM EXCEPTION] Unexpected error occurred!
+  Exception type: RuntimeError
+  Exception message: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+  Traceback:
+Traceback (most recent call last):
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py", line 116, in call_llm
+    raise RuntimeError(
+        f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+    )
+RuntimeError: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[SCIENTIST ERROR] Failed to call OpenAI!
+  Exception: RuntimeError: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[SSE STREAM ERROR] Exception caught in SSE stream!
+  Exception type: RuntimeError
+  Exception message: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+  Traceback:
+Traceback (most recent call last):
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\server.py", line 368, in generate_research_events
+    for event in workflow.stream(initial_state):
+                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\main.py", line 2643, in stream
+    for _ in runner.tick(
+             ~~~~~~~~~~~^
+        [t for t in loop.tasks.values() if not t.writes],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        schedule_task=loop.accept_push,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\_runner.py", line 167, in tick
+    run_with_retry(
+    ~~~~~~~~~~~~~~^
+        t,
+        ^^
+    ...<10 lines>...
+        },
+        ^^
+    )
+    ^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\_retry.py", line 42, in run_with_retry
+    return task.proc.invoke(task.input, config)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\_internal\_runnable.py", line 656, in invoke
+    input = context.run(step.invoke, input, config, **kwargs)
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\_internal\_runnable.py", line 400, in invoke
+    ret = self.func(*args, **kwargs)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\agents\scientist.py", line 96, in run_scientist
+    draft = call_gpt4o_mini(SYSTEM_PROMPT, user_message)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py", line 217, in call_gpt4o_mini
+    return call_llm(system_prompt, user_message, model=model, **kwargs)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py", line 116, in call_llm
+    raise RuntimeError(
+        f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+    )
+RuntimeError: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+During task with name 'drafting' and id '453293a8-4e6b-41f9-a297-f86a77286817'
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+2026-02-09 09:56:25,896 [sse] ERROR: SSE Error: Traceback (most recent call last):
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\server.py", line 368, in generate_research_events
+    for event in workflow.stream(initial_state):
+                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\main.py", line 2643, in stream
+    for _ in runner.tick(
+             ~~~~~~~~~~~^
+        [t for t in loop.tasks.values() if not t.writes],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        schedule_task=loop.accept_push,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\_runner.py", line 167, in tick
+    run_with_retry(
+    ~~~~~~~~~~~~~~^
+        t,
+        ^^
+    ...<10 lines>...
+        },
+        ^^
+    )
+    ^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\pregel\_retry.py", line 42, in run_with_retry
+    return task.proc.invoke(task.input, config)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\_internal\_runnable.py", line 656, in invoke
+    input = context.run(step.invoke, input, config, **kwargs)
+  File "C:\Users\배성우\AppData\Local\Programs\Python\Python313\Lib\site-packages\langgraph\_internal\_runnable.py", line 400, in invoke
+    ret = self.func(*args, **kwargs)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\agents\scientist.py", line 96, in run_scientist
+    draft = call_gpt4o_mini(SYSTEM_PROMPT, user_message)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py", line 217, in call_gpt4o_mini
+    return call_llm(system_prompt, user_message, model=model, **kwargs)
+  File "C:\Users\배성우\Desktop\pjt-virtual_lab\utils\llm.py", line 116, in call_llm
+    raise RuntimeError(
+        f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+    )
+RuntimeError: OpenAI API error (HTTP 401): {
+  "error": {
+    "message": "Incorrect API key provided: sk-proj-***********v.... You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key",
+    "param": null
+  },
+  "status": 401
+}
+During task with name 'drafting' and id '453293a8-4e6b-41f9-a297-f86a77286817'

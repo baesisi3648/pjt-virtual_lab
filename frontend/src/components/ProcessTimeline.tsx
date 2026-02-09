@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 // 타임라인 이벤트 타입
 interface TimelineEvent {
@@ -31,25 +31,28 @@ interface ProcessTimelineProps {
   onError?: (error: string) => void;
 }
 
-// 에이전트별 아이콘 및 색상
+// 에이전트별 아이콘 및 색상 (다크모드)
 const AGENT_CONFIG = {
   scientist: {
     icon: '🔬',
     name: 'Scientist',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-950',
+    borderColor: 'border-blue-800',
   },
   critic: {
     icon: '🔍',
     name: 'Critic',
-    color: 'text-red-600',
-    bgColor: 'bg-red-50',
+    color: 'text-red-400',
+    bgColor: 'bg-red-950',
+    borderColor: 'border-red-800',
   },
   pi: {
     icon: '👔',
     name: 'PI',
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
+    color: 'text-green-400',
+    bgColor: 'bg-green-950',
+    borderColor: 'border-green-800',
   },
 };
 
@@ -62,35 +65,38 @@ export default function ProcessTimeline({
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentReport, setCurrentReport] = useState<string>('');
-  const eventSourceRef = useRef<EventSource | null>(null);
   const timelineEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const isStreamingRef = useRef(false);
+
+  // 콜백을 ref로 관리하여 useEffect 재실행 방지
+  const onCompleteRef = useRef(onComplete);
+  const onErrorRef = useRef(onError);
+  onCompleteRef.current = onComplete;
+  onErrorRef.current = onError;
 
   // 자동 스크롤
   useEffect(() => {
     timelineEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [events]);
 
-  // SSE 연결
+  // SSE 연결 - topic/constraints만 의존성으로 사용
   useEffect(() => {
     if (!topic) return;
 
+    // 이미 스트리밍 중이면 중복 실행 방지
+    if (isStreamingRef.current) return;
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     const startStreaming = async () => {
+      isStreamingRef.current = true;
       setIsStreaming(true);
       setEvents([]);
       setCurrentReport('');
 
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-      // SSE 연결 (POST 요청은 직접 지원하지 않으므로 먼저 POST로 시작하고 GET으로 스트리밍)
-      // 간단하게 하기 위해 query params로 전달
-      const params = new URLSearchParams({
-        topic,
-        constraints: constraints || '',
-      });
-
-      // EventSource는 GET만 지원하므로 POST를 위해서는 fetch를 사용해야 함
-      // 하지만 여기서는 간단하게 구현하기 위해 서버에서 POST를 받는 대신
-      // 프론트에서 직접 fetch를 사용하여 ReadableStream을 처리
 
       try {
         const response = await fetch(`${API_BASE_URL}/api/research/stream`, {
@@ -102,6 +108,7 @@ export default function ProcessTimeline({
             topic,
             constraints: constraints || '',
           }),
+          signal: abortController.signal,
         });
 
         if (!response.ok) {
@@ -115,22 +122,26 @@ export default function ProcessTimeline({
           throw new Error('No response body');
         }
 
+        let buffer = '';
+
         // 스트림 읽기
         while (true) {
           const { done, value } = await reader.read();
 
           if (done) {
             setIsStreaming(false);
+            isStreamingRef.current = false;
             break;
           }
 
-          // SSE 데이터 파싱
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
+          // SSE 데이터 파싱 (버퍼링으로 부분 청크 처리)
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // 마지막 불완전한 줄은 버퍼에 유지
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
-              const data = line.slice(6); // 'data: ' 제거
+              const data = line.slice(6);
               try {
                 const event: TimelineEvent = JSON.parse(data);
 
@@ -140,23 +151,25 @@ export default function ProcessTimeline({
                 // 완료 이벤트 처리
                 if (event.type === 'complete' && event.report) {
                   setCurrentReport(event.report);
-                  onComplete?.(event.report);
+                  onCompleteRef.current?.(event.report);
                 }
 
                 // 에러 이벤트 처리
                 if (event.type === 'error' && event.error) {
-                  onError?.(event.error);
+                  onErrorRef.current?.(event.error);
                 }
               } catch (e) {
-                console.error('Failed to parse SSE event:', e);
+                console.error('Failed to parse SSE event:', data, e);
               }
             }
           }
         }
       } catch (error) {
+        if (abortController.signal.aborted) return; // 정상 취소
         console.error('SSE connection error:', error);
         setIsStreaming(false);
-        onError?.(error instanceof Error ? error.message : 'Unknown error');
+        isStreamingRef.current = false;
+        onErrorRef.current?.(error instanceof Error ? error.message : 'Unknown error');
       }
     };
 
@@ -164,14 +177,15 @@ export default function ProcessTimeline({
 
     // Cleanup
     return () => {
-      eventSourceRef.current?.close();
+      abortController.abort();
+      isStreamingRef.current = false;
       setIsStreaming(false);
     };
-  }, [topic, constraints, onComplete, onError]);
+  }, [topic, constraints]); // onComplete, onError 제거!
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">연구 진행 상황</h2>
+    <div className="w-full max-w-4xl mx-auto p-6 bg-gray-900 rounded-lg shadow-lg border border-gray-800">
+      <h2 className="text-2xl font-bold mb-6 text-white">연구 진행 상황</h2>
 
       {/* 타임라인 */}
       <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -181,9 +195,16 @@ export default function ProcessTimeline({
 
         {/* 스트리밍 중 인디케이터 */}
         {isStreaming && events.length === 0 && (
-          <div className="flex items-center gap-2 text-gray-500">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+          <div className="flex items-center gap-2 text-gray-400">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
             <span>연결 중...</span>
+          </div>
+        )}
+
+        {isStreaming && events.length > 0 && (
+          <div className="flex items-center gap-2 text-gray-400 p-3">
+            <div className="animate-pulse h-2 w-2 rounded-full bg-blue-400"></div>
+            <span className="text-sm">처리 중...</span>
           </div>
         )}
 
@@ -192,9 +213,9 @@ export default function ProcessTimeline({
 
       {/* 최종 보고서 미리보기 */}
       {currentReport && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded">
-          <h3 className="font-semibold text-green-800 mb-2">✅ 연구 완료</h3>
-          <p className="text-sm text-gray-600">
+        <div className="mt-6 p-4 bg-green-950 border border-green-800 rounded">
+          <h3 className="font-semibold text-green-400 mb-2">연구 완료</h3>
+          <p className="text-sm text-gray-300">
             최종 보고서가 생성되었습니다. (길이: {currentReport.length}자)
           </p>
         </div>
@@ -208,37 +229,40 @@ function TimelineItem({ event }: { event: TimelineEvent }) {
   // 에이전트 정보 가져오기
   const agentConfig = event.agent ? AGENT_CONFIG[event.agent] : null;
 
-  // 타임스탬프 포맷팅
+  // 타임스탬프 포맷팅 (서울 시간대)
   const formatTime = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString('ko-KR', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
+      timeZone: 'Asia/Seoul',
     });
   };
 
-  // 이벤트 타입별 스타일링
-  let itemClasses = 'p-4 rounded-lg border';
-  let iconClasses = 'text-2xl';
+  // 이벤트 타입별 스타일링 (다크모드)
+  let bgClass = 'bg-gray-800';
+  let borderClass = 'border-gray-700';
 
   if (event.type === 'start') {
-    itemClasses += ' bg-blue-50 border-blue-200';
+    bgClass = 'bg-blue-950';
+    borderClass = 'border-blue-800';
   } else if (event.type === 'complete') {
-    itemClasses += ' bg-green-50 border-green-200';
+    bgClass = 'bg-green-950';
+    borderClass = 'border-green-800';
   } else if (event.type === 'error') {
-    itemClasses += ' bg-red-50 border-red-200';
+    bgClass = 'bg-red-950';
+    borderClass = 'border-red-800';
   } else if (agentConfig) {
-    itemClasses += ` ${agentConfig.bgColor} border-${agentConfig.color.split('-')[1]}-200`;
-  } else {
-    itemClasses += ' bg-gray-50 border-gray-200';
+    bgClass = agentConfig.bgColor;
+    borderClass = agentConfig.borderColor;
   }
 
   return (
-    <div className={itemClasses}>
+    <div className={`p-4 rounded-lg border ${bgClass} ${borderClass}`}>
       <div className="flex items-start gap-3">
         {/* 아이콘 */}
-        <div className={iconClasses}>
+        <div className="text-2xl">
           {agentConfig?.icon || (event.type === 'complete' ? '✅' : event.type === 'error' ? '❌' : '🔄')}
         </div>
 
@@ -251,25 +275,25 @@ function TimelineItem({ event }: { event: TimelineEvent }) {
                   {agentConfig.name}
                 </span>
               )}
-              {event.iteration && (
-                <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+              {event.iteration != null && (
+                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded">
                   반복 {event.iteration}회
                 </span>
               )}
             </div>
-            <span className="text-xs text-gray-500">{formatTime(event.timestamp)}</span>
+            <span className="text-xs text-gray-400 font-mono">{formatTime(event.timestamp)}</span>
           </div>
 
-          <p className="mt-1 text-gray-700">{event.message}</p>
+          <p className="mt-1 text-gray-200">{event.message}</p>
 
           {/* Decision 뱃지 */}
           {event.decision && (
             <div className="mt-2">
               <span
-                className={`inline-block px-2 py-1 text-xs rounded ${
+                className={`inline-block px-2 py-1 text-xs rounded font-medium ${
                   event.decision === 'approve'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
+                    ? 'bg-green-900 text-green-300 border border-green-700'
+                    : 'bg-red-900 text-red-300 border border-red-700'
                 }`}
               >
                 {event.decision === 'approve' ? '승인' : '수정 필요'}
@@ -279,7 +303,7 @@ function TimelineItem({ event }: { event: TimelineEvent }) {
 
           {/* 에러 상세 */}
           {event.error && (
-            <div className="mt-2 text-sm text-red-600 bg-red-100 p-2 rounded">
+            <div className="mt-2 text-sm text-red-300 bg-red-950 border border-red-800 p-2 rounded">
               {event.error}
             </div>
           )}
