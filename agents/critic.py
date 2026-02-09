@@ -148,30 +148,55 @@ def run_critic(state: AgentState) -> dict:
             content = "\n".join(lines[1:-1])
 
         data = json.loads(content)
+        # 점수를 정수로 변환
+        raw_scores = data.get("scores", {})
+        scores = {}
+        for k, v in raw_scores.items():
+            try:
+                scores[k] = int(v)
+            except (ValueError, TypeError):
+                scores[k] = 1
+
+        decision = data["decision"]
+        feedback = data.get("feedback", "")
+
+        # 점수 기반 decision 검증: 하나라도 3 미만이면 강제 revise
+        if scores and any(v < 3 for v in scores.values()):
+            if decision == "approve":
+                logger.warning(f"[CRITIC] Overriding approve to revise - scores below 3: {scores}")
+                decision = "revise"
+                if not feedback:
+                    low_items = [f"{k}({v}점)" for k, v in scores.items() if v < 3]
+                    feedback = f"다음 항목의 점수가 기준(3점) 미만입니다: {', '.join(low_items)}. 해당 항목을 집중 개선하세요."
+
         critique = CritiqueResult(
-            decision=data["decision"],
-            feedback=data.get("feedback", ""),
-            scores=data.get("scores", {}),
+            decision=decision,
+            feedback=feedback,
+            scores=scores,
         )
+
+        print(f"[CRITIC] Decision: {decision}, Scores: {scores}")
+
     except (json.JSONDecodeError, KeyError) as e:
-        logger.warning(f"Critic JSON parse failed: {e}, defaulting to approve")
+        logger.warning(f"Critic JSON parse failed: {e}, defaulting to revise")
         critique = CritiqueResult(
-            decision="approve",
-            feedback="",
+            decision="revise",
+            feedback="JSON 파싱 실패로 재검토 필요",
             scores={},
         )
 
     # 메시지 로그
     messages = list(state.get("messages", []))
+    scores_str = ", ".join(f"{k}={v}" for k, v in (critique.scores or {}).items())
     if critique.decision == "approve":
         messages.append({
             "role": "critic",
-            "content": "초안을 승인합니다.",
+            "content": f"초안을 승인합니다. (점수: {scores_str})",
         })
     else:
         messages.append({
             "role": "critic",
-            "content": f"수정이 필요합니다.\n{critique.feedback}",
+            "content": f"수정이 필요합니다. (점수: {scores_str})\n{critique.feedback}",
         })
 
     return {

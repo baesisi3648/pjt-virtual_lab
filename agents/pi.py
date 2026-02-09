@@ -311,9 +311,11 @@ def run_pi(state: AgentState) -> dict:
     )
     if specialist_context:
         user_message += f"[각 전문가 개별 분석 결과]\n{specialist_context}\n\n"
-    # 출처 목록 통합 (이전 단계 + PI 웹 검색)
+    # 출처 목록 통합 (이전 단계 + PI 웹 검색 + 초안 텍스트에서 추출)
     all_sources = list(state.get("sources", []))
     all_sources.extend(pi_sources)
+    # 초안 텍스트에서도 출처 추출
+    all_sources.extend(_extract_sources(state.get("draft", "")))
     # 중복 제거
     seen = set()
     unique_sources = []
@@ -322,10 +324,16 @@ def run_pi(state: AgentState) -> dict:
             seen.add(s)
             unique_sources.append(s)
 
+    print(f"[PI] Sources collected: {len(unique_sources)}")
+    for s in unique_sources[:10]:
+        print(f"  - {s}")
+    if len(unique_sources) > 10:
+        print(f"  ... and {len(unique_sources) - 10} more")
+
     sources_text = ""
     if unique_sources:
-        sources_list = "\n".join(f"- {s}" for s in unique_sources)
-        sources_text = f"\n\n[참조 출처 목록]\n{sources_list}"
+        sources_list = "\n".join(f"{i+1}. {s}" for i, s in enumerate(unique_sources))
+        sources_text = f"\n\n[참조 출처 목록 - 반드시 보고서에 포함할 것]\n{sources_list}"
 
     user_message += (
         f"{web_context}\n\n"
@@ -337,9 +345,13 @@ def run_pi(state: AgentState) -> dict:
         "★ 핵심: 파트 3-2에서는 파트 1에서 식별한 각 위험 요소에 대해 구체적인 해결방안·검증방법을 제시하고,\n"
         "파트 2에서 발견한 지침 한계점에 대해 구체적인 보완조치를 제시하세요.\n"
         "모든 위험 요소가 해결방안과 명확히 연결되어야 합니다.\n\n"
-        "★ 보고서 최하단에 반드시 '## 5. 참고문헌 (References)' 섹션을 추가하세요.\n"
-        "위에 제공된 [참조 출처 목록]의 모든 출처를 포함하고,\n"
-        "[웹] 출처는 'Web Search' 카테고리로, [문헌] 출처는 'Regulatory Documents (RAG)' 카테고리로 구분하여 정리하세요."
+        "★★★ [필수] 보고서 맨 마지막에 반드시 아래 형식의 참고문헌 섹션을 작성하세요:\n\n"
+        "## 5. 참고문헌 (References)\n\n"
+        "### 5-1. Web Search Sources\n"
+        "(위 [참조 출처 목록]에서 [웹]으로 표시된 URL들을 번호 목록으로 정리)\n\n"
+        "### 5-2. Regulatory Documents (RAG)\n"
+        "(위 [참조 출처 목록]에서 [문헌]으로 표시된 문서들을 번호 목록으로 정리)\n\n"
+        "참조 출처 목록이 비어있더라도 본문에서 인용한 출처를 수집하여 참고문헌 섹션을 작성하세요."
     )
 
     # Step 4: OpenAI 직접 호출 (NO LangChain)
