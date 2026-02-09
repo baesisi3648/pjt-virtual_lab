@@ -137,19 +137,25 @@ export default function TimelinePage() {
                   </button>
                   <button
                     onClick={() => {
-                      const blob = new Blob([finalReport], { type: 'text/plain' });
+                      const now = new Date();
+                      const timestamp = now.toISOString().slice(0, 19).replace(/[T:]/g, '_').replace(/-/g, '');
+                      const header = `${'='.repeat(80)}\n  Virtual Lab - 최종 연구 보고서\n  연구 주제: ${topic}\n  생성 일시: ${now.toLocaleString('ko-KR')}\n${'='.repeat(80)}\n\n`;
+                      const blob = new Blob([header + finalReport], { type: 'text/plain; charset=utf-8' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');
                       a.href = url;
-                      a.download = `research-report-${Date.now()}.txt`;
+                      a.download = `report_${timestamp}.txt`;
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
                     className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-600 transition-colors"
                   >
-                    다운로드
+                    TXT 다운로드
                   </button>
                 </div>
+                <p className="mt-3 text-sm text-gray-500">
+                  * 보고서는 서버의 reports/ 폴더에도 자동 저장됩니다.
+                </p>
               </div>
             )}
 

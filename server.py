@@ -11,6 +11,8 @@ import json
 import logging
 import os
 import sys
+from datetime import datetime
+from pathlib import Path
 from typing import AsyncGenerator
 
 # __pycache__ 사용 방지 - 캐시된 .pyc가 오래된 코드를 로드하는 것을 방지
@@ -25,8 +27,12 @@ os.environ["LANGCHAIN_TRACING"] = "false"
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from pydantic import BaseModel
+
+# 보고서 저장 디렉토리
+REPORTS_DIR = Path(__file__).parent / "reports"
+REPORTS_DIR.mkdir(exist_ok=True)
 
 from workflow.graph import create_workflow
 from workflow.state import AgentState
@@ -125,6 +131,14 @@ class TaskStatusResponse(BaseModel):
     error: str | None = None
 
 
+class ReportFileInfo(BaseModel):
+    """보고서 파일 정보"""
+    filename: str
+    topic: str
+    created_at: str
+    size: int
+
+
 class RegenerateRequest(BaseModel):
     """보고서 섹션 재생성 요청 스키마"""
     section: str
@@ -137,6 +151,26 @@ class RegenerateResponse(BaseModel):
     updated_report: str
     section: str
     message: str
+
+
+def save_report_to_file(report: str, topic: str) -> str:
+    """최종 보고서를 텍스트 파일로 저장합니다."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # 파일명에서 특수문자 제거
+    safe_topic = "".join(c if c.isalnum() or c in (' ', '-', '_') else '_' for c in topic)[:50].strip()
+    filename = f"report_{timestamp}_{safe_topic}.txt"
+    filepath = REPORTS_DIR / filename
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(f"{'='*80}\n")
+        f.write(f"  Virtual Lab - 최종 연구 보고서\n")
+        f.write(f"  연구 주제: {topic}\n")
+        f.write(f"  생성 일시: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"{'='*80}\n\n")
+        f.write(report)
+
+    logging.getLogger("report").info(f"Report saved: {filepath}")
+    return filename
 
 
 @app.get("/health")
@@ -203,6 +237,13 @@ def run_research(request: ResearchRequest):
 
     # 실행
     result = workflow.invoke(initial_state)
+
+    # 보고서 파일 저장
+    if result["final_report"]:
+        try:
+            save_report_to_file(result["final_report"], request.topic)
+        except Exception as e:
+            logging.getLogger("report").warning(f"Failed to save report: {e}")
 
     return ResearchResponse(
         report=result["final_report"],
@@ -433,12 +474,22 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
         sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, iterations: {iteration_count}")
 
+        # 보고서 파일 저장
+        saved_filename = ""
+        if final_report:
+            try:
+                saved_filename = save_report_to_file(final_report, topic)
+                sse_logger.info(f"Report saved to file: {saved_filename}")
+            except Exception as e:
+                sse_logger.warning(f"Failed to save report file: {e}")
+
         # 완료 이벤트
         yield send_event("complete", {
             "message": "연구 프로세스 완료",
             "report": final_report,
             "iterations": iteration_count,
-            "messages": all_messages
+            "messages": all_messages,
+            "saved_filename": saved_filename,
         })
 
     except Exception as e:
@@ -537,3 +588,37 @@ def regenerate_section(request: RegenerateRequest):
             status_code=500,
             detail=f"Failed to regenerate section: {str(e)}"
         )
+
+
+@app.get("/api/reports")
+def list_reports():
+    """저장된 보고서 목록을 반환합니다."""
+    reports = []
+    for f in sorted(REPORTS_DIR.glob("report_*.txt"), reverse=True):
+        # 파일명에서 정보 추출: report_20260208_143000_topic.txt
+        parts = f.stem.split("_", 3)
+        topic = parts[3] if len(parts) > 3 else "unknown"
+        created = f"{parts[1][:4]}-{parts[1][4:6]}-{parts[1][6:8]} {parts[2][:2]}:{parts[2][2:4]}:{parts[2][4:6]}" if len(parts) > 2 else ""
+        reports.append(ReportFileInfo(
+            filename=f.name,
+            topic=topic.replace("_", " "),
+            created_at=created,
+            size=f.stat().st_size,
+        ))
+    return {"reports": reports}
+
+
+@app.get("/api/reports/{filename}")
+def download_report(filename: str):
+    """저장된 보고서 파일을 다운로드합니다."""
+    filepath = REPORTS_DIR / filename
+    if not filepath.exists() or not filepath.is_file():
+        raise HTTPException(status_code=404, detail="Report not found")
+    # 경로 조작 방지
+    if filepath.resolve().parent != REPORTS_DIR.resolve():
+        raise HTTPException(status_code=403, detail="Access denied")
+    return FileResponse(
+        path=str(filepath),
+        media_type="text/plain; charset=utf-8",
+        filename=filename,
+    )

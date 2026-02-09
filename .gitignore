@@ -37,6 +37,9 @@ htmlcov/
 # Worktree
 worktree/
 
+# Generated Reports (보고서 파일은 로컬만)
+reports/*.txt
+
 # Claude Skills (external)
 claude_skills/
 
