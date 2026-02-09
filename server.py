@@ -695,3 +695,15 @@ def get_report_content(filename: str):
         "created_at": created_at,
         "content": content,
     }
+
+
+@app.delete("/api/reports/{filename}")
+def delete_report(filename: str):
+    """보고서 파일을 삭제합니다."""
+    filepath = REPORTS_DIR / filename
+    if not filepath.exists() or not filepath.is_file():
+        raise HTTPException(status_code=404, detail="Report not found")
+    if filepath.resolve().parent != REPORTS_DIR.resolve():
+        raise HTTPException(status_code=403, detail="Access denied")
+    filepath.unlink()
+    return {"message": "삭제되었습니다.", "filename": filename}

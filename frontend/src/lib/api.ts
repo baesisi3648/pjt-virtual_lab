@@ -117,6 +117,19 @@ export async function fetchReports(): Promise<ReportListItem[]> {
 }
 
 /**
+ * 보고서 삭제
+ */
+export async function deleteReport(filename: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/api/reports/${encodeURIComponent(filename)}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete report: ${response.statusText}`);
+  }
+}
+
+/**
  * 보고서 내용 조회 (메타데이터 + 본문)
  */
 export async function fetchReportContent(filename: string): Promise<ReportContent> {

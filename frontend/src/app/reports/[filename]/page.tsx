@@ -111,23 +111,13 @@ export default function ReportViewerPage({
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <Link
-                href="/reports"
-                className="flex items-center gap-2 px-4 py-2 glass-panel-light rounded-lg hover:bg-white/10 transition-all text-sm text-gray-300"
-              >
-                <span className="material-icons text-base">arrow_back</span>
-                목록
-              </Link>
-              <a
-                href={`${API_BASE_URL}/api/reports/${encodeURIComponent(decodedFilename)}`}
-                download
-                className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-[#137fec] rounded-lg hover:bg-[#0e6bc9] transition-colors"
-              >
-                <span className="material-icons text-base">download</span>
-                Download
-              </a>
-            </div>
+            <Link
+              href="/reports"
+              className="flex items-center gap-2 px-4 py-2 glass-panel-light rounded-lg hover:bg-white/10 transition-all text-sm text-gray-300"
+            >
+              <span className="material-icons text-base">arrow_back</span>
+              목록
+            </Link>
           </div>
         </div>
       </header>

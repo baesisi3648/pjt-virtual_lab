@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { fetchReports, type ReportListItem } from '@/lib/api';
+import { fetchReports, deleteReport, type ReportListItem } from '@/lib/api';
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<ReportListItem[]>([]);
@@ -19,6 +19,18 @@ export default function ReportsPage() {
   const formatSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     return `${(bytes / 1024).toFixed(1)} KB`;
+  };
+
+  const handleDelete = async (filename: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm('이 보고서를 삭제하시겠습니까?')) return;
+    try {
+      await deleteReport(filename);
+      setReports((prev) => prev.filter((r) => r.filename !== filename));
+    } catch (err) {
+      alert(`삭제 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+    }
   };
 
   return (
@@ -113,13 +125,15 @@ export default function ReportsPage() {
         {!loading && !error && reports.length > 0 && (
           <div className="space-y-4">
             {reports.map((report) => (
-              <Link
+              <div
                 key={report.filename}
-                href={`/reports/${encodeURIComponent(report.filename)}`}
-                className="block glass-panel-hover p-6 rounded-lg group transition-all"
+                className="glass-panel-hover p-6 rounded-lg group transition-all"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <Link
+                    href={`/reports/${encodeURIComponent(report.filename)}`}
+                    className="flex items-center gap-4 flex-1 min-w-0"
+                  >
                     <div className="w-12 h-12 rounded-lg bg-[#137fec]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#137fec]/20 transition-colors">
                       <span className="material-symbols-outlined text-[#137fec] text-2xl">article</span>
                     </div>
@@ -138,12 +152,24 @@ export default function ReportsPage() {
                         </span>
                       </div>
                     </div>
+                  </Link>
+                  <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                    <button
+                      onClick={(e) => handleDelete(report.filename, e)}
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                      title="보고서 삭제"
+                    >
+                      <span className="material-symbols-outlined text-base">delete</span>
+                      <span className="hidden sm:inline">삭제</span>
+                    </button>
+                    <Link href={`/reports/${encodeURIComponent(report.filename)}`}>
+                      <span className="material-symbols-outlined text-white/20 group-hover:text-[#137fec] transition-colors text-2xl">
+                        chevron_right
+                      </span>
+                    </Link>
                   </div>
-                  <span className="material-symbols-outlined text-white/20 group-hover:text-[#137fec] transition-colors text-2xl flex-shrink-0">
-                    chevron_right
-                  </span>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
