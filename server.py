@@ -153,6 +153,16 @@ class RegenerateResponse(BaseModel):
     message: str
 
 
+class TranslateRequest(BaseModel):
+    """보고서 번역 요청 스키마"""
+    content: str
+
+
+class TranslateResponse(BaseModel):
+    """보고서 번역 응답 스키마"""
+    translated: str
+
+
 def save_report_to_file(report: str, topic: str) -> str:
     """최종 보고서를 텍스트 파일로 저장합니다."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -616,6 +626,36 @@ def regenerate_section(request: RegenerateRequest):
         raise HTTPException(
             status_code=500,
             detail=f"Failed to regenerate section: {str(e)}"
+        )
+
+
+@app.post("/api/reports/translate", response_model=TranslateResponse)
+def translate_report(request: TranslateRequest):
+    """보고서를 학술 논문체 영어로 번역합니다.
+
+    GPT-4o를 사용하여 높은 품질의 학술 영어 번역을 생성합니다.
+    """
+    from utils.llm import call_gpt4o
+
+    try:
+        system_prompt = (
+            "You are a professional academic translator specializing in biotechnology, "
+            "food safety, and genetic engineering. Translate the following Korean research "
+            "report into formal academic English suitable for publication in a peer-reviewed "
+            "journal. Maintain the original structure (headings, sections, bullet points). "
+            "Use precise scientific terminology. Do not add or remove any content — "
+            "translate faithfully."
+        )
+        user_message = request.content
+
+        translated = call_gpt4o(system_prompt, user_message, temperature=0.3)
+
+        return TranslateResponse(translated=translated)
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to translate report: {str(e)}"
         )
 
 

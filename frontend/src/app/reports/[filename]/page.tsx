@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import ReportEditor from '@/components/ReportEditor';
-import { fetchReportContent, regenerateSection } from '@/lib/api';
+import { fetchReportContent, regenerateSection, translateReport } from '@/lib/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -22,7 +22,9 @@ export default function ReportViewerPage({
   const [error, setError] = useState('');
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeSection, setActiveSection] = useState('executive-summary');
+  const [translatedReport, setTranslatedReport] = useState('');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [lang, setLang] = useState<'ko' | 'en'>('ko');
 
   useEffect(() => {
     fetchReportContent(decodedFilename)
@@ -53,13 +55,32 @@ export default function ReportViewerPage({
     }
   };
 
-  const navSections = [
-    { id: 'executive-summary', label: 'Executive Summary', icon: 'dashboard' },
-    { id: 'risk-analysis', label: 'Risk Analysis', icon: 'analytics' },
-    { id: 'guideline-assessment', label: 'Guideline Assessment', icon: 'science' },
-    { id: 'update-items', label: 'Update Items', icon: 'genetics' },
-    { id: 'conclusion', label: 'Conclusion', icon: 'verified_user' },
-  ];
+  const handleTranslate = async () => {
+    setIsTranslating(true);
+    setMessage('');
+    try {
+      const response = await translateReport(report);
+      setTranslatedReport(response.translated);
+      setLang('en');
+      setMessage('Translation completed successfully.');
+    } catch (err) {
+      setMessage(`번역 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const handleDownloadTxt = () => {
+    const content = lang === 'en' && translatedReport ? translatedReport : report;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const suffix = lang === 'en' ? '_EN' : '';
+    a.download = `${decodedFilename.replace('.txt', '')}${suffix}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (loading) {
     return (
@@ -122,62 +143,9 @@ export default function ReportViewerPage({
         </div>
       </header>
 
-      {/* Two-column layout */}
-      <div className="container mx-auto px-6 py-8 flex gap-8">
-        {/* Left Sidebar */}
-        <aside className="w-64 hidden lg:block flex-shrink-0">
-          <div className="sticky top-24 space-y-6">
-            {/* Navigation */}
-            <div className="glass-panel-light rounded-lg p-4">
-              <h2 className="text-xs uppercase tracking-wider text-gray-500 mb-4">Report Sections</h2>
-              <nav className="space-y-2">
-                {navSections.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                      activeSection === section.id
-                        ? 'bg-[#137fec]/10 text-[#137fec] border-l-2 border-[#137fec]'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span className="material-icons text-base">{section.icon}</span>
-                    <span>{section.label}</span>
-                  </button>
-                ))}
-              </nav>
-            </div>
-
-            {/* Meta Info */}
-            <div className="glass-panel-light rounded-lg p-4">
-              <div className="space-y-3 text-sm">
-                {topic && (
-                  <div>
-                    <span className="text-xs text-gray-500">Topic</span>
-                    <p className="text-gray-300 mt-1">{topic}</p>
-                  </div>
-                )}
-                {createdAt && (
-                  <div>
-                    <span className="text-xs text-gray-500">Created</span>
-                    <p className="text-gray-300 mt-1">{createdAt}</p>
-                  </div>
-                )}
-                <div>
-                  <span className="text-xs text-gray-500">Status</span>
-                  <div className="mt-1">
-                    <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded font-semibold">
-                      COMPLETED
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0">
+      {/* Content */}
+      <div className="container mx-auto px-6 py-8">
+        <main>
           <div className="bg-grid min-h-screen">
             {/* Floating Toolbar */}
             <div className="sticky top-24 z-10 mb-6">
@@ -190,14 +158,56 @@ export default function ReportViewerPage({
                     <span className="text-sm text-gray-400">Last updated: {createdAt}</span>
                   )}
                 </div>
-                <a
-                  href={`${API_BASE_URL}/api/reports/${encodeURIComponent(decodedFilename)}`}
-                  download
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-[#137fec] rounded-lg hover:bg-[#0e6bc9] transition-colors"
-                >
-                  <span className="material-icons text-base">download</span>
-                  Export TXT
-                </a>
+                <div className="flex items-center gap-3">
+                  {/* Language toggle / Translate button */}
+                  {translatedReport ? (
+                    <div className="flex items-center rounded-lg overflow-hidden border border-gray-600">
+                      <button
+                        onClick={() => setLang('ko')}
+                        className={`px-3 py-2 text-sm font-medium transition-colors ${
+                          lang === 'ko'
+                            ? 'bg-[#137fec] text-white'
+                            : 'bg-transparent text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        한국어
+                      </button>
+                      <button
+                        onClick={() => setLang('en')}
+                        className={`px-3 py-2 text-sm font-medium transition-colors ${
+                          lang === 'en'
+                            ? 'bg-[#137fec] text-white'
+                            : 'bg-transparent text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        English
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleTranslate}
+                      disabled={isTranslating}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 glass-panel-light rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50"
+                    >
+                      {isTranslating ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#137fec]"></div>
+                          Translating...
+                        </>
+                      ) : (
+                        <>Translate to English</>
+                      )}
+                    </button>
+                  )}
+
+                  <button
+                    onClick={handleDownloadTxt}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-[#137fec] rounded-lg hover:bg-[#0e6bc9] transition-colors"
+                  >
+                    <span className="material-icons text-base">download</span>
+                    Export TXT{lang === 'en' ? ' (EN)' : ''}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -232,7 +242,7 @@ export default function ReportViewerPage({
 
                 <div className="min-h-[800px]">
                   <ReportEditor
-                    report={report}
+                    report={lang === 'en' && translatedReport ? translatedReport : report}
                     onRegenerate={handleRegenerate}
                     isLoading={isRegenerating}
                   />
@@ -241,11 +251,13 @@ export default function ReportViewerPage({
             </div>
 
             {/* Loading indicator */}
-            {isRegenerating && (
+            {(isRegenerating || isTranslating) && (
               <div className="mt-6 glass-panel rounded-lg px-6 py-4">
                 <div className="flex items-center gap-3">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#137fec]"></div>
-                  <span className="text-gray-400">재생성 중...</span>
+                  <span className="text-gray-400">
+                    {isTranslating ? 'Translating to English...' : '재생성 중...'}
+                  </span>
                 </div>
               </div>
             )}

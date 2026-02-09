@@ -130,6 +130,27 @@ export async function deleteReport(filename: string): Promise<void> {
 }
 
 /**
+ * 보고서 영어 번역
+ */
+export async function translateReport(
+  content: string
+): Promise<{ translated: string }> {
+  const response = await fetch(`${API_BASE_URL}/api/reports/translate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Translate request failed: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
  * 보고서 내용 조회 (메타데이터 + 본문)
  */
 export async function fetchReportContent(filename: string): Promise<ReportContent> {

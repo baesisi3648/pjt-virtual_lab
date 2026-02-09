@@ -8,7 +8,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -39,6 +39,12 @@ export default function ReportEditor({
   const [currentReport, setCurrentReport] = useState(report);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
+
+  // report prop 변경 시 내부 state 동기화 (한/영 전환 등)
+  useEffect(() => {
+    setCurrentReport(report);
+    setEditedReport(report);
+  }, [report]);
 
   // 보고서를 섹션별로 파싱
   const parseSections = (markdown: string): Section[] => {
