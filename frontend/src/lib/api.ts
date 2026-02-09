@@ -21,6 +21,20 @@ export interface ResearchResponse {
   iterations: number;
 }
 
+export interface ReportListItem {
+  filename: string;
+  topic: string;
+  created_at: string;
+  size: number;
+}
+
+export interface ReportContent {
+  filename: string;
+  topic: string;
+  created_at: string;
+  content: string;
+}
+
 export interface RegenerateRequest {
   section: string;
   feedback: string;
@@ -83,6 +97,33 @@ export async function regenerateSection(
 
   if (!response.ok) {
     throw new Error(`Regenerate request failed: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * 보고서 목록 조회
+ */
+export async function fetchReports(): Promise<ReportListItem[]> {
+  const response = await fetch(`${API_BASE_URL}/api/reports`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch reports: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data.reports;
+}
+
+/**
+ * 보고서 내용 조회 (메타데이터 + 본문)
+ */
+export async function fetchReportContent(filename: string): Promise<ReportContent> {
+  const response = await fetch(`${API_BASE_URL}/api/reports/${encodeURIComponent(filename)}/content`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch report content: ${response.statusText}`);
   }
 
   return response.json();

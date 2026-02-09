@@ -49,7 +49,7 @@ export default function HomePage() {
             <Link href="/timeline" className="px-6 py-2 hover:bg-white/5 rounded-full text-sm font-medium transition-colors">
               Agents
             </Link>
-            <Link href="/report-demo" className="px-6 py-2 hover:bg-white/5 rounded-full text-sm font-medium transition-colors">
+            <Link href="/reports" className="px-6 py-2 hover:bg-white/5 rounded-full text-sm font-medium transition-colors">
               Reports
             </Link>
           </nav>
@@ -296,7 +296,7 @@ export default function HomePage() {
             </div>
           </Link>
 
-          <Link href="/report-demo" className="glass-panel-hover p-8 group">
+          <Link href="/reports" className="glass-panel-hover p-8 group">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full bg-[#0bda5b]/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[#0bda5b] text-2xl">description</span>

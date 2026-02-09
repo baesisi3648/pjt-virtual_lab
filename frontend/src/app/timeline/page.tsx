@@ -9,6 +9,7 @@
 
 import { useState, useCallback, useEffect, use } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ProcessTimeline from '@/components/ProcessTimeline';
 
 export default function TimelinePage({
@@ -16,11 +17,13 @@ export default function TimelinePage({
 }: {
   searchParams: Promise<{ topic?: string }>;
 }) {
+  const router = useRouter();
   const params = use(searchParams);
   const [topic, setTopic] = useState('');
   const [constraints, setConstraints] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [finalReport, setFinalReport] = useState('');
+  const [savedFilename, setSavedFilename] = useState('');
   const [error, setError] = useState('');
 
   // Auto-populate and submit if topic parameter exists
@@ -49,11 +52,13 @@ export default function TimelinePage({
     setTopic('');
     setConstraints('');
     setFinalReport('');
+    setSavedFilename('');
     setError('');
   };
 
-  const handleComplete = useCallback((report: string) => {
+  const handleComplete = useCallback((report: string, filename?: string) => {
     setFinalReport(report);
+    if (filename) setSavedFilename(filename);
   }, []);
 
   const handleError = useCallback((err: string) => {
@@ -296,6 +301,17 @@ export default function TimelinePage({
                 </div>
 
                 <div className="flex gap-4">
+                  {/* 보고서 보기 Button */}
+                  {savedFilename && (
+                    <button
+                      onClick={() => router.push(`/reports/${encodeURIComponent(savedFilename)}`)}
+                      className="px-6 py-3 bg-[#0bda5b] hover:bg-[#0bda5b]/80 rounded-lg font-medium transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(11,218,91,0.3)]"
+                    >
+                      <span className="material-symbols-outlined text-sm">description</span>
+                      <span>보고서 보기</span>
+                    </button>
+                  )}
+
                   {/* Copy Button */}
                   <button
                     onClick={() => {

@@ -27,6 +27,7 @@ interface TimelineEvent {
   content?: string;
   scores?: Record<string, number>;
   error?: string;
+  saved_filename?: string;
   specialist_name?: string;
   specialist_focus?: string;
 }
@@ -35,7 +36,7 @@ interface TimelineEvent {
 interface ProcessTimelineProps {
   topic: string;
   constraints?: string;
-  onComplete?: (report: string) => void;
+  onComplete?: (report: string, filename?: string) => void;
   onError?: (error: string) => void;
 }
 
@@ -171,7 +172,7 @@ export default function ProcessTimeline({
 
                 if (event.type === 'complete' && event.report) {
                   setCurrentReport(event.report);
-                  onCompleteRef.current?.(event.report);
+                  onCompleteRef.current?.(event.report, event.saved_filename);
                 }
                 if (event.type === 'error' && event.error) {
                   onErrorRef.current?.(event.error);

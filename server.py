@@ -651,3 +651,47 @@ def download_report(filename: str):
         media_type="text/plain; charset=utf-8",
         filename=filename,
     )
+
+
+@app.get("/api/reports/{filename}/content")
+def get_report_content(filename: str):
+    """보고서 파일의 내용을 JSON으로 반환합니다. 헤더(=== 블록)를 파싱하여 메타데이터와 본문을 분리합니다."""
+    filepath = REPORTS_DIR / filename
+    if not filepath.exists() or not filepath.is_file():
+        raise HTTPException(status_code=404, detail="Report not found")
+    if filepath.resolve().parent != REPORTS_DIR.resolve():
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    raw = filepath.read_text(encoding="utf-8")
+
+    # 헤더 블록 파싱: === 로 시작하는 줄 사이의 메타데이터 추출
+    topic = ""
+    created_at = ""
+    content = raw
+
+    lines = raw.split("\n")
+    # 헤더가 있는 경우: 첫 줄이 '=' 반복으로 시작
+    if lines and lines[0].startswith("===") or (lines and lines[0].startswith("="*10)):
+        # 두 번째 '===' 줄 찾기
+        header_end = -1
+        for i in range(1, len(lines)):
+            if lines[i].startswith("="*10):
+                header_end = i
+                break
+        if header_end > 0:
+            # 헤더 내부에서 메타데이터 추출
+            for line in lines[1:header_end]:
+                stripped = line.strip()
+                if stripped.startswith("연구 주제:"):
+                    topic = stripped.replace("연구 주제:", "").strip()
+                elif stripped.startswith("생성 일시:"):
+                    created_at = stripped.replace("생성 일시:", "").strip()
+            # 헤더 이후 빈 줄 제거하고 본문 추출
+            content = "\n".join(lines[header_end + 1:]).lstrip("\n")
+
+    return {
+        "filename": filename,
+        "topic": topic,
+        "created_at": created_at,
+        "content": content,
+    }
