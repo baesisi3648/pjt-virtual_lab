@@ -245,6 +245,7 @@ def run_research(request: ResearchRequest):
         "final_report": "",
         "messages": [],
         "parallel_views": [],
+        "sources": [],
     }
 
     # 실행
@@ -401,6 +402,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "final_report": "",
             "messages": [],
             "parallel_views": [],
+        "sources": [],
         }
 
         # Phase 1: Planning 시작

@@ -30,3 +30,4 @@ class AgentState(TypedDict):
     final_report: str  # PI가 확정한 최종 보고서
     messages: list[dict]  # 에이전트 간 메시지 로그
     parallel_views: list[dict]  # 병렬 분석 결과 (Map-Reduce)
+    sources: list[str]  # 참조 출처 목록 (웹 검색 URL, RAG 문헌)

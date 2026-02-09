@@ -13,7 +13,25 @@ from tools.rag_search import rag_search_tool
 from tools.web_search import web_search
 from agents.factory import create_specialist
 
+import re
+
 logger = logging.getLogger(__name__)
+
+
+def _extract_sources(text: str) -> list[str]:
+    """검색 결과 텍스트에서 출처 정보를 추출합니다."""
+    sources = []
+    # 웹 검색 출처: [출처: URL]
+    for match in re.findall(r'\[출처:\s*(https?://[^\]]+)\]', text):
+        source = f"[웹] {match.strip()}"
+        if source not in sources:
+            sources.append(source)
+    # RAG 문헌 출처: **출처**: filename (p.N)
+    for match in re.findall(r'\*\*출처\*\*:\s*(.+?)(?:\n|$)', text):
+        source = f"[문헌] {match.strip()}"
+        if source not in sources:
+            sources.append(source)
+    return sources
 
 
 SYSTEM_PROMPT = f"""당신은 유전자편집식품(NGT)의 안전성 위험 요소를 식별하고 기존 위험평가 지침의 적용 가능성을 분석하는 과학 전문가입니다.
@@ -254,6 +272,18 @@ def run_specialists(state: AgentState) -> dict:
                 "output": f"분석 실패: {str(e)}",
             })
 
+    # 출처 수집
+    collected_sources = list(state.get("sources", []))
+    collected_sources.extend(_extract_sources(rag_context))
+    collected_sources.extend(_extract_sources(web_context))
+    # 중복 제거
+    seen = set()
+    unique_sources = []
+    for s in collected_sources:
+        if s not in seen:
+            seen.add(s)
+            unique_sources.append(s)
+
     # 전문가 결과를 통합하여 draft 생성
     draft_sections = []
     for so in specialist_outputs:
@@ -261,10 +291,12 @@ def run_specialists(state: AgentState) -> dict:
     combined_draft = "\n\n---\n\n".join(draft_sections)
 
     print(f"\n[SPECIALISTS] All {len(team)} specialists completed")
-    print(f"  Combined draft: {len(combined_draft)} chars\n")
+    print(f"  Combined draft: {len(combined_draft)} chars")
+    print(f"  Sources collected: {len(unique_sources)}\n")
 
     return {
         "draft": combined_draft,
         "specialist_outputs": specialist_outputs,
         "messages": messages,
+        "sources": unique_sources,
     }

@@ -20,13 +20,13 @@ from agents.scientist import run_specialists
 from agents.critic import run_critic
 from agents.pi import run_pi_planning, run_pi
 
-MAX_ITERATIONS = 2
+MAX_ITERATIONS = 5
 
 
 def should_continue(state: AgentState) -> Literal["researching", "finalizing"]:
     """Critic 결과에 따라 다음 노드 결정
 
-    - 최대 반복 횟수(2회) 도달 시 -> finalizing
+    - 최대 반복 횟수(5회) 도달 시 -> finalizing
     - Critic이 revise 판정 시 -> researching (전문가 재분석)
     - Critic이 approve 판정 시 -> finalizing (최종 보고서)
     """

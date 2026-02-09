@@ -5,11 +5,26 @@ OpenAI SDK 직접 호출 방식으로 tool_calls 문제를 방지합니다.
 """
 import json
 import logging
+import re
 from typing import List
 
 from utils.llm import call_gpt4o
 from workflow.state import AgentState
 from tools.web_search import web_search
+
+
+def _extract_sources(text: str) -> list[str]:
+    """검색 결과 텍스트에서 출처 정보를 추출합니다."""
+    sources = []
+    for match in re.findall(r'\[출처:\s*(https?://[^\]]+)\]', text):
+        source = f"[웹] {match.strip()}"
+        if source not in sources:
+            sources.append(source)
+    for match in re.findall(r'\*\*출처\*\*:\s*(.+?)(?:\n|$)', text):
+        source = f"[문헌] {match.strip()}"
+        if source not in sources:
+            sources.append(source)
+    return sources
 
 logger = logging.getLogger(__name__)
 
@@ -113,27 +128,43 @@ off-target 변화, 의도되지 않은 서열 삽입 가능성 등을 EGT 및 �
 ## 4. 종합적인 결론 보고서
 
 ### 4-1. 통합적 평가 결과
-(기존 유전자변형식품 위험평가 체계의 적용 가능성, 충분성 및 한계를 통합 정리)
+(기존 유전자변형식품 위험평가 체계의 적용 가능성, 충분성 및 한계를 통합 정리.
+최소 5-10문장으로 구체적인 평가 결과를 상세히 서술할 것.)
 
 ### 4-2. NGT vs EGT vs 전통 육종 비교 총괄
 (유전자 변형 과정과 결과적 형질이라는 두 분석 축을 중심으로,
-위험 특성의 공통점과 차별점을 명확히 도출)
+위험 특성의 공통점과 차별점을 명확히 도출.
+최소 5-10문장으로 비교 결과를 체계적으로 서술할 것.)
 
 ### 4-3. 기존 지침의 적용 영역 구분 및 과학적 근거
 (전반적으로 적용 가능한 영역과, 부분적 보완 또는 신규 평가 요소 추가가
-요구되는 영역을 구분하고, 그 과학적·기술적 근거를 명확히 기술)
+요구되는 영역을 구분하고, 그 과학적·기술적 근거를 명확히 기술.
+최소 5-10문장으로 각 영역별 판단 근거를 상세히 서술할 것.)
 
 ### 4-4. 주요 한계점
 (분자적 특성 변화의 해석, 비의도적 변형의 평가 한계, 형질 기반 위험 평가의
-불확실성, 식품 안전성 평가에서의 자료 공백 등 본 연구에서 확인된 주요 한계점)
+불확실성, 식품 안전성 평가에서의 자료 공백 등 본 연구에서 확인된 주요 한계점.
+최소 5-10문장으로 각 한계점과 그 영향을 구체적으로 서술할 것.)
 
 ### 4-5. 향후 연구 과제 및 데이터 요구 사항
 (분석 범위 및 방법론적 제약으로 인해 도출되지 못한 사항을 명시하고,
-향후 위험평가 체계 고도화를 위해 추가 검토가 필요한 연구 과제 및 데이터 제안)
+향후 위험평가 체계 고도화를 위해 추가 검토가 필요한 연구 과제 및 데이터 제안.
+최소 5-10문장으로 구체적 연구 과제와 필요 데이터를 상세히 서술할 것.)
 
 ### 4-6. 최종 결론
 (유전자편집식품의 특성을 반영한 단계적·비례적 위험평가 접근의 필요성을
-결론으로 제시하고, 현행 안전성 평가 지침의 합리적 개선 방향을 도출)
+결론으로 제시하고, 현행 안전성 평가 지침의 합리적 개선 방향을 도출.
+최소 5-10문장으로 핵심 결론과 정책적 제언을 구체적으로 서술할 것.)
+
+---
+
+## 5. 참고문헌 (References)
+
+### 5-1. Web Search Sources
+(Tavily 웹 검색을 통해 참조한 온라인 자료의 URL과 제목을 번호 목록으로 정리)
+
+### 5-2. Regulatory Documents (RAG)
+(RAG 시스템을 통해 참조한 규제 문서·학술 문헌의 파일명, 페이지, 제목을 번호 목록으로 정리)
 ```
 
 **중요**:
@@ -252,9 +283,11 @@ def run_pi(state: AgentState) -> dict:
 
     # Step 1: 웹 검색으로 최신 정보 보강
     web_context = ""
+    pi_sources = []
     try:
         web_result = web_search.invoke({"query": f"{state['topic']} NGT safety framework final report 2025"})
         web_context = f"\n\n## [웹 검색 결과 - 최신 정보]\n{web_result}"
+        pi_sources.extend(_extract_sources(web_context))
         logger.info("PI web search completed")
     except Exception as e:
         logger.warning(f"PI web search failed: {e}")
@@ -278,15 +311,35 @@ def run_pi(state: AgentState) -> dict:
     )
     if specialist_context:
         user_message += f"[각 전문가 개별 분석 결과]\n{specialist_context}\n\n"
+    # 출처 목록 통합 (이전 단계 + PI 웹 검색)
+    all_sources = list(state.get("sources", []))
+    all_sources.extend(pi_sources)
+    # 중복 제거
+    seen = set()
+    unique_sources = []
+    for s in all_sources:
+        if s not in seen:
+            seen.add(s)
+            unique_sources.append(s)
+
+    sources_text = ""
+    if unique_sources:
+        sources_list = "\n".join(f"- {s}" for s in unique_sources)
+        sources_text = f"\n\n[참조 출처 목록]\n{sources_list}"
+
     user_message += (
         f"{web_context}\n\n"
+        f"{sources_text}\n\n"
         "위 초안과 전문가 분석 결과를 종합하여 최종 보고서를 Markdown 형식으로 작성하세요.\n"
         "반드시 4개 파트(1. 위험 식별, 2. 지침 적용 가능성 평가, 3. 지침 업데이트 항목, 4. 종합 결론)와\n"
         "모든 하위 항목(1-1~1-3, 2-1~2-6, 3-1~3-4, 4-1~4-6)을 빠짐없이 포함해야 합니다.\n"
         "각 항목은 충분한 분량(최소 5-10 문단)으로 분석적으로 서술하세요.\n\n"
         "★ 핵심: 파트 3-2에서는 파트 1에서 식별한 각 위험 요소에 대해 구체적인 해결방안·검증방법을 제시하고,\n"
         "파트 2에서 발견한 지침 한계점에 대해 구체적인 보완조치를 제시하세요.\n"
-        "모든 위험 요소가 해결방안과 명확히 연결되어야 합니다."
+        "모든 위험 요소가 해결방안과 명확히 연결되어야 합니다.\n\n"
+        "★ 보고서 최하단에 반드시 '## 5. 참고문헌 (References)' 섹션을 추가하세요.\n"
+        "위에 제공된 [참조 출처 목록]의 모든 출처를 포함하고,\n"
+        "[웹] 출처는 'Web Search' 카테고리로, [문헌] 출처는 'Regulatory Documents (RAG)' 카테고리로 구분하여 정리하세요."
     )
 
     # Step 4: OpenAI 직접 호출 (NO LangChain)
