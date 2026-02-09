@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import logging
+import time
 import traceback
 
 from dotenv import load_dotenv
@@ -86,123 +87,105 @@ def call_llm(
     logger.info(f"[LLM] User message: {len(user_message)} chars")
 
     client = _get_http_client()
+    max_retries = 5
 
-    try:
-        response = client.post(
-            OPENAI_API_URL,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-        )
-
-        # 상세 로깅: 응답 받음
-        print(f"\n{'='*80}")
-        print(f"[LLM RESPONSE] Received response from OpenAI")
-        print(f"  Status code: {response.status_code}")
-        print(f"  Response headers: {dict(response.headers)}")
-        print(f"{'='*80}\n")
-
-        # HTTP 에러 체크
-        if response.status_code != 200:
-            error_body = response.text
-            print(f"\n{'!'*80}")
-            print(f"[LLM ERROR] OpenAI API returned error!")
-            print(f"  Status: {response.status_code}")
-            print(f"  Error body: {error_body}")
-            print(f"{'!'*80}\n")
-            logger.error(f"[LLM] OpenAI API HTTP {response.status_code}: {error_body}")
-            raise RuntimeError(
-                f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+    for attempt in range(max_retries):
+        try:
+            response = client.post(
+                OPENAI_API_URL,
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
             )
 
-        data = response.json()
+            # 상세 로깅: 응답 받음
+            print(f"\n{'='*80}")
+            print(f"[LLM RESPONSE] Received response from OpenAI")
+            print(f"  Status code: {response.status_code}")
+            print(f"{'='*80}\n")
 
-        # 상세 로깅: 응답 데이터 구조
-        print(f"\n{'='*80}")
-        print(f"[LLM RESPONSE DATA] Parsing JSON response")
-        print(f"  Response keys: {list(data.keys())}")
-        if "choices" in data and len(data["choices"]) > 0:
-            msg = data["choices"][0].get("message", {})
-            print(f"  Message keys: {list(msg.keys())}")
-            print(f"  Has 'tool_calls': {bool(msg.get('tool_calls'))}")
-            if msg.get("tool_calls"):
-                print(f"  Tool calls count: {len(msg['tool_calls'])}")
-                print(f"  Tool call IDs: {[tc.get('id') for tc in msg['tool_calls']]}")
-        print(f"{'='*80}\n")
+            # Rate Limit (429) 자동 재시도
+            if response.status_code == 429:
+                retry_after = 10  # 기본 대기 시간
+                try:
+                    err = response.json().get("error", {})
+                    msg = err.get("message", "")
+                    # "Please try again in 3.396s" 에서 대기 시간 추출
+                    if "try again in" in msg:
+                        wait_str = msg.split("try again in ")[1].split("s")[0]
+                        retry_after = float(wait_str) + 1  # 여유 1초 추가
+                except Exception:
+                    pass
+                retry_after = min(retry_after, 60)  # 최대 60초
 
-        # API 레벨 에러 체크
-        if "error" in data:
-            error_msg = data["error"].get("message", str(data["error"]))
-            error_type = data["error"].get("type", "unknown")
-            error_param = data["error"].get("param", "unknown")
+                if attempt < max_retries - 1:
+                    print(f"[LLM RATE LIMIT] 429 - waiting {retry_after:.1f}s before retry ({attempt+1}/{max_retries})")
+                    logger.warning(f"[LLM] Rate limit hit, retrying in {retry_after:.1f}s (attempt {attempt+1})")
+                    time.sleep(retry_after)
+                    continue
+                else:
+                    error_body = response.text
+                    raise RuntimeError(f"OpenAI API rate limit exceeded after {max_retries} retries: {error_body}")
 
-            print(f"\n{'!'*80}")
-            print(f"[LLM API ERROR] OpenAI returned error in JSON!")
-            print(f"  Type: {error_type}")
-            print(f"  Param: {error_param}")
-            print(f"  Message: {error_msg}")
-            print(f"  Full error: {json.dumps(data['error'], indent=2)}")
-            print(f"{'!'*80}\n")
+            # HTTP 에러 체크
+            if response.status_code != 200:
+                error_body = response.text
+                print(f"\n{'!'*80}")
+                print(f"[LLM ERROR] OpenAI API returned error!")
+                print(f"  Status: {response.status_code}")
+                print(f"  Error body: {error_body}")
+                print(f"{'!'*80}\n")
+                logger.error(f"[LLM] OpenAI API HTTP {response.status_code}: {error_body}")
+                raise RuntimeError(
+                    f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+                )
 
-            logger.error(f"[LLM] OpenAI API Error: {error_msg}")
-            raise RuntimeError(f"OpenAI API error: {error_msg}")
+            data = response.json()
 
-        # 응답 파싱
-        choice = data["choices"][0]
-        content = choice["message"].get("content") or ""
+            # API 레벨 에러 체크
+            if "error" in data:
+                error_msg = data["error"].get("message", str(data["error"]))
+                logger.error(f"[LLM] OpenAI API Error: {error_msg}")
+                raise RuntimeError(f"OpenAI API error: {error_msg}")
 
-        # tool_calls가 있으면 경고 (발생하면 안 됨)
-        if choice["message"].get("tool_calls"):
-            print(f"\n{'!'*80}")
-            print(f"[LLM WARNING] Response contains tool_calls!")
-            print(f"  This should NEVER happen - we didn't send 'tools' parameter")
-            print(f"  Tool calls: {choice['message']['tool_calls']}")
-            print(f"  Ignoring tool_calls and using text content only")
-            print(f"{'!'*80}\n")
+            # 응답 파싱
+            choice = data["choices"][0]
+            content = choice["message"].get("content") or ""
 
-            logger.warning(
-                "[LLM] WARNING: Response contains tool_calls despite no tools being sent! "
-                "Ignoring tool_calls and returning text content only."
+            print(f"\n{'='*80}")
+            print(f"[LLM SUCCESS] API call completed successfully")
+            print(f"  Content length: {len(content)} chars")
+            print(f"  Model used: {data.get('model', 'unknown')}")
+            print(f"  Usage: {data.get('usage', {})}")
+            print(f"{'='*80}\n")
+
+            logger.info(
+                f"[LLM] Response: {len(content)} chars, "
+                f"model={data.get('model', 'unknown')}, "
+                f"usage={data.get('usage', {})}"
             )
+            return content
 
-        print(f"\n{'='*80}")
-        print(f"[LLM SUCCESS] API call completed successfully")
-        print(f"  Content length: {len(content)} chars")
-        print(f"  Model used: {data.get('model', 'unknown')}")
-        print(f"  Usage: {data.get('usage', {})}")
-        print(f"{'='*80}\n")
+        except httpx.TimeoutException as e:
+            print(f"[LLM TIMEOUT] Request timed out after 180 seconds")
+            logger.error("[LLM] OpenAI API request timed out (180s)")
+            if attempt < max_retries - 1:
+                time.sleep(5)
+                continue
+            raise RuntimeError("OpenAI API request timed out")
 
-        logger.info(
-            f"[LLM] Response: {len(content)} chars, "
-            f"model={data.get('model', 'unknown')}, "
-            f"usage={data.get('usage', {})}"
-        )
-        return content
+        except RuntimeError:
+            raise
 
-    except httpx.TimeoutException as e:
-        print(f"\n{'!'*80}")
-        print(f"[LLM TIMEOUT] Request timed out after 180 seconds")
-        print(f"  Exception: {e}")
-        print(f"{'!'*80}\n")
-        logger.error("[LLM] OpenAI API request timed out (180s)")
-        raise RuntimeError("OpenAI API request timed out")
-
-    except Exception as e:
-        print(f"\n{'!'*80}")
-        print(f"[LLM EXCEPTION] Unexpected error occurred!")
-        print(f"  Exception type: {type(e).__name__}")
-        print(f"  Exception message: {e}")
-        print(f"  Traceback:")
-        print(traceback.format_exc())
-        print(f"{'!'*80}\n")
-
-        if not isinstance(e, RuntimeError):
-            error_detail = traceback.format_exc()
+        except Exception as e:
+            print(f"[LLM EXCEPTION] {type(e).__name__}: {e}")
             logger.error(f"[LLM] Unexpected error: {type(e).__name__}: {e}")
-            logger.error(f"[LLM] Detail: {error_detail}")
-        raise
+            raise
+
+    # for 루프가 정상 종료된 경우 (모든 재시도 소진)
+    raise RuntimeError("OpenAI API call failed after all retries")
 
 
 def call_gpt4o(system_prompt: str, user_message: str, **kwargs) -> str:
