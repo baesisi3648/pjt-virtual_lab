@@ -9,7 +9,7 @@
 **핵심 아키텍처**: 3라운드 팀 회의 (Specialists + Critic + PI 전원 참여)
 
 - **PI Agent** (GPT-5): 전문가 팀 구성, 라운드별 요약, 최종 보고서 작성
-- **Specialist Agents** (GPT-4o-mini): PI가 동적으로 구성한 전문가 팀이 RAG + 웹 검색으로 개별 분석
+- **Specialist Agents** (GPT-5): PI가 동적으로 구성한 전문가 팀이 RAG + 웹 검색으로 개별 분석
 - **Critic Agent** (GPT-5): 전문가별 과학적 타당성 검증 및 개선 피드백
 
 ## 기술 스택
@@ -18,7 +18,7 @@
 |------|------|
 | Backend | FastAPI + LangGraph + httpx (OpenAI API 직접 호출) |
 | Frontend | Next.js 16 + React 19 + Tailwind CSS 4 |
-| LLM | GPT-5 (PI, Critic) / GPT-4o-mini (Specialists) |
+| LLM | GPT-5 (전 에이전트) |
 | Vector DB | Pinecone (규제 문서 316개) |
 | Web Search | Tavily API |
 | Database | SQLite (MVP) |
@@ -107,7 +107,7 @@ npm run dev
 ```
 pjt-virtual_lab/
 ├── agents/                 # AI 에이전트
-│   ├── scientist.py        # Specialist Agent (GPT-4o-mini) - 분석 + 수정
+│   ├── scientist.py        # Specialist Agent (GPT-5) - 분석 + 수정
 │   ├── critic.py           # Critic Agent (GPT-5) - 전문가별 평가
 │   ├── pi.py               # PI Agent (GPT-5) - 팀구성 + 요약 + 최종보고서
 │   └── factory.py          # 동적 전문가 생성 (RAG/웹검색 도구 바인딩)
@@ -215,10 +215,9 @@ curl http://localhost:8000/health
 
 ## 비용
 
-| 모델 | Input | Output | 용도 |
-|------|-------|--------|------|
-| GPT-5 | - | - | PI, Critic (팀 구성, 요약, 비평, 최종 보고서) |
-| GPT-4o-mini | $0.15/1M | $0.60/1M | Specialists (분석, 수정) |
+| 모델 | 용도 |
+|------|------|
+| GPT-5 | 전 에이전트 (PI, Critic, Specialists) |
 
 ## 참고 문서
 
