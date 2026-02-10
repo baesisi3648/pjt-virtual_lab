@@ -32,7 +32,7 @@ def _get_http_client() -> httpx.Client:
     """httpx 클라이언트 싱글톤 반환"""
     global _http_client
     if _http_client is None:
-        _http_client = httpx.Client(timeout=300.0)
+        _http_client = httpx.Client(timeout=600.0)
     return _http_client
 
 
@@ -175,8 +175,8 @@ def call_llm(
             return content
 
         except httpx.TimeoutException as e:
-            print(f"[LLM TIMEOUT] Request timed out after 180 seconds")
-            logger.error("[LLM] OpenAI API request timed out (180s)")
+            print(f"[LLM TIMEOUT] Request timed out after 600 seconds")
+            logger.error("[LLM] OpenAI API request timed out (600s)")
             if attempt < max_retries - 1:
                 time.sleep(5)
                 continue
