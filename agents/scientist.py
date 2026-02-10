@@ -31,13 +31,13 @@ def _extract_sources(text: str) -> list[str]:
 
 
 def run_specialists(state: AgentState) -> dict:
-    """PI가 구성한 전문가 팀이 각자 분석을 수행합니다."""
+    """PI가 구성한 전문가 팀이 각자 1차 분석을 수행합니다. (라운드 1 전용)"""
     team = state.get("team", [])
     topic = state["topic"]
     constraints = state.get("constraints", "")
 
     print(f"\n{'#'*80}")
-    print(f"[SPECIALISTS] Running {len(team)} specialist agents")
+    print(f"[SPECIALISTS] Running {len(team)} specialist agents (Round 1 - Initial Research)")
     print(f"  Topic: {topic}")
     print(f"{'#'*80}\n")
 
@@ -59,31 +59,6 @@ def run_specialists(state: AgentState) -> dict:
     except Exception as e:
         logger.warning(f"Specialist web search failed: {e}")
 
-    # 이전 초안 및 critique 피드백
-    critique_context = ""
-    previous_draft = state.get("draft", "")
-    iteration = state.get("iteration", 0)
-
-    if state.get("critique"):
-        critique = state["critique"]
-        scores_str = ", ".join(f"{k}={v}" for k, v in (critique.scores or {}).items())
-        critique_context = (
-            f"\n\n{'='*60}\n"
-            f"[★ 이전 검토 결과 - 반복 {iteration}회차]\n"
-            f"판정: {critique.decision}\n"
-            f"점수: {scores_str}\n"
-            f"피드백:\n{critique.feedback}\n"
-            f"{'='*60}\n"
-            f"위 피드백의 각 지적사항을 반드시 하나씩 해결하여 개선된 분석을 작성하세요.\n"
-            f"특히 점수가 낮은 항목을 집중적으로 보완하세요."
-        )
-
-    # 이전 전문가 결과를 role 기준으로 매핑 (반복 시 자기 결과만 참조)
-    prev_specialist_outputs = state.get("specialist_outputs", [])
-    prev_output_map = {}
-    for so in prev_specialist_outputs:
-        prev_output_map[so.get("role", "")] = so.get("output", "")
-
     # 각 전문가별 분석 수행
     specialist_outputs = []
     messages = list(state.get("messages", []))
@@ -92,38 +67,20 @@ def run_specialists(state: AgentState) -> dict:
         role = profile.get("role", f"전문가 {i+1}")
         focus = profile.get("focus", "")
 
-        print(f"  [{i+1}/{len(team)}] {role}: {focus} (iteration {iteration})")
+        print(f"  [{i+1}/{len(team)}] {role}: {focus}")
 
         try:
             agent = create_specialist(profile)
 
-            # 이 전문가의 이전 결과 찾기
-            my_previous = prev_output_map.get(role, "")
-
-            if my_previous and iteration > 0:
-                # 반복 개선: 자기 이전 결과 + 비평 피드백만 전달
-                query = (
-                    f"연구 주제: {topic}\n"
-                    f"제약 조건: {constraints}\n"
-                    f"당신의 전문 분야: {focus}\n\n"
-                    f"[당신의 이전 분석 결과]\n{my_previous}\n\n"
-                    f"위는 당신이 이전에 작성한 분석입니다.\n"
-                    f"아래 검토 의견을 반영하여 개선된 분석을 작성하세요.\n"
-                    f"이전 내용 중 좋은 부분은 유지하고, 지적된 부분만 보완·강화하세요.\n"
-                    f"과학적 근거와 출처를 [출처: ...] 형식으로 명시하세요."
-                    f"{critique_context}"
-                    f"{rag_context}{web_context}"
-                )
-            else:
-                query = (
-                    f"연구 주제: {topic}\n"
-                    f"제약 조건: {constraints}\n"
-                    f"당신의 전문 분야: {focus}\n\n"
-                    f"위 연구 주제에 대해 당신의 전문 분야 관점에서 심층 분석을 수행하세요.\n"
-                    f"유전자편집식품(NGT)의 안전성 평가 프레임워크 도출에 기여할 수 있는 구체적 분석을 제공하세요.\n"
-                    f"과학적 근거와 출처를 [출처: ...] 형식으로 명시하세요."
-                    f"{rag_context}{web_context}{critique_context}"
-                )
+            query = (
+                f"연구 주제: {topic}\n"
+                f"제약 조건: {constraints}\n"
+                f"당신의 전문 분야: {focus}\n\n"
+                f"위 연구 주제에 대해 당신의 전문 분야 관점에서 심층 분석을 수행하세요.\n"
+                f"유전자편집식품(NGT)의 안전성 평가 프레임워크 도출에 기여할 수 있는 구체적 분석을 제공하세요.\n"
+                f"과학적 근거와 출처를 [출처: ...] 형식으로 명시하세요."
+                f"{rag_context}{web_context}"
+            )
             output = agent.invoke(query)
 
             specialist_outputs.append({
@@ -149,14 +106,12 @@ def run_specialists(state: AgentState) -> dict:
                 "output": f"분석 실패: {str(e)}",
             })
 
-    # 출처 수집: 도구 결과 + 전문가 텍스트에서 추출
+    # 출처 수집
     collected_sources = list(state.get("sources", []))
     collected_sources.extend(_extract_sources(rag_context))
     collected_sources.extend(_extract_sources(web_context))
-    # 전문가 결과 텍스트에서도 출처 추출
     for so in specialist_outputs:
         collected_sources.extend(_extract_sources(so.get("output", "")))
-    # 중복 제거
     seen = set()
     unique_sources = []
     for s in collected_sources:
@@ -164,18 +119,109 @@ def run_specialists(state: AgentState) -> dict:
             seen.add(s)
             unique_sources.append(s)
 
-    # 전문가 결과를 통합하여 draft 생성
-    draft_sections = []
-    for so in specialist_outputs:
-        draft_sections.append(f"## [{so['role']}] ({so['focus']})\n\n{so['output']}")
-    combined_draft = "\n\n---\n\n".join(draft_sections)
-
     print(f"\n[SPECIALISTS] All {len(team)} specialists completed")
-    print(f"  Combined draft: {len(combined_draft)} chars")
     print(f"  Sources collected: {len(unique_sources)}\n")
 
     return {
-        "draft": combined_draft,
+        "specialist_outputs": specialist_outputs,
+        "messages": messages,
+        "sources": unique_sources,
+    }
+
+
+def run_round_revision(state: AgentState) -> dict:
+    """전문가들이 이전 라운드 피드백을 반영하여 분석을 수정/보완합니다."""
+    team = state.get("team", [])
+    current_round = state.get("current_round", 2)
+    critique = state.get("critique")
+    pi_summary = state.get("draft", "")  # PI의 이전 라운드 임시 결론
+    prev_outputs = state.get("specialist_outputs", [])
+    topic = state["topic"]
+    constraints = state.get("constraints", "")
+
+    print(f"\n{'#'*80}")
+    print(f"[ROUND REVISION] Running {len(team)} specialist revisions - Round {current_round}/3")
+    print(f"  Topic: {topic}")
+    print(f"{'#'*80}\n")
+
+    # 이전 결과를 role 기준 매핑
+    prev_map = {so.get("role", ""): so.get("output", "") for so in prev_outputs}
+
+    specialist_outputs = []
+    messages = list(state.get("messages", []))
+
+    for i, profile in enumerate(team):
+        role = profile.get("role", f"전문가 {i+1}")
+        focus = profile.get("focus", "")
+
+        # Critic의 이 전문가에 대한 피드백 추출
+        my_feedback = ""
+        my_score = ""
+        if critique and critique.specialist_feedback:
+            my_feedback = critique.specialist_feedback.get(role, "")
+        if critique and critique.scores:
+            score_val = critique.scores.get(role, "")
+            if score_val:
+                my_score = f" (이전 점수: {score_val}/5)"
+
+        print(f"  [{i+1}/{len(team)}] {role}: {focus} (Round {current_round}){my_score}")
+
+        try:
+            agent = create_specialist(profile)
+
+            query = (
+                f"[라운드 {current_round}/3 - 수정/보완 단계]\n"
+                f"연구 주제: {topic}\n"
+                f"제약 조건: {constraints}\n"
+                f"당신의 전문 분야: {focus}\n\n"
+                f"[당신의 이전 분석]\n{prev_map.get(role, '')}\n\n"
+                f"[비평가의 피드백]{my_score}\n{my_feedback}\n\n"
+                f"[PI의 이전 라운드 결론]\n{pi_summary}\n\n"
+                f"위 피드백을 반영하여 분석을 수정/보완하세요.\n"
+                f"강점은 유지하고, 지적된 약점을 집중 개선하세요.\n"
+                f"과학적 근거와 출처를 [출처: ...] 형식으로 명시하세요."
+            )
+            output = agent.invoke(query)
+
+            specialist_outputs.append({
+                "role": role,
+                "focus": focus,
+                "output": output,
+            })
+
+            output_preview = output[:200] + "..." if len(output) > 200 else output
+            messages.append({
+                "role": "specialist",
+                "name": role,
+                "content": f"[라운드 {current_round}] [{role}] 수정된 분석을 완료했습니다.\n\n{output_preview}",
+            })
+
+            print(f"    -> Revised output: {len(output)} chars")
+
+        except Exception as e:
+            logger.error(f"Specialist {role} revision failed: {e}")
+            # 실패 시 이전 결과 유지
+            specialist_outputs.append({
+                "role": role,
+                "focus": focus,
+                "output": prev_map.get(role, f"수정 실패: {str(e)}"),
+            })
+
+    # 출처 수집 (기존 + 새로운)
+    collected_sources = list(state.get("sources", []))
+    for so in specialist_outputs:
+        collected_sources.extend(_extract_sources(so.get("output", "")))
+    seen = set()
+    unique_sources = []
+    for s in collected_sources:
+        if s not in seen:
+            seen.add(s)
+            unique_sources.append(s)
+
+    print(f"\n[ROUND REVISION] All {len(team)} specialists revised")
+    print(f"  Sources collected: {len(unique_sources)}\n")
+
+    return {
         "specialist_outputs": specialist_outputs,
         "messages": messages,
         "sources": unique_sources,

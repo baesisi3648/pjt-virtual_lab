@@ -84,7 +84,7 @@ if submitted:
                 else:
                     st.markdown(f"**[시스템]:** {content}")
 
-            st.caption(f"반복 횟수: {data.get('iterations', 0)}회")
+            st.caption(f"라운드: {data.get('rounds', 3)}회")
 
         # 보고서 표시
         with report_container:

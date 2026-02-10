@@ -1,90 +1,79 @@
-# @TASK P2-R4-T1 - LangGraph StateGraph 워크플로우
-# @SPEC TASKS.md#P2-R4-T1
-# @TEST tests/test_workflow.py
-"""LangGraph StateGraph 워크플로우
+"""LangGraph StateGraph 워크플로우 - 3라운드 팀 회의
 
-PI 중심 워크플로우:
-  planning -> researching -> critique -> [should_continue]
-                                            |-> researching (via increment)
-                                            |-> finalizing -> END
+3라운드 팀 회의 워크플로우:
+  planning -> researching -> critique -> pi_summary -> [check_round]
+                                ↑                          ↓ (round < 3)
+                                └── round_revision ← increment_round
+                                                           ↓ (round >= 3)
+                                                      final_synthesis -> END
 
-PI가 먼저 팀을 구성하고, 전문가들이 분석하며,
-Critic이 검증한 뒤, PI가 최종 보고서를 작성합니다.
+모든 에이전트(Specialists + Critic + PI)가 3라운드 팀 회의에 참여하고,
+최종 보고서 작성 시 모든 라운드의 베스트 파트를 선별합니다.
 """
 from typing import Literal
 
 from langgraph.graph import StateGraph, END
 
 from workflow.state import AgentState
-from agents.scientist import run_specialists
+from agents.scientist import run_specialists, run_round_revision
 from agents.critic import run_critic
-from agents.pi import run_pi_planning, run_pi
+from agents.pi import run_pi_planning, run_pi_summary, run_final_synthesis
 
-MAX_ITERATIONS = 5
-
-
-MIN_SCORE = 3  # 모든 항목이 이 점수 이상이어야 approve
+MAX_ROUNDS = 3
 
 
-def should_continue(state: AgentState) -> Literal["researching", "finalizing"]:
-    """Critic 결과에 따라 다음 노드 결정
-
-    - 최대 반복 횟수(5회) 도달 시 -> finalizing
-    - 점수가 모두 MIN_SCORE 이상이고 approve면 -> finalizing
-    - 그 외 -> researching (전문가 재분석)
-    """
-    critique = state.get("critique")
-    iteration = state.get("iteration", 0)
+def check_round(state: AgentState) -> Literal["increment_round", "final_synthesis"]:
+    """라운드 확인: 3라운드 미만이면 계속, 아니면 최종 합성"""
+    current_round = state.get("current_round", 1)
 
     print(f"\n{'='*60}")
-    print(f"[SHOULD_CONTINUE] Evaluating next step")
-    print(f"  iteration={iteration}, MAX_ITERATIONS={MAX_ITERATIONS}, MIN_SCORE={MIN_SCORE}")
+    print(f"[CHECK_ROUND] current_round={current_round}, MAX_ROUNDS={MAX_ROUNDS}")
 
-    # 최대 반복 제한
-    if iteration >= MAX_ITERATIONS:
-        print(f"  -> FINALIZING (max iterations reached)")
+    if current_round < MAX_ROUNDS:
+        print(f"  -> INCREMENT_ROUND (round {current_round} < {MAX_ROUNDS})")
         print(f"{'='*60}\n")
-        return "finalizing"
+        return "increment_round"
 
-    if critique:
-        scores = critique.scores or {}
-        score_values = list(scores.values()) if scores else []
-        print(f"  decision={critique.decision}, scores={scores}")
-        print(f"  score_values={score_values}")
-
-        # 점수 기반 강제 검증: 하나라도 MIN_SCORE 미만이면 무조건 revise
-        if score_values and any(s < MIN_SCORE for s in score_values):
-            low = {k: v for k, v in scores.items() if v < MIN_SCORE}
-            print(f"  -> RESEARCHING (scores below {MIN_SCORE}: {low})")
-            print(f"{'='*60}\n")
-            return "researching"
-
-        # Critic의 decision 확인
-        if critique.decision == "revise":
-            print(f"  -> RESEARCHING (critic says revise)")
-            print(f"{'='*60}\n")
-            return "researching"
-
-        print(f"  -> FINALIZING (all scores >= {MIN_SCORE}, approved)")
-    else:
-        print(f"  -> FINALIZING (no critique available)")
-
+    print(f"  -> FINAL_SYNTHESIS (round {current_round} >= {MAX_ROUNDS})")
     print(f"{'='*60}\n")
-    return "finalizing"
+    return "final_synthesis"
 
 
-def increment_iteration(state: AgentState) -> dict:
-    """반복 횟수 증가 (revise 루프 진입 시 호출)"""
-    return {"iteration": state.get("iteration", 0) + 1}
+def increment_round(state: AgentState) -> dict:
+    """라운드 증가 + 현재 라운드 기록을 meeting_history에 아카이브"""
+    current_round = state.get("current_round", 1)
+    meeting_history = list(state.get("meeting_history", []))
+    critique = state.get("critique")
+
+    # 현재 라운드 기록 아카이브
+    round_record = {
+        "round": current_round,
+        "specialist_outputs": state.get("specialist_outputs", []),
+        "critique_feedback": critique.feedback if critique else "",
+        "critique_scores": critique.scores if critique else {},
+        "specialist_feedback": critique.specialist_feedback if critique else {},
+        "pi_summary": state.get("draft", ""),
+    }
+    meeting_history.append(round_record)
+
+    print(f"[INCREMENT_ROUND] Round {current_round} -> {current_round + 1}")
+    print(f"  Meeting history: {len(meeting_history)} rounds archived")
+
+    return {
+        "current_round": current_round + 1,
+        "meeting_history": meeting_history,
+    }
 
 
 def create_workflow():
-    """LangGraph 워크플로우 생성 및 컴파일
+    """3라운드 팀 회의 LangGraph 워크플로우 생성 및 컴파일
 
     그래프 구조:
-        planning -> researching -> critique -> [should_continue]
-                                                   |-> researching (via increment)
-                                                   |-> finalizing -> END
+        planning -> researching -> critique -> pi_summary -> [check_round]
+                                      ↑                          ↓ (round < 3)
+                                      └── round_revision ← increment_round
+                                                                 ↓ (round >= 3)
+                                                            final_synthesis -> END
 
     Returns:
         CompiledStateGraph: 컴파일된 LangGraph 워크플로우
@@ -95,22 +84,26 @@ def create_workflow():
     workflow.add_node("planning", run_pi_planning)
     workflow.add_node("researching", run_specialists)
     workflow.add_node("critique", run_critic)
-    workflow.add_node("increment", increment_iteration)
-    workflow.add_node("finalizing", run_pi)
+    workflow.add_node("pi_summary", run_pi_summary)
+    workflow.add_node("increment_round", increment_round)
+    workflow.add_node("round_revision", run_round_revision)
+    workflow.add_node("final_synthesis", run_final_synthesis)
 
     # 엣지 설정
     workflow.set_entry_point("planning")
     workflow.add_edge("planning", "researching")
     workflow.add_edge("researching", "critique")
+    workflow.add_edge("critique", "pi_summary")
     workflow.add_conditional_edges(
-        "critique",
-        should_continue,
+        "pi_summary",
+        check_round,
         {
-            "researching": "increment",
-            "finalizing": "finalizing",
+            "increment_round": "increment_round",
+            "final_synthesis": "final_synthesis",
         },
     )
-    workflow.add_edge("increment", "researching")
-    workflow.add_edge("finalizing", END)
+    workflow.add_edge("increment_round", "round_revision")
+    workflow.add_edge("round_revision", "critique")
+    workflow.add_edge("final_synthesis", END)
 
     return workflow.compile()

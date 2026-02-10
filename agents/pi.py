@@ -1,7 +1,8 @@
 """PI (Principal Investigator) Agent
 
 연구 프로젝트의 총괄 책임자 역할을 수행합니다.
-OpenAI SDK 직접 호출 방식으로 tool_calls 문제를 방지합니다.
+3라운드 팀 회의 워크플로우: planning, round summary, final synthesis.
+OpenAI SDK 직접 호출.
 """
 import json
 import logging
@@ -180,6 +181,30 @@ off-target 변화, 의도되지 않은 서열 삽입 가능성 등을 EGT 및 �
 """
 
 
+PI_SUMMARY_PROMPT = """당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
+
+## 당신의 임무
+팀 회의의 현재 라운드 논의를 요약하고 임시 결론을 도출하세요.
+
+## 요약 구조
+다음 형식으로 라운드별 요약을 작성하세요:
+
+### 주요 쟁점과 합의 사항
+- 이번 라운드에서 논의된 핵심 쟁점들
+- 전문가들 간 합의된 사항
+
+### 미해결 쟁점
+- 다음 라운드에서 추가 논의가 필요한 사항
+- 전문가별 보완이 필요한 영역
+
+### 임시 결론
+- 현재까지의 분석을 종합한 중간 결론
+- 보고서 4개 파트(위험 식별, 지침 평가, 업데이트 항목, 종합 결론) 관점에서의 진행 상황
+
+**중요**: 각 전문가의 기여를 구체적으로 언급하고, 비평가의 지적 사항이 어떻게 반영되었는지 추적하세요.
+"""
+
+
 TEAM_DECISION_PROMPT = """당신은 연구 프로젝트의 총괄 책임자(PI)입니다.
 
 ## 당신의 임무
@@ -273,50 +298,127 @@ def run_pi_planning(state: AgentState) -> dict:
     }
 
 
-def run_pi(state: AgentState) -> dict:
-    """PI 에이전트 실행 - OpenAI 직접 호출"""
+def run_pi_summary(state: AgentState) -> dict:
+    """PI가 라운드별 논의를 요약하고 임시 결론을 도출합니다."""
+    current_round = state.get("current_round", 1)
+    specialist_outputs = state.get("specialist_outputs", [])
+    critique = state.get("critique")
+    meeting_history = state.get("meeting_history", [])
+
     print(f"\n{'#'*80}")
-    print(f"[PI] Starting PI agent")
-    print(f"  Draft length: {len(state.get('draft', ''))} chars")
-    print(f"  Iteration: {state.get('iteration', 0)}")
+    print(f"[PI SUMMARY] Starting PI summary - Round {current_round}/3")
+    print(f"  Specialist outputs: {len(specialist_outputs)}")
     print(f"{'#'*80}\n")
 
-    # Step 1: 웹 검색으로 최신 정보 보강
+    # 이전 라운드 PI 요약 (연속성 확보)
+    prev_summaries = ""
+    for record in meeting_history:
+        prev_summaries += f"\n[라운드 {record['round']} 임시 결론]\n{record['pi_summary']}\n"
+
+    # 전문가 분석 결과 구성
+    specialist_context = ""
+    for so in specialist_outputs:
+        specialist_context += (
+            f"\n### [{so.get('role', '전문가')}] ({so.get('focus', '')})\n"
+            f"{so.get('output', '')}\n"
+        )
+
+    # 비평가 피드백
+    critique_text = ""
+    if critique:
+        critique_text = critique.feedback
+        if critique.specialist_feedback:
+            critique_text += "\n\n[전문가별 피드백]\n"
+            for role, fb in critique.specialist_feedback.items():
+                critique_text += f"- {role}: {fb}\n"
+
+    user_message = (
+        f"[팀 회의 라운드 {current_round}/3]\n"
+        f"연구 주제: {state['topic']}\n\n"
+        f"{'[이전 라운드 임시 결론]' + prev_summaries if prev_summaries else ''}\n\n"
+        f"[이번 라운드 전문가 발표]\n{specialist_context}\n\n"
+        f"[비평가 피드백]\n{critique_text}\n\n"
+        f"라운드 {current_round}의 논의를 요약하세요:\n"
+        f"1. 주요 쟁점과 합의 사항\n"
+        f"2. 미해결 쟁점 (다음 라운드에서 다룰 것)\n"
+        f"3. 임시 결론\n"
+    )
+
+    print(f"[PI SUMMARY] Calling OpenAI API via call_gpt4o")
+    logger.info("PI summary: Calling OpenAI directly...")
+
+    try:
+        summary = call_gpt4o(PI_SUMMARY_PROMPT, user_message)
+        print(f"[PI SUMMARY] OpenAI call succeeded - Summary: {len(summary)} chars")
+    except Exception as e:
+        print(f"[PI SUMMARY ERROR] {type(e).__name__}: {e}")
+        raise
+
+    # 메시지 로그
+    messages = list(state.get("messages", []))
+    messages.append({
+        "role": "pi",
+        "content": f"[라운드 {current_round}] 논의를 요약하고 임시 결론을 도출했습니다.",
+    })
+
+    return {
+        "draft": summary,
+        "messages": messages,
+    }
+
+
+def run_final_synthesis(state: AgentState) -> dict:
+    """PI가 3라운드 전체 내용에서 베스트 파트를 선별하여 최종 보고서를 작성합니다."""
+    meeting_history = state.get("meeting_history", [])
+    current_round = state.get("current_round", 3)
+
+    print(f"\n{'#'*80}")
+    print(f"[PI FINAL SYNTHESIS] Starting final report synthesis")
+    print(f"  Meeting history: {len(meeting_history)} rounds archived")
+    print(f"  Current round: {current_round}")
+    print(f"{'#'*80}\n")
+
+    # 웹 검색으로 최신 정보 보강
     web_context = ""
     pi_sources = []
     try:
-        web_result = web_search.invoke({"query": f"{state['topic']} NGT safety framework final report 2025"})
+        web_result = web_search.invoke({"query": f"{state['topic']} NGT safety framework 2025"})
         web_context = f"\n\n## [웹 검색 결과 - 최신 정보]\n{web_result}"
         pi_sources.extend(_extract_sources(web_context))
-        logger.info("PI web search completed")
+        logger.info("PI final synthesis web search completed")
     except Exception as e:
-        logger.warning(f"PI web search failed: {e}")
+        logger.warning(f"PI final synthesis web search failed: {e}")
 
-    # Step 2: 전문가 분석 결과 통합
-    specialist_context = ""
-    specialist_outputs = state.get("specialist_outputs", [])
-    if specialist_outputs:
-        specialist_sections = []
-        for so in specialist_outputs:
-            specialist_sections.append(
-                f"### [{so.get('role', '전문가')}] ({so.get('focus', '')})\n{so.get('output', '')}"
-            )
-        specialist_context = "\n\n---\n\n".join(specialist_sections)
+    # 3라운드 전체 PI 요약 구성
+    pi_summaries_text = ""
+    for record in meeting_history:
+        pi_summaries_text += (
+            f"\n\n=== 라운드 {record['round']} 요약 ===\n"
+            f"{record.get('pi_summary', '')}\n"
+        )
+    # 현재 라운드 (마지막) PI 요약도 포함
+    current_draft = state.get("draft", "")
+    if current_draft:
+        pi_summaries_text += (
+            f"\n\n=== 라운드 {current_round} 요약 ===\n"
+            f"{current_draft}\n"
+        )
 
-    # Step 3: 프롬프트 구성
-    user_message = (
-        f"연구 주제: {state['topic']}\n"
-        f"제약 조건: {state['constraints']}\n\n"
-        f"[승인된 통합 초안]\n{state['draft']}\n\n"
-    )
-    if specialist_context:
-        user_message += f"[각 전문가 개별 분석 결과]\n{specialist_context}\n\n"
-    # 출처 목록 통합 (이전 단계 + PI 웹 검색 + 초안 텍스트에서 추출)
+    # 최종 라운드 전문가 결과 (가장 정제된 버전)
+    round3_outputs = state.get("specialist_outputs", [])
+    round3_text = ""
+    for so in round3_outputs:
+        round3_text += (
+            f"\n### [{so.get('role', '전문가')}] ({so.get('focus', '')})\n"
+            f"{so.get('output', '')}\n"
+        )
+
+    # 출처 수집
     all_sources = list(state.get("sources", []))
     all_sources.extend(pi_sources)
-    # 초안 텍스트에서도 출처 추출
-    all_sources.extend(_extract_sources(state.get("draft", "")))
-    # 중복 제거
+    # 최종 전문가 결과에서도 출처 추출
+    for so in round3_outputs:
+        all_sources.extend(_extract_sources(so.get("output", "")))
     seen = set()
     unique_sources = []
     for s in all_sources:
@@ -324,66 +426,50 @@ def run_pi(state: AgentState) -> dict:
             seen.add(s)
             unique_sources.append(s)
 
-    print(f"[PI] Sources collected: {len(unique_sources)}")
-    for s in unique_sources[:10]:
-        print(f"  - {s}")
-    if len(unique_sources) > 10:
-        print(f"  ... and {len(unique_sources) - 10} more")
-
+    # 출처 목록 텍스트
     sources_text = ""
     if unique_sources:
         sources_list = "\n".join(f"{i+1}. {s}" for i, s in enumerate(unique_sources))
         sources_text = f"\n\n[참조 출처 목록 - 반드시 보고서에 포함할 것]\n{sources_list}"
 
-    user_message += (
+    print(f"[PI FINAL SYNTHESIS] Sources collected: {len(unique_sources)}")
+
+    user_message = (
+        f"연구 주제: {state['topic']}\n"
+        f"제약 조건: {state.get('constraints', '')}\n\n"
+        f"[3라운드 팀 회의 전체 요약]\n{pi_summaries_text}\n\n"
+        f"[최종 라운드 전문가 분석 (정제본)]\n{round3_text}\n\n"
         f"{web_context}\n\n"
         f"{sources_text}\n\n"
-        "위 초안과 전문가 분석 결과를 종합하여 최종 보고서를 Markdown 형식으로 작성하세요.\n"
-        "반드시 4개 파트(1. 위험 식별, 2. 지침 적용 가능성 평가, 3. 지침 업데이트 항목, 4. 종합 결론)와\n"
-        "모든 하위 항목(1-1~1-3, 2-1~2-6, 3-1~3-4, 4-1~4-6)을 빠짐없이 포함해야 합니다.\n"
-        "각 항목은 충분한 분량(최소 5-10 문단)으로 분석적으로 서술하세요.\n\n"
-        "★ 핵심: 파트 3-2에서는 파트 1에서 식별한 각 위험 요소에 대해 구체적인 해결방안·검증방법을 제시하고,\n"
-        "파트 2에서 발견한 지침 한계점에 대해 구체적인 보완조치를 제시하세요.\n"
-        "모든 위험 요소가 해결방안과 명확히 연결되어야 합니다.\n\n"
-        "★★★ [필수] 보고서 맨 마지막에 반드시 아래 형식의 참고문헌 섹션을 작성하세요:\n\n"
-        "## 5. 참고문헌 (References)\n\n"
-        "### 5-1. Web Search Sources\n"
-        "(위 [참조 출처 목록]에서 [웹]으로 표시된 URL들을 번호 목록으로 정리)\n\n"
-        "### 5-2. Regulatory Documents (RAG)\n"
-        "(위 [참조 출처 목록]에서 [문헌]으로 표시된 문서들을 번호 목록으로 정리)\n\n"
-        "참조 출처 목록이 비어있더라도 본문에서 인용한 출처를 수집하여 참고문헌 섹션을 작성하세요."
+        f"위 3라운드 팀 회의의 모든 내용에서 가장 우수한 분석, 근거, 결론을 선별하여\n"
+        f"4개 파트 구성의 최종 보고서를 작성하세요.\n"
+        f"각 파트의 모든 하위 항목을 빠짐없이 포함하세요.\n\n"
+        f"★ 핵심: 파트 3-2에서는 파트 1에서 식별한 각 위험 요소에 대해 구체적인 해결방안·검증방법을 제시하고,\n"
+        f"파트 2에서 발견한 지침 한계점에 대해 구체적인 보완조치를 제시하세요.\n\n"
+        f"보고서 맨 마지막에 반드시 참고문헌(5. References) 섹션을 포함하세요:\n"
+        f"- 5-1. Web Search Sources: [웹] 출처 URL 정리\n"
+        f"- 5-2. Regulatory Documents (RAG): [문헌] 출처 정리\n"
     )
 
-    # Step 4: OpenAI 직접 호출 (NO LangChain)
-    print(f"\n{'#'*80}")
-    print(f"[PI] Calling OpenAI API via call_gpt4o")
-    print(f"{'#'*80}\n")
-
-    logger.info("PI: Calling OpenAI directly...")
+    print(f"[PI FINAL SYNTHESIS] Calling OpenAI API via call_gpt4o")
+    logger.info("PI final synthesis: Calling OpenAI directly...")
 
     try:
-        final_report = call_gpt4o(SYSTEM_PROMPT, user_message)
-        print(f"\n{'#'*80}")
-        print(f"[PI] OpenAI call succeeded")
-        print(f"  Report length: {len(final_report)} chars")
-        print(f"{'#'*80}\n")
+        final_report = call_gpt4o(SYSTEM_PROMPT, user_message, max_tokens=65536)
+        print(f"[PI FINAL SYNTHESIS] OpenAI call succeeded - Final report: {len(final_report)} chars")
     except Exception as e:
-        print(f"\n{'!'*80}")
-        print(f"[PI ERROR] Failed to call OpenAI!")
-        print(f"  Exception: {type(e).__name__}: {e}")
-        print(f"{'!'*80}\n")
+        print(f"[PI FINAL SYNTHESIS ERROR] {type(e).__name__}: {e}")
         raise
 
     # 메시지 로그
     messages = list(state.get("messages", []))
-    team = state.get("team", [])
-    team_names = ", ".join([m.get("role", "전문가") for m in team]) if team else "전문가 팀"
     messages.append({
         "role": "pi",
-        "content": f"팀 회의를 주재하고 {team_names}의 분석 결과를 종합하여 최종 보고서를 작성했습니다.",
+        "content": "3라운드 팀 회의 결과를 종합하여 최종 보고서를 작성했습니다.",
     })
 
     return {
         "final_report": final_report,
         "messages": messages,
+        "sources": unique_sources,
     }

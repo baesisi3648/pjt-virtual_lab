@@ -1,7 +1,8 @@
 """Scientific Critic Agent
 
-Scientist가 작성한 초안의 과학적 타당성, 범용성, 과도한 규제 여부를
-검증하는 비평가 에이전트입니다. OpenAI SDK 직접 호출.
+각 과학자 에이전트의 분석 결과를 개별적으로 검토하고
+전문가별 평가를 수행하는 비평가 에이전트입니다.
+OpenAI SDK 직접 호출.
 """
 import json
 import logging
@@ -14,62 +15,34 @@ from tools.web_search import web_search
 logger = logging.getLogger(__name__)
 
 
-SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 비평가입니다.
+SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 독립적 비평가입니다.
 
-## 비평 기준
+## 참고 기준
 {CRITIQUE_RUBRIC}
 
 ## 당신의 임무
-Scientist가 작성한 초안을 검토하고, 아래 체크리스트에 따라 **엄격하게** 평가하세요:
+각 과학자 에이전트의 분석 결과를 개별적으로 검토하세요.
 
-1. 과학적 근거 (scientific): 구체적인 출처나 연구가 인용되어 있는가? (1-5점)
-2. 범용성 (universal): 특정 제품이 아닌 NGT 카테고리 전체에 적용 가능한가? (1-5점)
-3. 규제 비례성 (regulation): 불필요하게 과도한 자료를 요구하지 않는가? (1-5점)
-4. 구조적 완전성 (completeness): 아래 필수 항목이 모두 포함되어 있는가? (1-5점)
-5. 문제-해결 연계 (problem_solution): 파트 1에서 식별한 위험 요소에 대해 파트 3에서 구체적 해결방안·검증방법이 제시되는가? (1-5점)
+## 전문가별 평가 기준
+각 전문가에 대해 다음을 평가하세요:
+1. **근거의 적절성**: 주장을 뒷받침하는 과학적 근거가 충분한가?
+2. **논리적 비약 여부**: 전제에서 결론으로의 논리적 연결이 타당한가?
+3. **대안적 해석 가능성**: 다른 해석이나 반론을 충분히 고려했는가?
+4. **판단 기준 일관성**: '적용 가능', '부분 적용', '충분'의 기준이 일관적인가?
 
-### 구조적 완전성 체크리스트
-초안에 다음 항목이 **모두** 포함되어 있는지 확인하세요:
+## 평가 유의사항
+- 첫 번째 라운드에서는 특히 엄격하게 평가하세요
+- 이전 라운드에서 지적한 사항이 해결되었는지 추적하세요
+- 강점은 명확히 인정하고, 약점은 구체적 개선 방향과 함께 지적하세요
 
-**파트 1. 잠재적 위험 및 위해 요소 식별**
-- [ ] 1-1. 유전자 편집 과정 자체의 위험 분석 (off-target, 비의도적 변형)
-- [ ] 1-2. 생성된 새로운 형질의 위험 분석 (식품/사료/환경 안전성)
-- [ ] 1-3. 비교 기반 통합 위험 평가 프레임워크 (NGT vs EGT vs 전통 육종)
-
-**파트 2. 기존 위험평가 지침의 적용 가능성 및 충분성 평가**
-- [ ] 2-1. Information relating to the recipient or parental animals
-- [ ] 2-2. Molecular characterisation
-- [ ] 2-3. Comparative analysis
-- [ ] 2-4. Toxicological assessment
-- [ ] 2-5. Allergenicity assessment
-- [ ] 2-6. Nutritional assessment
-
-**파트 3. 지침 업데이트·수정·보완 항목 도출**
-- [ ] 그대로 적용 가능 / 부분 보완 / 신규 추가 필요 항목 구분
-- [ ] ★ 파트 1에서 식별된 각 위험 요소에 대한 구체적 해결방안·검증방법 제시
-- [ ] ★ 파트 2에서 발견된 지침 한계점에 대한 구체적 보완조치 제시
-
-누락된 항목이 있으면 completeness 점수를 낮추고, feedback에 누락 항목을 명시하세요.
-
-**문제-해결 연계 (problem_solution) 평가 기준:**
-- [1점] 파트 1의 위험 요소와 파트 3의 해결방안 간 연결이 전혀 없음
-- [3점] 일부 위험 요소에 대한 해결방안이 제시되나, 누락된 연결이 있음
-- [5점] 파트 1의 모든 위험 요소가 파트 3에서 구체적 해결방안과 1:1로 매칭됨
-
-**승인 조건**: 모든 항목(scientific, universal, regulation, completeness, problem_solution) 4점 이상
-첫 번째 검토에서는 특히 엄격하게 평가하세요. 개선 여지가 있다면 반드시 revise를 선택하세요.
-특히 problem_solution 점수가 낮으면, 어떤 위험 요소에 대한 해결방안이 누락되었는지 구체적으로 명시하세요.
-
-**출력 형식** (JSON):
+## 출력 형식 (JSON)
 {{
-  "decision": "approve" | "revise",
-  "feedback": "수정 제안 (revise인 경우만)",
-  "scores": {{
-    "scientific": 1-5,
-    "universal": 1-5,
-    "regulation": 1-5,
-    "completeness": 1-5,
-    "problem_solution": 1-5
+  "decision": "continue",
+  "feedback": "전체 요약 피드백 (주요 쟁점, 합의된 사항, 미해결 사항)",
+  "scores": {{"전문가역할명1": 1-5, "전문가역할명2": 1-5}},
+  "specialist_feedback": {{
+    "전문가역할명1": "구체적 피드백 (강점, 약점, 개선 지시)",
+    "전문가역할명2": "구체적 피드백 ..."
   }}
 }}
 
@@ -78,30 +51,14 @@ Scientist가 작성한 초안을 검토하고, 아래 체크리스트에 따라 
 """.strip()
 
 
-def merge_views(views: list[str]) -> str:
-    """병렬 의견 통합 함수"""
-    if not views:
-        return ""
-    if len(views) == 1:
-        return views[0]
-
-    unique_views = []
-    seen = set()
-    for view in views:
-        view_stripped = view.strip()
-        if view_stripped and view_stripped not in seen:
-            unique_views.append(view_stripped)
-            seen.add(view_stripped)
-
-    return "\n\n".join(unique_views)
-
-
 def run_critic(state: AgentState) -> dict:
-    """Critic 에이전트 실행 - OpenAI 직접 호출"""
+    """Critic 에이전트 실행 - 전문가별 평가"""
+    current_round = state.get("current_round", 1)
+    specialist_outputs = state.get("specialist_outputs", [])
+
     print(f"\n{'#'*80}")
-    print(f"[CRITIC] Starting Critic agent")
-    print(f"  Draft length: {len(state.get('draft', ''))} chars")
-    print(f"  Iteration: {state.get('iteration', 0)}")
+    print(f"[CRITIC] Starting Critic agent - Round {current_round}/3")
+    print(f"  Specialist outputs: {len(specialist_outputs)}")
     print(f"{'#'*80}\n")
 
     # Step 1: 웹 검색으로 검증 정보 수집
@@ -113,31 +70,46 @@ def run_critic(state: AgentState) -> dict:
     except Exception as e:
         logger.warning(f"Critic web search failed: {e}")
 
-    # Step 2: 프롬프트 구성
-    user_message = f"""[전문가 팀의 통합 분석 초안]
-{state['draft']}
+    # Step 2: 전문가별 분석 결과 구성
+    specialist_context = ""
+    for so in specialist_outputs:
+        specialist_context += (
+            f"\n\n### [{so.get('role', '전문가')}] ({so.get('focus', '')})\n"
+            f"{so.get('output', '')}\n"
+        )
+
+    # 이전 라운드 기록 참조
+    meeting_history = state.get("meeting_history", [])
+    history_context = ""
+    if meeting_history:
+        for record in meeting_history:
+            history_context += (
+                f"\n[라운드 {record['round']} 비평 요약]\n"
+                f"피드백: {record.get('critique_feedback', '')}\n"
+                f"점수: {record.get('critique_scores', {})}\n"
+            )
+
+    # Step 3: 프롬프트 구성
+    user_message = f"""[팀 회의 라운드 {current_round}/3 - 비평 단계]
+
+[전문가별 분석 결과]
+{specialist_context}
 {web_context}
 
-위 초안을 검토하고, JSON 형식으로 응답하세요."""
+{f'[이전 라운드 비평 기록]{history_context}' if history_context else ''}
 
-    # Step 3: OpenAI 직접 호출 (NO LangChain)
-    print(f"\n{'#'*80}")
+위 전문가들의 분석 결과를 개별적으로 검토하고, JSON 형식으로 응답하세요.
+각 전문가의 역할명을 키로 사용하세요."""
+
+    # Step 4: OpenAI 직접 호출
     print(f"[CRITIC] Calling OpenAI API via call_gpt4o")
-    print(f"{'#'*80}\n")
-
     logger.info("Critic: Calling OpenAI directly...")
 
     try:
         response_content = call_gpt4o(SYSTEM_PROMPT, user_message)
-        print(f"\n{'#'*80}")
-        print(f"[CRITIC] OpenAI call succeeded")
-        print(f"  Response length: {len(response_content)} chars")
-        print(f"{'#'*80}\n")
+        print(f"[CRITIC] OpenAI call succeeded - Response: {len(response_content)} chars")
     except Exception as e:
-        print(f"\n{'!'*80}")
-        print(f"[CRITIC ERROR] Failed to call OpenAI!")
-        print(f"  Exception: {type(e).__name__}: {e}")
-        print(f"{'!'*80}\n")
+        print(f"[CRITIC ERROR] {type(e).__name__}: {e}")
         raise
 
     # JSON 파싱
@@ -148,7 +120,6 @@ def run_critic(state: AgentState) -> dict:
             content = "\n".join(lines[1:-1])
 
         data = json.loads(content)
-        # 점수를 정수로 변환
         raw_scores = data.get("scores", {})
         scores = {}
         for k, v in raw_scores.items():
@@ -157,47 +128,37 @@ def run_critic(state: AgentState) -> dict:
             except (ValueError, TypeError):
                 scores[k] = 1
 
-        decision = data["decision"]
+        decision = data.get("decision", "continue")
         feedback = data.get("feedback", "")
-
-        # 점수 기반 decision 검증: 하나라도 3 미만이면 강제 revise
-        if scores and any(v < 3 for v in scores.values()):
-            if decision == "approve":
-                logger.warning(f"[CRITIC] Overriding approve to revise - scores below 3: {scores}")
-                decision = "revise"
-                if not feedback:
-                    low_items = [f"{k}({v}점)" for k, v in scores.items() if v < 3]
-                    feedback = f"다음 항목의 점수가 기준(3점) 미만입니다: {', '.join(low_items)}. 해당 항목을 집중 개선하세요."
+        specialist_feedback = data.get("specialist_feedback", {})
 
         critique = CritiqueResult(
             decision=decision,
             feedback=feedback,
             scores=scores,
+            specialist_feedback=specialist_feedback,
         )
 
         print(f"[CRITIC] Decision: {decision}, Scores: {scores}")
+        if specialist_feedback:
+            print(f"[CRITIC] Specialist feedback keys: {list(specialist_feedback.keys())}")
 
     except (json.JSONDecodeError, KeyError) as e:
-        logger.warning(f"Critic JSON parse failed: {e}, defaulting to revise")
+        logger.warning(f"Critic JSON parse failed: {e}, defaulting to continue")
         critique = CritiqueResult(
-            decision="revise",
+            decision="continue",
             feedback="JSON 파싱 실패로 재검토 필요",
             scores={},
+            specialist_feedback={},
         )
 
     # 메시지 로그
     messages = list(state.get("messages", []))
     scores_str = ", ".join(f"{k}={v}" for k, v in (critique.scores or {}).items())
-    if critique.decision == "approve":
-        messages.append({
-            "role": "critic",
-            "content": f"초안을 승인합니다. (점수: {scores_str})",
-        })
-    else:
-        messages.append({
-            "role": "critic",
-            "content": f"수정이 필요합니다. (점수: {scores_str})\n{critique.feedback}",
-        })
+    messages.append({
+        "role": "critic",
+        "content": f"[라운드 {current_round}] 전문가 분석을 검토했습니다. (점수: {scores_str})\n{critique.feedback}",
+    })
 
     return {
         "critique": critique,

@@ -4,10 +4,10 @@
  * 에이전트 간 대화를 채팅 형태로 실시간 표시하는 컴포넌트
  * Server-Sent Events (SSE)를 사용하여 백엔드로부터 이벤트를 스트리밍
  *
- * REDESIGN: Biotech AI Lab 디자인 시스템 적용
- * - Material Symbols 아이콘 사용
- * - glass-panel CSS 클래스 활용
- * - 에이전트별 네온 테두리 효과
+ * REDESIGN: 3라운드 팀 회의 워크플로우 UI
+ * - 라운드 구분선 표시
+ * - 전문가별 점수/피드백 표시
+ * - 모든 라운드 내용 누적 표시
  */
 
 'use client';
@@ -20,12 +20,13 @@ interface TimelineEvent {
   timestamp: number;
   message: string;
   agent?: 'scientist' | 'critic' | 'pi' | 'specialist';
-  phase?: 'planning' | 'researching' | 'drafting' | 'critique' | 'finalizing';
-  decision?: 'approve' | 'revise';
-  iteration?: number;
+  phase?: string;
+  decision?: string;
+  round?: number;
   report?: string;
   content?: string;
   scores?: Record<string, number>;
+  specialist_feedback?: Record<string, string>;
   error?: string;
   saved_filename?: string;
   specialist_name?: string;
@@ -271,12 +272,55 @@ export default function ProcessTimeline({
         ) : isStreaming ? (
           <div className="flex items-center gap-2 text-gray-400 text-sm font-mono">
             <div className="animate-pulse h-2 w-2 rounded-full bg-cyan-400"></div>
-            <span>워크플로우 실행 중...</span>
+            <span>3라운드 팀 회의 진행 중...</span>
           </div>
         ) : (
           <div className="text-gray-500 text-sm font-mono">IDLE</div>
         )}
       </div>
+    </div>
+  );
+}
+
+// 전문가별 피드백 패널
+function SpecialistFeedbackPanel({ specialistFeedback, scores }: { specialistFeedback: Record<string, string>; scores?: Record<string, number> }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="text-xs text-cyan-400 hover:text-cyan-300 font-mono flex items-center gap-1 transition-colors"
+      >
+        <span className={`material-symbols-outlined text-sm transition-transform ${isOpen ? 'rotate-90' : ''}`}>
+          play_arrow
+        </span>
+        전문가별 상세 피드백 ({Object.keys(specialistFeedback).length}건)
+      </button>
+      {isOpen && (
+        <div className="mt-2 space-y-2">
+          {Object.entries(specialistFeedback).map(([role, feedback]) => {
+            const score = scores?.[role];
+            return (
+              <div key={role} className="glass-panel-light rounded p-3 border border-white/5">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-emerald-400 font-mono">{role}</span>
+                  {score != null && (
+                    <span className={`text-xs px-2 py-0.5 rounded font-mono ${
+                      score >= 4 ? 'text-green-400 bg-green-500/10 border border-green-500/30' :
+                      score >= 3 ? 'text-yellow-400 bg-yellow-500/10 border border-yellow-500/30' :
+                      'text-red-400 bg-red-500/10 border border-red-500/30'
+                    }`}>
+                      {score}/5
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-300 whitespace-pre-wrap">{feedback}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -319,9 +363,9 @@ function MessageItem({
     }
     if (event.type === 'iteration') {
       return (
-        <div className="flex justify-center">
-          <div className="glass-panel text-amber-400 text-xs px-4 py-2 rounded-full border border-amber-500/30 font-mono">
-            <span className="material-symbols-outlined text-sm align-middle mr-1">sync</span>
+        <div className="flex justify-center my-2">
+          <div className="glass-panel text-amber-400 text-sm px-6 py-2.5 rounded-full border border-amber-500/30 font-mono font-bold">
+            <span className="material-symbols-outlined text-base align-middle mr-1">groups</span>
             {event.message}
           </div>
         </div>
@@ -388,9 +432,9 @@ function MessageItem({
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`font-bold ${agentConfig.color} font-mono text-sm`}>{displayName}</span>
             <span className="text-xs text-gray-500">{displayRole}</span>
-            {event.iteration != null && (
+            {event.round != null && (
               <span className="text-xs glass-panel-light text-gray-400 px-2 py-0.5 rounded border border-white/5 font-mono">
-                Iteration {event.iteration}
+                R{event.round}
               </span>
             )}
           </div>
@@ -399,50 +443,34 @@ function MessageItem({
         <span className="text-xs text-gray-500 font-mono shrink-0">{formatTime(event.timestamp)}</span>
       </div>
 
-      {/* Critic 점수 표시 (horizontal badges) */}
+      {/* Critic 점수 표시 (전문가별 동적 표시) */}
       {event.scores && Object.keys(event.scores).length > 0 && (
         <div className="px-4 pb-3">
           <div className="flex flex-wrap gap-2">
             {Object.entries(event.scores).map(([key, value]) => {
-              const label: Record<string, string> = {
-                scientific: '과학적 근거',
-                universal: '범용성',
-                regulation: '규제 비례성',
-                completeness: '구조적 완전성',
-              };
-              // Score-based coloring
-              const scoreClass = value >= 4
-                ? 'glass-panel text-green-400 border-green-500/40'
-                : value >= 3
-                  ? 'glass-panel text-yellow-400 border-yellow-500/40'
-                  : 'glass-panel text-red-400 border-red-500/40';
+              const scoreClass = value >= 5
+                ? 'glass-panel text-blue-400 border-blue-500/40'
+                : value >= 4
+                  ? 'glass-panel text-green-400 border-green-500/40'
+                  : value >= 3
+                    ? 'glass-panel text-yellow-400 border-yellow-500/40'
+                    : 'glass-panel text-red-400 border-red-500/40';
               return (
                 <span key={key} className={`text-xs px-3 py-1.5 rounded font-mono ${scoreClass}`}>
-                  {label[key] || key}: <strong>{value}/5</strong>
+                  {key}: <strong>{value}/5</strong>
                 </span>
               );
             })}
           </div>
-          {/* 승인/수정 뱃지 */}
-          {event.decision && (
-            <div className="mt-3">
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-full font-bold font-mono border ${
-                event.decision === 'approve'
-                  ? 'glass-panel text-green-300 border-green-500/40'
-                  : 'glass-panel text-red-300 border-red-500/40'
-              }`}>
-                <span className="material-symbols-outlined text-base">
-                  {event.decision === 'approve' ? 'check_circle' : 'edit_note'}
-                </span>
-                {event.decision === 'approve' ? 'APPROVED' : 'REVISION REQUESTED'}
-              </span>
-            </div>
+          {/* 전문가별 피드백 (접기/펼치기) */}
+          {event.specialist_feedback && Object.keys(event.specialist_feedback).length > 0 && (
+            <SpecialistFeedbackPanel specialistFeedback={event.specialist_feedback} scores={event.scores} />
           )}
         </div>
       )}
 
       {/* 상세 내용 (접기/펼치기) */}
-      {hasContent && (
+      {hasContent && !event.scores && (
         <div className="border-t border-white/5">
           <button
             onClick={onToggle}

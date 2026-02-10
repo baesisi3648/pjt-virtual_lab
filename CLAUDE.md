@@ -26,8 +26,11 @@ pytest tests/ -v
 
 ## Critical Architecture Notes
 
-### LangGraph Workflow (KEEP!)
-- Scientist → Critic → PI 흐름 유지
+### LangGraph Workflow - 3라운드 팀 회의
+- planning → researching → critique → pi_summary → [check_round]
+- round < 3: increment_round → round_revision → critique (루프)
+- round >= 3: final_synthesis → END
+- 모든 에이전트가 3라운드 팀 회의에 참여
 - StateGraph로 워크플로우 오케스트레이션
 - LangChain @tool decorator로 RAG/Web Search 도구 정의
 
@@ -57,8 +60,8 @@ pytest tests/ -v
 
 ### workflow.stream() Per-Node Output
 - `workflow.stream()`은 노드별 출력 반환 (`{"node_name": {...}}`)
-- 전체 state가 아니므로 `result["iteration"]` 직접 접근 시 KeyError
-- 로컬 변수로 값 추적 필요
+- 전체 state가 아니므로 직접 접근 시 KeyError
+- 로컬 변수로 값 추적 필요 (예: `current_round`)
 
 ## Project Structure
 ```

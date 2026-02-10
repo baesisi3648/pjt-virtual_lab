@@ -32,7 +32,7 @@ def _get_http_client() -> httpx.Client:
     """httpx 클라이언트 싱글톤 반환"""
     global _http_client
     if _http_client is None:
-        _http_client = httpx.Client(timeout=180.0)
+        _http_client = httpx.Client(timeout=300.0)
     return _http_client
 
 
@@ -41,7 +41,7 @@ def call_llm(
     user_message: str,
     model: str | None = None,
     temperature: float = 0.7,
-    max_tokens: int = 16384,
+    max_tokens: int = 32768,
 ) -> str:
     """OpenAI Chat Completion 직접 호출 (httpx)
 
@@ -63,12 +63,18 @@ def call_llm(
     ]
 
     # 요청 페이로드: tools 관련 파라미터 없음
+    # GPT-5, o3, o4 등 신규 모델은 max_completion_tokens 사용 + temperature 미지원
+    use_new_api = any(model.startswith(p) for p in ("gpt-5", "o3", "o4"))
+    token_key = "max_completion_tokens" if use_new_api else "max_tokens"
+
     payload = {
         "model": model,
         "messages": messages,
-        "temperature": temperature,
-        "max_tokens": max_tokens,
+        token_key: max_tokens,
     }
+    # GPT-5/o3/o4는 temperature 커스텀 미지원 (기본값 1만 허용)
+    if not use_new_api:
+        payload["temperature"] = temperature
 
     # 상세 로깅: 요청 전 정보
     print(f"\n{'='*80}")
@@ -77,7 +83,7 @@ def call_llm(
     print(f"  Messages count: {len(messages)}")
     print(f"  System prompt: {len(system_prompt)} chars")
     print(f"  User message: {len(user_message)} chars")
-    print(f"  Temperature: {temperature}, Max tokens: {max_tokens}")
+    print(f"  Temperature: {'default(1)' if use_new_api else temperature}, {token_key}: {max_tokens}")
     print(f"  Payload keys: {list(payload.keys())}")
     print(f"  Has 'tools' in payload: {'tools' in payload}")
     print(f"{'='*80}\n")

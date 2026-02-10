@@ -108,7 +108,7 @@ class ResearchResponse(BaseModel):
     """연구 응답 스키마"""
     report: str
     messages: list[dict]
-    iterations: int
+    rounds: int
 
 
 class AsyncResearchRequest(BaseModel):
@@ -241,7 +241,8 @@ def run_research(request: ResearchRequest):
         "specialist_outputs": [],
         "draft": "",
         "critique": None,
-        "iteration": 0,
+        "current_round": 1,
+        "meeting_history": [],
         "final_report": "",
         "messages": [],
         "parallel_views": [],
@@ -261,7 +262,7 @@ def run_research(request: ResearchRequest):
     return ResearchResponse(
         report=result["final_report"],
         messages=result["messages"],
-        iterations=result["iteration"],
+        rounds=result.get("current_round", 3),
     )
 
 
@@ -398,11 +399,12 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "specialist_outputs": [],
             "draft": "",
             "critique": None,
-            "iteration": 0,
+            "current_round": 1,
+            "meeting_history": [],
             "final_report": "",
             "messages": [],
             "parallel_views": [],
-        "sources": [],
+            "sources": [],
         }
 
         # Phase 1: Planning 시작
@@ -415,12 +417,12 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         await asyncio.sleep(0.1)
 
         # 워크플로우 실행 (스트림 모드)
-        iteration_count = 0
+        current_round = 1
         final_report = ""
         all_messages: list[dict] = []
 
         sse_logger.info(f"Starting workflow stream for topic: {topic}")
-        print(f"[SSE STREAM] Starting workflow.stream() iteration...\n")
+        print(f"[SSE STREAM] Starting workflow.stream()...\n")
 
         for event in workflow.stream(initial_state):
             for node_name, node_state in event.items():
@@ -443,16 +445,20 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         "message": f"전문가 팀을 구성했습니다. ({len(team)}명)",
                         "content": team_summary,
                     })
+                    # Round 1 시작 알림
+                    yield send_event("iteration", {
+                        "round": 1,
+                        "message": "===== 팀 회의 - 라운드 1/3 =====",
+                    })
                     # researching phase 시작 알림
                     yield send_event("phase", {
                         "phase": "researching",
                         "agent": "specialist",
-                        "message": "전문가 팀이 개별 분석을 수행 중..."
+                        "message": "라운드 1: 전문가 팀이 개별 분석을 수행 중..."
                     })
 
                 elif node_name == "researching":
                     specialist_outputs = node_state.get("specialist_outputs", [])
-                    # 각 전문가별 분석 결과를 개별 이벤트로 전송
                     for so in specialist_outputs:
                         yield send_event("agent", {
                             "agent": "specialist",
@@ -461,7 +467,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                             "content": so.get("output", ""),
                             "specialist_name": so.get("role", ""),
                             "specialist_focus": so.get("focus", ""),
-                            "iteration": iteration_count + 1,
+                            "round": current_round,
                         })
 
                 elif node_name == "critique":
@@ -470,38 +476,63 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         decision = critique.decision
                         sse_logger.info(f"Critic decision: {decision}, scores: {critique.scores}")
 
-                        if decision == "revise":
-                            yield send_event("decision", {
-                                "agent": "critic",
-                                "decision": "revise",
-                                "message": "수정이 필요합니다.",
-                                "content": critique.feedback,
-                                "scores": critique.scores,
-                                "iteration": iteration_count + 1
-                            })
-                        else:
-                            yield send_event("decision", {
-                                "agent": "critic",
-                                "decision": "approve",
-                                "message": "초안을 승인합니다.",
-                                "scores": critique.scores,
-                                "iteration": iteration_count + 1
-                            })
+                        event_data = {
+                            "agent": "critic",
+                            "decision": decision,
+                            "message": f"[라운드 {current_round}] 전문가 분석을 검토했습니다.",
+                            "scores": critique.scores,
+                            "round": current_round,
+                            "content": critique.feedback,
+                        }
+                        if critique.specialist_feedback:
+                            event_data["specialist_feedback"] = critique.specialist_feedback
 
-                elif node_name == "increment":
-                    iteration_count += 1
-                    sse_logger.info(f"Iteration incremented to {iteration_count}")
-                    yield send_event("iteration", {
-                        "iteration": iteration_count,
-                        "message": f"{iteration_count}회차 수정을 시작합니다."
+                        yield send_event("decision", event_data)
+
+                elif node_name == "pi_summary":
+                    summary = node_state.get("draft", "")
+                    yield send_event("agent", {
+                        "agent": "pi",
+                        "phase": "pi_summary",
+                        "message": f"[라운드 {current_round}] PI: 라운드 {current_round} 임시 결론을 도출했습니다.",
+                        "content": summary,
+                        "round": current_round,
                     })
 
-                elif node_name == "finalizing":
+                elif node_name == "increment_round":
+                    new_round = node_state.get("current_round", current_round + 1)
+                    current_round = new_round
+                    sse_logger.info(f"Round incremented to {current_round}")
+                    yield send_event("iteration", {
+                        "round": current_round,
+                        "message": f"===== 팀 회의 - 라운드 {current_round}/3 =====",
+                    })
+
+                elif node_name == "round_revision":
+                    specialist_outputs = node_state.get("specialist_outputs", [])
+                    # revision phase 시작 알림
+                    yield send_event("phase", {
+                        "phase": "round_revision",
+                        "agent": "specialist",
+                        "message": f"라운드 {current_round}: 전문가들이 피드백을 반영하여 수정·보완 중..."
+                    })
+                    for so in specialist_outputs:
+                        yield send_event("agent", {
+                            "agent": "specialist",
+                            "phase": "round_revision",
+                            "message": f"[라운드 {current_round}] [{so.get('role', '전문가')}] 수정된 분석을 완료했습니다.",
+                            "content": so.get("output", ""),
+                            "specialist_name": so.get("role", ""),
+                            "specialist_focus": so.get("focus", ""),
+                            "round": current_round,
+                        })
+
+                elif node_name == "final_synthesis":
                     final = node_state.get("final_report", "")
                     yield send_event("agent", {
                         "agent": "pi",
-                        "phase": "finalizing",
-                        "message": "최종 보고서를 작성했습니다.",
+                        "phase": "final_synthesis",
+                        "message": "PI: 3라운드 팀 회의 결과를 종합하여 최종 보고서를 작성했습니다.",
                         "content": final,
                     })
 
@@ -510,10 +541,8 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     final_report = node_state["final_report"]
                 if "messages" in node_state:
                     all_messages = node_state["messages"]
-                if "team" in node_state:
-                    pass  # team은 state에 자동 저장됨
 
-        sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, iterations: {iteration_count}")
+        sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, rounds: {current_round}")
 
         # 보고서 파일 저장
         saved_filename = ""
@@ -528,7 +557,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         yield send_event("complete", {
             "message": "연구 프로세스 완료",
             "report": final_report,
-            "iterations": iteration_count,
+            "rounds": current_round,
             "messages": all_messages,
             "saved_filename": saved_filename,
         })
@@ -555,16 +584,16 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
 @app.post("/api/research/stream")
 async def stream_research(request: ResearchRequest):
-    """연구 프로세스를 SSE로 스트리밍합니다.
+    """연구 프로세스를 SSE로 스트리밍합니다. (3라운드 팀 회의)
 
     실시간으로 에이전트 상태를 전송하여 프론트엔드에서 타임라인을 표시할 수 있습니다.
 
     이벤트 타입:
     - start: 프로세스 시작
-    - phase: 단계 변경 (drafting, critique, finalizing)
-    - agent: 에이전트 활동 (scientist, critic, pi)
-    - decision: Critic 결정 (approve/revise)
-    - iteration: 반복 횟수 변경
+    - phase: 단계 변경 (researching, round_revision, final_synthesis)
+    - agent: 에이전트 활동 (specialist, critic, pi)
+    - decision: Critic 전문가별 평가
+    - iteration: 라운드 변경
     - complete: 프로세스 완료
     - error: 에러 발생
     """
