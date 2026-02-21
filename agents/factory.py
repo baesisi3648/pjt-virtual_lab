@@ -41,7 +41,10 @@ def generate_system_prompt(profile: dict) -> str:
 
 
 class SpecialistAgent:
-    """동적으로 생성된 전문가 에이전트"""
+    """동적으로 생성된 전문가 에이전트
+
+    Phase 1 최적화: max_tokens 파라미터 지원
+    """
 
     def __init__(self, system_prompt: str):
         """
@@ -50,16 +53,17 @@ class SpecialistAgent:
         """
         self.system_prompt = system_prompt
 
-    def invoke(self, query: str) -> str:
+    def invoke(self, query: str, max_tokens: int = 32768) -> str:
         """전문가 에이전트 실행
 
         Args:
             query: 사용자 질문
+            max_tokens: 최대 생성 토큰 수 (기본: 32768)
 
         Returns:
             str: LLM 응답 내용
         """
-        return call_gpt4o(self.system_prompt, query)
+        return call_gpt4o(self.system_prompt, query, max_tokens=max_tokens)
 
 
 def create_specialist(profile: dict) -> SpecialistAgent:

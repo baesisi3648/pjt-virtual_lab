@@ -18,7 +18,10 @@ class CritiqueResult:
 
 
 class AgentState(TypedDict):
-    """LangGraph 에이전트 공유 상태 - 3라운드 팀 회의"""
+    """LangGraph 에이전트 공유 상태 - 3라운드 팀 회의
+
+    Phase 1 최적화: 검색 캐싱 필드 추가
+    """
 
     topic: str  # 연구 주제
     constraints: str  # 제약 조건
@@ -32,3 +35,5 @@ class AgentState(TypedDict):
     messages: list[dict]  # 에이전트 간 메시지 로그
     parallel_views: list[dict]  # 병렬 분석 결과 (Map-Reduce)
     sources: list[str]  # 참조 출처 목록 (웹 검색 URL, RAG 문헌)
+    cached_rag_context: str  # Phase 1: Round 1 RAG 검색 캐시
+    cached_web_context: str  # Phase 1: Round 1 Web 검색 캐시
