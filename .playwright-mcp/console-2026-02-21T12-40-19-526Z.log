@@ -1,0 +1,6 @@
+[     485ms] [ERROR] SSE connection error: TypeError: network error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[     487ms] [ERROR] Game SSE error: network error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1455075ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=BtLhD7V5QcdGWkSMrVYkk' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 1458436ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=BtLhD7V5QcdGWkSMrVYkk' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[ 1465837ms] [ERROR] SSE connection error: TypeError: network error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[ 1465838ms] [ERROR] Game SSE error: network error @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127

@@ -283,7 +283,7 @@ export default function HomePage() {
         </div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <Link href="/timeline" className="glass-panel-hover p-8 group">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full bg-[#137fec]/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -292,6 +292,18 @@ export default function HomePage() {
               <div>
                 <h3 className="text-xl font-semibold mb-2">Agent Timeline</h3>
                 <p className="text-white/60 text-sm">실시간으로 에이전트 간 협업 과정을 모니터링하고 각 단계의 의사결정을 추적합니다.</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/timeline" className="glass-panel-hover p-8 group">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-[#8b5cf6]/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[#8b5cf6] text-2xl">sports_esports</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Game Board</h3>
+                <p className="text-white/60 text-sm">픽셀아트 캐릭터로 에이전트 팀 회의를 시각화합니다. 연구실/회의실 씬 전환 포함.</p>
               </div>
             </div>
           </Link>

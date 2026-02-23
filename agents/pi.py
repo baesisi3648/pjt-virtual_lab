@@ -43,6 +43,29 @@ Scientist와 Critic의 논의를 거쳐 승인된 초안을 바탕으로, 아래
 
 ---
 
+## 연구 방법론 (Research Methodology)
+
+본 연구는 AI 기반 Virtual Lab 시스템을 활용하여 다학제 전문가 팀의 체계적 협업을 통해 수행되었다.
+
+### 연구 수행 체계
+- **총괄책임자(PI)**: 연구 방향 설정, 전문가 팀 구성, 라운드별 논의 종합 및 최종 보고서 작성
+- **전문가 패널(Specialists)**: PI가 연구 주제에 맞게 구성한 다학제 전문가들이 각자 전문 분야의 분석 수행
+- **독립 비평가(Critic)**: 전문가별 분석의 과학적 타당성, 논리적 일관성, 근거 충분성을 독립적으로 검증하고 1-5점 척도로 평가
+
+### 3라운드 반복 심화 프로세스
+1. **라운드 1**: 전문가 초기 분석 → 비평가 엄격 검증 → PI 쟁점 정리 및 임시 결론
+2. **라운드 2**: 비평가 피드백 반영한 전문가 보완 분석 → 재검증 → PI 중간 종합
+3. **라운드 3**: 최종 정제 분석 → 최종 검증 → PI 최종 종합 및 보고서 작성
+
+각 라운드에서 비평가의 전문가별 점수와 구체적 피드백이 다음 라운드의 분석 개선에 직접 반영되며,
+이 반복 과정을 통해 분석의 깊이와 정확성이 점진적으로 향상된다.
+
+### 정보 검색 체계
+- **RAG (Retrieval-Augmented Generation)**: Pinecone 벡터 데이터베이스에 저장된 규제 문서 및 학술 문헌 검색
+- **Web Search**: Tavily API를 통한 최신 온라인 자료 검색 및 교차 검증
+
+---
+
 ## 1. 새로운 잠재적 위험 및 위해 요소 식별 보고서
 
 식품, 사료 및 기타 농업용 동식물에 적용되는 새로운 유전자편집기술(NGT)과
@@ -323,12 +346,16 @@ def run_pi_summary(state: AgentState) -> dict:
             f"{so.get('output', '')}\n"
         )
 
-    # 비평가 피드백
+    # 비평가 피드백 (점수 포함)
     critique_text = ""
     if critique:
         critique_text = critique.feedback
+        if critique.scores:
+            critique_text += "\n\n[전문가별 점수]\n"
+            for role, score in critique.scores.items():
+                critique_text += f"- {role}: {score}/5\n"
         if critique.specialist_feedback:
-            critique_text += "\n\n[전문가별 피드백]\n"
+            critique_text += "\n[전문가별 피드백]\n"
             for role, fb in critique.specialist_feedback.items():
                 critique_text += f"- {role}: {fb}\n"
 

@@ -1,8 +1,8 @@
 /**
  * @TASK P4-T2 - Timeline Demo Page (Redesigned)
- * @SPEC TASKS.md#P4-T2
  *
- * BIO-CORE AI LAB design system with workflow visualization
+ * BIO-CORE AI LAB - GameBoard 통합 버전
+ * ProcessTimeline 대신 GameBoard 캐릭터 시각화 사용
  */
 
 'use client';
@@ -10,7 +10,8 @@
 import { useState, useCallback, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import ProcessTimeline from '@/components/ProcessTimeline';
+import { useGameSSE } from '@/hooks/useGameSSE';
+import GameBoard from '@/components/game/GameBoard';
 
 export default function TimelinePage({
   searchParams,
@@ -36,6 +37,26 @@ export default function TimelinePage({
     }
   }, [params.topic]);
 
+  const handleComplete = useCallback((report: string, filename?: string) => {
+    setFinalReport(report);
+    if (filename) setSavedFilename(filename);
+  }, []);
+
+  const handleError = useCallback((err: string) => {
+    setError(err);
+  }, []);
+
+  // useGameSSE: topic이 비어있으면 idle, isSubmitted일 때만 실제 topic 전달
+  const activeTopic = isSubmitted ? topic : '';
+  const activeConstraints = isSubmitted ? constraints : '';
+
+  const { state: gameState, reset: resetGame } = useGameSSE({
+    topic: activeTopic,
+    constraints: activeConstraints,
+    onComplete: handleComplete,
+    onError: handleError,
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!topic.trim()) {
@@ -48,6 +69,7 @@ export default function TimelinePage({
   };
 
   const handleReset = () => {
+    resetGame();
     setIsSubmitted(false);
     setTopic('');
     setConstraints('');
@@ -55,15 +77,6 @@ export default function TimelinePage({
     setSavedFilename('');
     setError('');
   };
-
-  const handleComplete = useCallback((report: string, filename?: string) => {
-    setFinalReport(report);
-    if (filename) setSavedFilename(filename);
-  }, []);
-
-  const handleError = useCallback((err: string) => {
-    setError(err);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#101922] text-white">
@@ -85,16 +98,18 @@ export default function TimelinePage({
               </div>
             </div>
 
-            {/* Center: Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-white/60">
-              <Link href="/" className="hover:text-[#137fec] transition-colors">
+            {/* Center: Nav */}
+            <nav className="flex items-center gap-2 bg-white/5 rounded-full p-1">
+              <Link href="/" className="px-4 py-1.5 hover:bg-white/5 rounded-full text-sm transition-colors">
                 Dashboard
               </Link>
-              <span className="material-symbols-outlined text-xs">chevron_right</span>
-              <span>Agents</span>
-              <span className="material-symbols-outlined text-xs">chevron_right</span>
-              <span className="text-white">Research</span>
-            </div>
+              <div className="px-4 py-1.5 bg-[#137fec] rounded-full text-sm font-medium">
+                Agents
+              </div>
+              <Link href="/reports" className="px-4 py-1.5 hover:bg-white/5 rounded-full text-sm transition-colors">
+                Reports
+              </Link>
+            </nav>
 
             {/* Right: Back Link */}
             <Link
@@ -186,7 +201,6 @@ export default function TimelinePage({
                 <div className="relative w-full h-[500px]">
                   <svg className="w-full h-full" viewBox="0 0 800 500">
                     {/* Flow Paths */}
-                    {/* PI to Critic */}
                     <path
                       d="M 400 100 L 400 200"
                       stroke="rgba(139, 92, 246, 0.4)"
@@ -194,7 +208,6 @@ export default function TimelinePage({
                       fill="none"
                       className="flow-path"
                     />
-                    {/* Critic to Specialist 1 */}
                     <path
                       d="M 400 250 L 200 350"
                       stroke="rgba(6, 182, 212, 0.4)"
@@ -202,7 +215,6 @@ export default function TimelinePage({
                       fill="none"
                       className="flow-path"
                     />
-                    {/* Critic to Specialist 2 */}
                     <path
                       d="M 400 250 L 400 350"
                       stroke="rgba(6, 182, 212, 0.4)"
@@ -210,7 +222,6 @@ export default function TimelinePage({
                       fill="none"
                       className="flow-path"
                     />
-                    {/* Critic to Specialist 3 */}
                     <path
                       d="M 400 250 L 600 350"
                       stroke="rgba(6, 182, 212, 0.4)"
@@ -276,15 +287,10 @@ export default function TimelinePage({
             </div>
           </div>
         ) : (
-          // After Submission: Full-width Timeline
+          // After Submission: GameBoard visualization
           <>
-            {/* Process Timeline */}
-            <ProcessTimeline
-              topic={topic}
-              constraints={constraints}
-              onComplete={handleComplete}
-              onError={handleError}
-            />
+            {/* GameBoard - Character visualization */}
+            <GameBoard state={gameState} />
 
             {/* Final Report */}
             {finalReport && (
@@ -301,7 +307,6 @@ export default function TimelinePage({
                 </div>
 
                 <div className="flex gap-4">
-                  {/* 보고서 보기 Button */}
                   {savedFilename && (
                     <button
                       onClick={() => router.push(`/reports/${encodeURIComponent(savedFilename)}`)}
@@ -312,7 +317,6 @@ export default function TimelinePage({
                     </button>
                   )}
 
-                  {/* Copy Button */}
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(finalReport);
@@ -324,7 +328,6 @@ export default function TimelinePage({
                     <span>Copy</span>
                   </button>
 
-                  {/* TXT Download Button */}
                   <button
                     onClick={() => {
                       const now = new Date();

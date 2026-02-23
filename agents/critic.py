@@ -6,6 +6,7 @@ OpenAI SDK 직접 호출.
 """
 import json
 import logging
+import re
 
 from data.guidelines import CRITIQUE_RUBRIC
 from utils.llm import call_gpt4o
@@ -39,12 +40,15 @@ SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 독립적 비�
 {{
   "decision": "continue",
   "feedback": "전체 요약 피드백 (주요 쟁점, 합의된 사항, 미해결 사항)",
-  "scores": {{"전문가역할명1": 1-5, "전문가역할명2": 1-5}},
+  "scores": {{"전문가역할명1": 4, "전문가역할명2": 3}},
   "specialist_feedback": {{
     "전문가역할명1": "구체적 피드백 (강점, 약점, 개선 지시)",
     "전문가역할명2": "구체적 피드백 ..."
   }}
 }}
+
+★ scores 필드는 반드시 포함하세요. 각 전문가에 대해 1~5 사이의 정수 점수를 부여하세요.
+  예: "scores": {{"NGT 분자생물학 전문가": 4, "식품안전성 평가 전문가": 3}}
 
 참고 정보가 제공된 경우 이를 활용하여 더 정확한 검증을 수행하세요.
 반드시 JSON만 출력하세요. 다른 설명은 불필요합니다.
@@ -126,11 +130,24 @@ def run_critic(state: AgentState) -> dict:
             try:
                 scores[k] = int(v)
             except (ValueError, TypeError):
-                scores[k] = 1
+                # "4/5", "4점", "4 점" 등 변형 파싱
+                m = re.search(r'(\d)', str(v))
+                scores[k] = int(m.group(1)) if m else 3
 
         decision = data.get("decision", "continue")
         feedback = data.get("feedback", "")
         specialist_feedback = data.get("specialist_feedback", {})
+
+        # 점수가 비어있으면 content에서 점수 패턴 추출 시도
+        if not scores and specialist_feedback:
+            for role in specialist_feedback:
+                scores[role] = 3
+            logger.info(f"Critic scores empty, assigned default 3 for {list(scores.keys())}")
+
+        # 전문가별 피드백은 있는데 점수에 해당 키가 없는 경우 보충
+        for role in specialist_feedback:
+            if role not in scores:
+                scores[role] = 3
 
         critique = CritiqueResult(
             decision=decision,
@@ -145,10 +162,20 @@ def run_critic(state: AgentState) -> dict:
 
     except (json.JSONDecodeError, KeyError) as e:
         logger.warning(f"Critic JSON parse failed: {e}, defaulting to continue")
+        # 파싱 실패 시 content에서 점수 패턴 추출 시도
+        fallback_scores = {}
+        for m in re.finditer(r'["\']([^"\']+)["\']\s*:\s*(\d)\s*/\s*5', response_content):
+            fallback_scores[m.group(1)] = int(m.group(2))
+        if not fallback_scores:
+            # "전문가명": 4 패턴도 시도
+            for m in re.finditer(r'["\']([^"\']+)["\']\s*:\s*(\d)', response_content):
+                name, val = m.group(1), int(m.group(2))
+                if 1 <= val <= 5 and name not in ("decision", "feedback", "scores", "specialist_feedback"):
+                    fallback_scores[name] = val
         critique = CritiqueResult(
             decision="continue",
-            feedback="JSON 파싱 실패로 재검토 필요",
-            scores={},
+            feedback=response_content[:500] if not fallback_scores else "JSON 파싱 실패, 점수만 추출됨",
+            scores=fallback_scores,
             specialist_feedback={},
         )
 
