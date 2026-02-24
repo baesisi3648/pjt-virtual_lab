@@ -39,4 +39,4 @@ echo   Server starting at http://localhost:8000
 echo   Press Ctrl+C to stop
 echo ============================================
 echo.
-python -B -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+venv\Scripts\python.exe -B -m uvicorn server:app --host 0.0.0.0 --port 8000 --reload

@@ -35,6 +35,8 @@ export interface ChatMessage {
   message: string;
   content?: string;
   type: 'system' | 'agent' | 'decision' | 'phase';
+  scores?: Record<string, number>;
+  specialist_feedback?: Record<string, string>;
 }
 
 export interface GameState {

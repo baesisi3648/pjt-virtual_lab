@@ -186,6 +186,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
             message: event.message,
             content: event.content,
             type: 'decision',
+            scores: event.scores,
+            specialist_feedback: event.specialist_feedback,
           });
           break;
         }
