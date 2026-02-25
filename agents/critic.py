@@ -33,8 +33,15 @@ SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 독립적 비�
 
 ## 평가 유의사항
 - 첫 번째 라운드에서는 특히 엄격하게 평가하세요
-- 이전 라운드에서 지적한 사항이 해결되었는지 추적하세요
+- **점수 비교 원칙**: 이전 라운드 점수가 제공된 경우, 각 전문가의 이전 점수와 비교하세요.
+  - 이전 지적 사항이 해결되었으면 점수를 올려주세요
+  - 이전 강점이 유지되면서 새로운 개선이 있으면 반드시 점수를 올려주세요
+  - 점수를 내리려면 명확한 근거(이전 강점이 삭제됨, 새로운 오류 발생 등)가 있어야 합니다
 - 강점은 명확히 인정하고, 약점은 구체적 개선 방향과 함께 지적하세요
+- **피드백 구조**: 각 전문가 피드백에 다음을 포함하세요:
+  1. 이전 라운드 대비 개선된 점 (있다면)
+  2. 여전히 남아있는 약점
+  3. 5/5 만점을 받기 위해 필요한 구체적 조치
 
 ## 출력 형식 (JSON)
 {{
@@ -82,16 +89,25 @@ def run_critic(state: AgentState) -> dict:
             f"{so.get('output', '')}\n"
         )
 
-    # 이전 라운드 기록 참조
+    # 이전 라운드 기록 참조 (전문가별 점수·피드백 누적)
     meeting_history = state.get("meeting_history", [])
     history_context = ""
     if meeting_history:
         for record in meeting_history:
-            history_context += (
-                f"\n[라운드 {record['round']} 비평 요약]\n"
-                f"피드백: {record.get('critique_feedback', '')}\n"
-                f"점수: {record.get('critique_scores', {})}\n"
-            )
+            round_num = record.get("round", 0)
+            scores = record.get("critique_scores", {})
+            feedback = record.get("critique_feedback", "")
+            spec_fb = record.get("specialist_feedback", {})
+            history_context += f"\n[라운드 {round_num} 비평 기록]\n"
+            history_context += f"전체 피드백: {feedback}\n"
+            if scores:
+                history_context += "전문가별 점수:\n"
+                for role, score in scores.items():
+                    history_context += f"  - {role}: {score}/5\n"
+            if spec_fb:
+                history_context += "전문가별 상세 피드백:\n"
+                for role, fb in spec_fb.items():
+                    history_context += f"  - {role}: {fb}\n"
 
     # Step 3: 프롬프트 구성
     user_message = f"""[팀 회의 라운드 {current_round}/3 - 비평 단계]
@@ -103,7 +119,12 @@ def run_critic(state: AgentState) -> dict:
 {f'[이전 라운드 비평 기록]{history_context}' if history_context else ''}
 
 위 전문가들의 분석 결과를 개별적으로 검토하고, JSON 형식으로 응답하세요.
-각 전문가의 역할명을 키로 사용하세요."""
+각 전문가의 역할명을 키로 사용하세요.
+
+★ 라운드 {current_round} 채점 원칙:
+- 이전 라운드에서 지적한 약점이 해결되었으면 점수를 반드시 올려주세요.
+- 이전 강점이 유지되고 있으면 점수를 내리지 마세요.
+- specialist_feedback에 "개선된 점", "남은 약점", "5점을 위한 조치"를 포함하세요."""
 
     # Step 4: OpenAI 직접 호출
     print(f"[CRITIC] Calling OpenAI API via call_gpt4o")
