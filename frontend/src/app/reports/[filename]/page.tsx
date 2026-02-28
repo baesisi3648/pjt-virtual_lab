@@ -148,6 +148,12 @@ export default function ReportViewerPage({
                   Dashboard
                 </Link>
                 <Link
+                  href="/timeline"
+                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                >
+                  Agents
+                </Link>
+                <Link
                   href="/reports"
                   className="px-3 py-1.5 rounded-md text-white bg-primary font-medium transition-colors"
                 >
