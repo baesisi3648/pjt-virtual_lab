@@ -26,9 +26,8 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
 
           {/* Left: Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <img src="/logo.png" alt="Virtual Lab" className="h-10" />
-            <span className="text-xl font-bold text-[var(--foreground)]">VIRTUAL LAB</span>
           </div>
 
           {/* Center: Pill Nav */}
@@ -240,7 +239,7 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* Simulation Board */}
+            {/* Workflow Pipeline */}
             <Link
               href="/timeline"
               className="glass-panel-hover overflow-hidden group"
@@ -248,16 +247,16 @@ export default function HomePage() {
               <div className="h-8 bg-[var(--background)] relative">
                 <div className="absolute -bottom-4 left-4 w-8 h-8 rounded-full bg-blue-50 border-2 border-white flex items-center justify-center shadow-sm">
                   <span className="material-symbols-outlined text-blue-600 icon-sm">
-                    dashboard
+                    account_tree
                   </span>
                 </div>
               </div>
               <div className="pt-6 px-4 pb-5">
                 <p className="font-bold text-[var(--foreground)] text-sm mb-1 group-hover:text-[var(--primary)] transition-colors">
-                  Simulation Board
+                  Workflow Pipeline
                 </p>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  픽셀아트 캐릭터로 에이전트 팀 회의를 시각화합니다. 연구실/회의실 씬 전환 포함.
+                  3라운드 팀 회의 파이프라인을 단계별 카드로 시각화하고 에이전트 활동을 실시간 추적합니다.
                 </p>
               </div>
             </Link>

@@ -137,9 +137,8 @@ export default function ReportViewerPage({
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center">
                 <img src="/logo.png" alt="Virtual Lab" className="h-8" />
-                <span className="text-lg font-bold text-slate-900">VIRTUAL LAB</span>
               </div>
               <nav className="hidden md:flex items-center gap-1 text-sm">
                 <Link
@@ -152,19 +151,7 @@ export default function ReportViewerPage({
                   href="/reports"
                   className="px-3 py-1.5 rounded-md text-white bg-primary font-medium transition-colors"
                 >
-                  Safety Assessments
-                </Link>
-                <Link
-                  href="/laboratory"
-                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  Laboratory
-                </Link>
-                <Link
-                  href="/settings"
-                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  Settings
+                  Reports
                 </Link>
               </nav>
             </div>

@@ -40,9 +40,8 @@ export default function ReportsPage() {
         <div className="max-w-[1800px] mx-auto px-10 py-3">
           <div className="flex items-center justify-between">
             {/* Left: Logo + Brand */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center">
               <img src="/logo.png" alt="Virtual Lab" className="h-10" />
-              <span className="text-xl font-bold tracking-tight text-[#121714]">VIRTUAL LAB</span>
             </div>
 
             {/* Center: Nav Links */}
