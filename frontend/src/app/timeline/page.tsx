@@ -87,7 +87,7 @@ export default function TimelinePage({
           <div className="flex items-center justify-between">
             {/* Left: Logo */}
             <div className="flex items-center">
-              <img src="/logo.png" alt="Virtual Lab" className="h-10" />
+              <img src="/logo.png" alt="Virtual Lab" className="h-12" />
             </div>
 
             {/* Center: Nav */}

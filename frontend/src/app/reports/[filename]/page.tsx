@@ -138,7 +138,7 @@ export default function ReportViewerPage({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <div className="flex items-center">
-                <img src="/logo.png" alt="Virtual Lab" className="h-8" />
+                <img src="/logo.png" alt="Virtual Lab" className="h-12" />
               </div>
               <nav className="hidden md:flex items-center gap-1 text-sm">
                 <Link
