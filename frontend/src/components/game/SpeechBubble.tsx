@@ -36,7 +36,7 @@ export default function SpeechBubble({
       }`}
       style={{ maxWidth }}
     >
-      <div className="relative glass-panel rounded-lg px-3 py-2 text-xs text-white/90 leading-relaxed border border-white/20">
+      <div className="relative glass-panel rounded-lg px-3 py-2 text-xs text-gray-700 leading-relaxed border border-gray-300">
         {truncated}
         {/* Tail */}
         <div

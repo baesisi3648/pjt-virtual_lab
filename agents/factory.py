@@ -8,7 +8,8 @@ LangChain ChatOpenAI 인스턴스를 래핑한 에이전트를 반환합니다.
 """
 from typing import Any
 
-from utils.llm import call_gpt4o
+from utils.llm import call_gpt
+from data.guidelines import RESEARCH_AGENDA
 
 
 def generate_system_prompt(profile: dict) -> str:
@@ -29,10 +30,17 @@ def generate_system_prompt(profile: dict) -> str:
 ## 전문 분야
 {focus}
 
+## 연구 배경 및 핵심 질문
+{RESEARCH_AGENDA}
+
 ## 당신의 임무
 주어진 질문에 대해 전문 지식을 활용하여 정확하고 상세한 답변을 제공하세요.
 유전자편집식품(NGT)의 안전성 평가와 관련된 질문이라면, 과학적 근거를 바탕으로
 규제 당국이 활용할 수 있는 실질적인 정보를 제공해야 합니다.
+
+위 5대 핵심 질문 중 당신의 전문 분야와 관련된 질문에 특히 주목하여,
+자유롭고 창의적인 관점에서 깊이 있는 분석을 수행하세요.
+기존 연구의 단순 요약이 아닌, 전문가로서의 독자적 견해와 새로운 통찰을 제시하세요.
 
 **중요**: 답변은 명확하고 간결하게, 그리고 실무에 즉시 활용 가능한 형태로 작성하세요.
 """.strip()
@@ -63,7 +71,7 @@ class SpecialistAgent:
         Returns:
             str: LLM 응답 내용
         """
-        return call_gpt4o(self.system_prompt, query, max_tokens=max_tokens)
+        return call_gpt(self.system_prompt, query, max_tokens=max_tokens)
 
 
 def create_specialist(profile: dict) -> SpecialistAgent:

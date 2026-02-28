@@ -40,6 +40,9 @@ worktree/
 # Generated Reports (보고서 파일은 로컬만)
 reports/*.txt
 
+# Runtime logs
+search_queries.log
+
 # Claude Skills (external)
 claude_skills/
 

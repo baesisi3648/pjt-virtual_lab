@@ -39,8 +39,7 @@ class Settings(BaseSettings):
     FASTAPI_PORT: int = 8000
 
     # LLM Config
-    GPT4O_MODEL: str = "gpt-4o"
-    GPT4O_MINI_MODEL: str = "gpt-4o-mini"
+    GPT_MODEL: str = "gpt-4o"
     LLM_TEMPERATURE: float = 0.7
     LLM_MAX_TOKENS: int = 4096
 

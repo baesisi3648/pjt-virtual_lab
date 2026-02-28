@@ -81,7 +81,7 @@ export default function MeetingScene({ characters, onCharacterClick }: MeetingSc
         >
           {/* Table label */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-white/5 text-xs font-mono tracking-widest">MEETING TABLE</span>
+            <span className="text-white/20 text-xs font-mono tracking-widest">MEETING TABLE</span>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function MeetingScene({ characters, onCharacterClick }: MeetingSc
                 {char.name}
               </div>
               {char.focus && (
-                <div className="text-[9px] text-white/30 text-center mt-0.5 max-w-[90px] truncate">
+                <div className="text-[9px] text-gray-400 text-center mt-0.5 max-w-[90px] truncate">
                   {char.focus}
                 </div>
               )}

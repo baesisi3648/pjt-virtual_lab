@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Virtual Lab - NGT Safety Assessment",
   description: "AI-powered safety assessment framework for Novel Genomic Techniques",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className="dark">
+    <html lang="ko">
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -32,14 +36,9 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${geistMono.variable} antialiased bg-[#101922] text-gray-100 overflow-x-hidden`}
+        className={`${spaceGrotesk.variable} ${geistMono.variable} antialiased bg-[#f6f8f7] text-[#121714] overflow-x-hidden`}
       >
-        {/* Ambient Background Effects */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-grid opacity-50" />
-          <div className="absolute inset-0 dna-bg" />
-        </div>
-        <div className="relative z-10 min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col">
           {children}
         </div>
       </body>

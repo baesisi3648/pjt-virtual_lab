@@ -118,7 +118,7 @@ export default function ReportEditor({
   // 빈 보고서 처리
   if (!report && !currentReport) {
     return (
-      <div className="p-6 text-center text-white/40">
+      <div className="p-6 text-center text-gray-700">
         <p>보고서가 없습니다</p>
       </div>
     );
@@ -129,7 +129,7 @@ export default function ReportEditor({
     return (
       <div className="p-6 text-center">
         <div className="animate-pulse">
-          <p className="text-white/50">처리 중...</p>
+          <p className="text-gray-700">처리 중...</p>
         </div>
       </div>
     );
@@ -138,14 +138,14 @@ export default function ReportEditor({
   return (
     <div className="report-editor h-full flex flex-col">
       {/* 헤더 */}
-      <div className="flex justify-between items-center p-6 border-b border-white/10">
-        <h2 className="text-2xl font-bold text-white tracking-tight">최종 보고서</h2>
+      <div className="flex justify-between items-center p-6 border-b border-gray-200">
+        <h2 className="text-2xl font-bold text-black tracking-tight">최종 보고서</h2>
         <div className="flex gap-2">
           {isEditMode ? (
             <>
               <button
                 onClick={handleCancelEdit}
-                className="px-4 py-2 text-white/50 hover:text-white/80 text-sm"
+                className="px-4 py-2 text-gray-600 hover:text-black text-sm"
               >
                 취소
               </button>
@@ -159,7 +159,7 @@ export default function ReportEditor({
           ) : (
             <button
               onClick={handleEditToggle}
-              className="px-4 py-2 bg-white/10 text-white/80 rounded-lg hover:bg-white/15 text-sm font-medium flex items-center gap-2"
+              className="px-4 py-2 bg-gray-100 text-black rounded-lg hover:bg-gray-200 text-sm font-medium flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-base">edit</span>
               편집
@@ -175,7 +175,7 @@ export default function ReportEditor({
           <textarea
             value={editedReport}
             onChange={(e) => setEditedReport(e.target.value)}
-            className="w-full h-full p-4 border border-white/10 rounded-lg bg-black/20 text-gray-200 font-mono text-sm resize-none focus:outline-none focus:border-[#137fec] focus:ring-2 focus:ring-[#137fec]/20"
+            className="w-full h-full p-4 border border-gray-200 rounded-lg bg-gray-50 text-black font-mono text-sm resize-none focus:outline-none focus:border-[#137fec] focus:ring-2 focus:ring-[#137fec]/20"
             placeholder="마크다운 형식으로 보고서를 작성하세요..."
           />
         ) : (
@@ -184,19 +184,22 @@ export default function ReportEditor({
             {sections.map((section, index) => (
               <div
                 key={index}
-                className="section-container border-l-4 border-[#137fec] pl-4 py-2 hover:bg-white/5 transition-colors rounded-r group"
+                className="section-container border-l-4 border-[#137fec] pl-4 py-2 hover:bg-gray-50 transition-colors rounded-r group"
               >
                 <div className="flex justify-between items-start mb-2">
-                  <div className="flex-1 prose prose-invert prose-sm max-w-none
-                    [&_h1]:text-white [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-3
-                    [&_h2]:text-white [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-2
-                    [&_h3]:text-white/90 [&_h3]:text-lg [&_h3]:font-medium [&_h3]:mb-2
-                    [&_p]:text-gray-300 [&_p]:leading-relaxed [&_p]:mb-2
-                    [&_li]:text-gray-300 [&_li]:leading-relaxed
-                    [&_strong]:text-white
+                  <div className="flex-1 prose prose-sm max-w-none
+                    [&_h1]:text-black [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-3
+                    [&_h2]:text-black [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mb-2
+                    [&_h3]:text-black [&_h3]:text-lg [&_h3]:font-medium [&_h3]:mb-2
+                    [&_p]:text-gray-900 [&_p]:leading-relaxed [&_p]:mb-2
+                    [&_li]:text-gray-900 [&_li]:leading-relaxed
+                    [&_strong]:text-black
                     [&_a]:text-[#137fec]
                     [&_ul]:list-disc [&_ul]:pl-5
-                    [&_ol]:list-decimal [&_ol]:pl-5"
+                    [&_ol]:list-decimal [&_ol]:pl-5
+                    [&_td]:text-gray-900 [&_th]:text-black [&_th]:font-semibold
+                    [&_table]:border-collapse [&_td]:border [&_td]:border-gray-300 [&_td]:px-2 [&_td]:py-1
+                    [&_th]:border [&_th]:border-gray-300 [&_th]:px-2 [&_th]:py-1 [&_th]:bg-gray-50"
                   >
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {section.content}
@@ -227,21 +230,21 @@ export default function ReportEditor({
                 <span className="material-symbols-outlined text-[#137fec]">rate_review</span>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">재검토 요청</h3>
-                <p className="text-sm text-white/50">{selectedSection}</p>
+                <h3 className="text-lg font-bold text-black">재검토 요청</h3>
+                <p className="text-sm text-gray-700">{selectedSection}</p>
               </div>
             </div>
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="피드백을 입력하세요 (예: 알레르기 부분을 더 자세히 서술해주세요)"
-              className="w-full h-32 p-3 border border-white/10 rounded-lg bg-black/20 text-gray-200 resize-none mb-4 focus:outline-none focus:border-[#137fec] focus:ring-2 focus:ring-[#137fec]/20 text-sm"
+              className="w-full h-32 p-3 border border-gray-200 rounded-lg bg-gray-50 text-black resize-none mb-4 focus:outline-none focus:border-[#137fec] focus:ring-2 focus:ring-[#137fec]/20 text-sm"
               autoFocus
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleCancelFeedback}
-                className="px-4 py-2 text-white/50 hover:text-white/80 text-sm"
+                className="px-4 py-2 text-gray-600 hover:text-black text-sm"
               >
                 취소
               </button>

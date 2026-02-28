@@ -4,10 +4,10 @@
 AI 에이전트 시스템 - 유전자편집식품(NGT) 표준 안전성 평가 프레임워크 도출
 
 ## Tech Stack
-- Backend: FastAPI + LangGraph + OpenAI API (GPT-4o, GPT-4o-mini)
+- Backend: FastAPI + LangGraph + OpenAI API (GPT_MODEL 단일 모델)
 - Frontend: Next.js 16 + React 19 + Tailwind CSS 4
 - Database: SQLite (MVP) + Pinecone (Vector DB, 316 docs)
-- Tools: Tavily (Web Search) + LangChain RAG
+- Tools: Tavily (Web Search + EFSA Journal Search) + LangChain RAG
 
 ## Commands
 ```bash
@@ -34,11 +34,20 @@ pytest tests/ -v
 - StateGraph로 워크플로우 오케스트레이션
 - LangChain @tool decorator로 RAG/Web Search 도구 정의
 
-### OpenAI Direct Calls (NEW!)
-- `utils/llm.py`: OpenAI SDK 직접 사용 (`from openai import OpenAI`)
-- Agents: `call_gpt4o()` / `call_gpt4o_mini()` 함수 사용
+### OpenAI Direct Calls
+- `utils/llm.py`: httpx로 OpenAI API 직접 호출
+- Agents: `call_gpt()` 단일 함수 사용 (env `GPT_MODEL`, 기본값 `gpt-4o`)
+- `call_gpt4o()` / `call_gpt4o_mini()`는 `call_gpt()`의 alias로 하위 호환성 유지
 - **NO** `bind_tools()`, **NO** `ChatOpenAI` in agents
-- Tools (RAG/Web Search)는 prompt injection 방식으로 호출
+- Tools (RAG/Web Search/EFSA Search)는 prompt injection 방식으로 호출
+
+### 보고서 개편 (v2)
+- 10팀 통계적 선별: PI가 10회 독립적 팀 구성 → 빈도 분석 → 최종 선정
+- 전문가 자기소개: 선별된 전문가별 2-3문장 자기소개 생성
+- 연구 아젠다: 5대 핵심 질문이 에이전트 프롬프트에 주입됨
+- 발화 통계: 에이전트별 발화 횟수/글자수를 보고서에 포함
+- Mermaid Decision Tree: SDN-1/2/3/ODM 의사결정 흐름도
+- EFSA Journal 검색: efsa.onlinelibrary.wiley.com 전용 검색
 
 ### Windows Development
 - `__pycache__` 캐시가 구 코드를 로드할 수 있음

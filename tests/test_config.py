@@ -57,8 +57,7 @@ def test_config_default_values(monkeypatch):
 
     assert settings.FASTAPI_HOST == "0.0.0.0"
     assert settings.FASTAPI_PORT == 8000
-    assert settings.GPT4O_MODEL == "gpt-4o"
-    assert settings.GPT4O_MINI_MODEL == "gpt-4o-mini"
+    assert settings.GPT_MODEL == "gpt-4o"
     assert settings.LLM_TEMPERATURE == 0.7
     assert settings.LLM_MAX_TOKENS == 4096
 

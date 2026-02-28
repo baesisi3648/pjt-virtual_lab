@@ -207,15 +207,15 @@ def debug_modules():
             "file": mod.__file__,
             "has_bind_tools": "bind_tools" in src,
             "has_ChatOpenAI": "ChatOpenAI" in src,
-            "has_call_gpt4o": "call_gpt4o" in src,
+            "has_call_gpt": "call_gpt" in src,
             "has_openai_sdk": "from openai import" in src or "OpenAI(" in src,
             "source_length": len(src),
         }
 
     # LLM 빠른 테스트 (실제 OpenAI 호출)
     try:
-        from utils.llm import call_gpt4o_mini
-        test_result = call_gpt4o_mini("Say 'OK'", "Test", max_tokens=5)
+        from utils.llm import call_gpt
+        test_result = call_gpt("Say 'OK'", "Test", max_tokens=5)
         results["llm_test"] = {"status": "ok", "response": test_result[:50]}
     except Exception as e:
         results["llm_test"] = {"status": "error", "error": str(e)}
@@ -247,6 +247,10 @@ def run_research(request: ResearchRequest):
         "messages": [],
         "parallel_views": [],
         "sources": [],
+        "cached_efsa_context": "",
+        "team_selection_data": None,
+        "specialist_introductions": [],
+        "word_counts": {},
     }
 
     # 실행
@@ -439,12 +443,39 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     team_summary = "\n".join(
                         [f"- {m.get('role', '전문가')}: {m.get('focus', '')}" for m in team]
                     )
+
+                    # 10팀 통계적 선별 데이터 전송
+                    tsd = node_state.get("team_selection_data")
+                    if tsd:
+                        yield send_event("team_selection", {
+                            "agent": "pi",
+                            "phase": "planning",
+                            "message": f"10회 독립적 팀 구성 실험 완료 ({tsd.get('n_trials', 0)}회 성공)",
+                            "frequency_table": tsd.get("frequency_table", ""),
+                            "rationale": tsd.get("rationale", ""),
+                            "team_sizes": tsd.get("team_sizes", ""),
+                        })
+
                     yield send_event("agent", {
                         "agent": "pi",
                         "phase": "planning",
                         "message": f"전문가 팀을 구성했습니다. ({len(team)}명)",
                         "content": team_summary,
                     })
+
+                    # 전문가 자기소개 전송
+                    intros = node_state.get("specialist_introductions", [])
+                    if intros:
+                        intro_content = "\n".join(
+                            f"- **{intro.get('role', '')}**: {intro.get('introduction', '')}"
+                            for intro in intros
+                        )
+                        yield send_event("agent", {
+                            "agent": "pi",
+                            "phase": "introductions",
+                            "message": "전문가 자기소개",
+                            "content": intro_content,
+                        })
                     # Round 1 시작 알림
                     yield send_event("iteration", {
                         "round": 1,
@@ -621,7 +652,7 @@ def regenerate_section(request: RegenerateRequest):
     Returns:
         업데이트된 보고서 전체
     """
-    from utils.llm import call_gpt4o_mini
+    from utils.llm import call_gpt
 
     try:
         system_prompt = "당신은 보고서 편집 전문가입니다."
@@ -645,7 +676,7 @@ def regenerate_section(request: RegenerateRequest):
 개선된 전체 보고서를 출력하세요.
 """
 
-        updated_report = call_gpt4o_mini(system_prompt, user_message, temperature=0.3)
+        updated_report = call_gpt(system_prompt, user_message, temperature=0.3)
 
         return RegenerateResponse(
             updated_report=updated_report,
@@ -666,7 +697,7 @@ def translate_report(request: TranslateRequest):
 
     GPT-4o를 사용하여 높은 품질의 학술 영어 번역을 생성합니다.
     """
-    from utils.llm import call_gpt4o
+    from utils.llm import call_gpt
 
     try:
         system_prompt = (
@@ -679,7 +710,7 @@ def translate_report(request: TranslateRequest):
         )
         user_message = request.content
 
-        translated = call_gpt4o(system_prompt, user_message, temperature=0.3)
+        translated = call_gpt(system_prompt, user_message, temperature=0.3)
 
         return TranslateResponse(translated=translated)
 

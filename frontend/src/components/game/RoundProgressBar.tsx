@@ -46,7 +46,7 @@ export default function RoundProgressBar({
                     ? 'bg-emerald-500/30 text-emerald-400 border border-emerald-500/50'
                     : isActive
                       ? 'bg-[#137fec]/30 text-[#137fec] border border-[#137fec]/50 animate-pulse'
-                      : 'bg-white/5 text-white/30 border border-white/10'
+                      : 'bg-gray-100 text-gray-400 border border-gray-200'
                 }`}
               >
                 {isDone ? '✓' : `R${roundNum}`}
@@ -65,14 +65,14 @@ export default function RoundProgressBar({
               LIVE
             </span>
           )}
-          <span className="text-xs font-mono text-white/50">
+          <span className="text-xs font-mono text-gray-500">
             {PHASE_LABELS[phase]}
           </span>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-1000 ease-out"
           style={{

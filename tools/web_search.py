@@ -59,7 +59,7 @@ def get_tavily_client() -> TavilySearchClient:
 
         _tavily_client = TavilySearchClient(
             api_key=api_key,
-            include_domains=[".gov", "nature.com", "sciencedirect.com"],
+            include_domains=[".gov", "nature.com", "sciencedirect.com", "efsa.onlinelibrary.wiley.com"],
             max_results=5,
             search_depth="advanced"
         )
@@ -155,6 +155,51 @@ def web_search(query: str) -> str:
     except Exception as e:
         # Unexpected error
         logger.error(f"SEARCH_UNEXPECTED_ERROR | query='{query}' | error='{str(e)}'")
+        return f"예상치 못한 오류: {str(e)}"
+
+
+@tool
+def efsa_search(query: str) -> str:
+    """
+    EFSA Journal 전용 검색
+
+    EFSA(유럽식품안전청) 공식 학술지에서 관련 자료를 검색합니다.
+    efsa.onlinelibrary.wiley.com 도메인에서만 결과를 반환합니다.
+
+    Args:
+        query (str): 검색 쿼리 (예: "NGT safety assessment EFSA opinion")
+
+    Returns:
+        str: 포맷팅된 검색 결과 (제목, 내용, 출처 URL 포함)
+    """
+    logger.info(f"EFSA_SEARCH_QUERY | query='{query}'")
+
+    try:
+        client = get_tavily_client()
+
+        # EFSA Journal 도메인으로 제한
+        results = client.search_sync(
+            query,
+            include_domains=["efsa.onlinelibrary.wiley.com"],
+        )
+
+        formatted = format_search_results(results)
+
+        result_count = len(results.get('results', [])) if results else 0
+        logger.info(f"EFSA_SEARCH_SUCCESS | query='{query}' | results={result_count}")
+
+        return formatted
+
+    except ValueError as e:
+        logger.error(f"EFSA_SEARCH_CONFIG_ERROR | query='{query}' | error='{str(e)}'")
+        return f"설정 오류: {str(e)}"
+
+    except RuntimeError as e:
+        logger.error(f"EFSA_SEARCH_API_ERROR | query='{query}' | error='{str(e)}'")
+        return f"EFSA 검색 실패: {str(e)}"
+
+    except Exception as e:
+        logger.error(f"EFSA_SEARCH_UNEXPECTED_ERROR | query='{query}' | error='{str(e)}'")
         return f"예상치 못한 오류: {str(e)}"
 
 

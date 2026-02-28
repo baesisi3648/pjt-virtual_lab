@@ -9,7 +9,7 @@ import logging
 import re
 
 from data.guidelines import CRITIQUE_RUBRIC
-from utils.llm import call_gpt4o
+from utils.llm import call_gpt
 from workflow.state import AgentState, CritiqueResult
 from tools.web_search import web_search
 
@@ -127,11 +127,11 @@ def run_critic(state: AgentState) -> dict:
 - specialist_feedback에 "개선된 점", "남은 약점", "5점을 위한 조치"를 포함하세요."""
 
     # Step 4: OpenAI 직접 호출
-    print(f"[CRITIC] Calling OpenAI API via call_gpt4o")
+    print(f"[CRITIC] Calling OpenAI API via call_gpt")
     logger.info("Critic: Calling OpenAI directly...")
 
     try:
-        response_content = call_gpt4o(SYSTEM_PROMPT, user_message)
+        response_content = call_gpt(SYSTEM_PROMPT, user_message)
         print(f"[CRITIC] OpenAI call succeeded - Response: {len(response_content)} chars")
     except Exception as e:
         print(f"[CRITIC ERROR] {type(e).__name__}: {e}")

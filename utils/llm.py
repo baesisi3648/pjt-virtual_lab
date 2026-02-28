@@ -54,7 +54,7 @@ def call_llm(
         raise ValueError("OPENAI_API_KEY 환경 변수가 설정되지 않았습니다.")
 
     if model is None:
-        model = os.environ.get("GPT4O_MODEL", "gpt-4o")
+        model = os.environ.get("GPT_MODEL", "gpt-4o")
 
     # 메시지 배열: 정확히 2개만
     messages = [
@@ -194,13 +194,18 @@ def call_llm(
     raise RuntimeError("OpenAI API call failed after all retries")
 
 
-def call_gpt4o(system_prompt: str, user_message: str, **kwargs) -> str:
-    """GPT-4o 호출 (PI, Critic용)"""
-    model = os.environ.get("GPT4O_MODEL", "gpt-4o")
+def call_gpt(system_prompt: str, user_message: str, **kwargs) -> str:
+    """GPT 모델 호출 (단일 모델 사용)"""
+    model = os.environ.get("GPT_MODEL", "gpt-4o")
     return call_llm(system_prompt, user_message, model=model, **kwargs)
+
+
+# 하위 호환성을 위한 alias
+def call_gpt4o(system_prompt: str, user_message: str, **kwargs) -> str:
+    """call_gpt()의 alias (하위 호환성)"""
+    return call_gpt(system_prompt, user_message, **kwargs)
 
 
 def call_gpt4o_mini(system_prompt: str, user_message: str, **kwargs) -> str:
-    """GPT-4o-mini 호출 (Scientist용)"""
-    model = os.environ.get("GPT4O_MINI_MODEL", "gpt-4o-mini")
-    return call_llm(system_prompt, user_message, model=model, **kwargs)
+    """call_gpt()의 alias (하위 호환성)"""
+    return call_gpt(system_prompt, user_message, **kwargs)

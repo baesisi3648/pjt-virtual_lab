@@ -44,7 +44,7 @@ export default function GameBoard({ state }: GameBoardProps) {
 
         {/* Scene label */}
         <div className="absolute top-3 right-3 z-20">
-          <span className="text-[10px] font-mono text-white/20 px-2 py-1 rounded bg-white/3">
+          <span className="text-[10px] font-mono text-gray-400 px-2 py-1 rounded bg-gray-100">
             {state.scene === 'lab' ? 'LAB' : 'MEETING'} / R{state.currentRound}
           </span>
         </div>

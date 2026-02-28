@@ -55,7 +55,7 @@ export default function LabScene({ characters, onCharacterClick }: LabSceneProps
                   ? 'border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
                   : isDone
                     ? 'border-emerald-500/30'
-                    : 'border-white/10'
+                    : 'border-gray-200'
               }`}
               style={{
                 animationDelay: `${idx * 100}ms`,
@@ -63,13 +63,13 @@ export default function LabScene({ characters, onCharacterClick }: LabSceneProps
             >
               {/* Lab background decoration */}
               <div className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
-                <div className="absolute top-1 right-2 text-[10px] text-white/10 font-mono">
+                <div className="absolute top-1 right-2 text-[10px] text-gray-300 font-mono">
                   LAB-{String(idx + 1).padStart(2, '0')}
                 </div>
                 {/* Desk line */}
-                <div className="absolute bottom-12 left-2 right-2 h-[1px] bg-white/5" />
+                <div className="absolute bottom-12 left-2 right-2 h-[1px] bg-gray-200" />
                 {/* Monitor */}
-                <div className="absolute top-2 left-2 w-4 h-3 rounded-sm border border-white/5 bg-white/3" />
+                <div className="absolute top-2 left-2 w-4 h-3 rounded-sm border border-gray-200 bg-gray-50" />
               </div>
 
               {/* Speech Bubble */}
@@ -95,7 +95,7 @@ export default function LabScene({ characters, onCharacterClick }: LabSceneProps
                   {spec.name}
                 </div>
                 {spec.focus && (
-                  <div className="text-[10px] text-white/40 mt-0.5 line-clamp-2 leading-tight">
+                  <div className="text-[10px] text-gray-400 mt-0.5 line-clamp-2 leading-tight">
                     {spec.focus.length > 30 ? spec.focus.slice(0, 30) + '...' : spec.focus}
                   </div>
                 )}
@@ -117,7 +117,7 @@ export default function LabScene({ characters, onCharacterClick }: LabSceneProps
                   </>
                 )}
                 {!isActive && !isDone && (
-                  <span className="text-[10px] text-white/20 font-mono">Standby</span>
+                  <span className="text-[10px] text-gray-400 font-mono">Standby</span>
                 )}
               </div>
             </div>
@@ -129,9 +129,9 @@ export default function LabScene({ characters, onCharacterClick }: LabSceneProps
           Array.from({ length: 3 - specialists.length }, (_, i) => (
             <div
               key={`empty-${i}`}
-              className="glass-panel rounded-lg p-4 flex flex-col items-center justify-center border-dashed border-white/5 min-h-[180px]"
+              className="glass-panel rounded-lg p-4 flex flex-col items-center justify-center border-dashed border-gray-200 min-h-[180px]"
             >
-              <span className="text-white/10 text-xs font-mono">EMPTY</span>
+              <span className="text-gray-300 text-xs font-mono">EMPTY</span>
             </div>
           ))}
       </div>

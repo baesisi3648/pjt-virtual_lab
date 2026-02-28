@@ -31,9 +31,9 @@ export default function CharacterDetailModal({ character, onClose }: CharacterDe
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
         >
-          <span className="material-symbols-outlined text-white/40 text-sm">close</span>
+          <span className="material-symbols-outlined text-gray-400 text-sm">close</span>
         </button>
 
         {/* Character display */}
@@ -48,7 +48,7 @@ export default function CharacterDetailModal({ character, onClose }: CharacterDe
             {character.name}
           </h3>
           {character.focus && (
-            <p className="text-xs text-white/40 mt-1">{character.focus}</p>
+            <p className="text-xs text-gray-400 mt-1">{character.focus}</p>
           )}
           <div className="flex items-center gap-2 mt-2">
             <span
@@ -57,10 +57,10 @@ export default function CharacterDetailModal({ character, onClose }: CharacterDe
                 backgroundColor: character.status === 'done' ? '#10b981'
                   : character.status === 'speaking' ? colors.primary
                   : character.status === 'active' ? colors.light
-                  : '#ffffff33',
+                  : '#d1d5db',
               }}
             />
-            <span className="text-xs text-white/50 capitalize font-mono">
+            <span className="text-xs text-gray-500 capitalize font-mono">
               {character.status}
             </span>
           </div>
@@ -69,21 +69,21 @@ export default function CharacterDetailModal({ character, onClose }: CharacterDe
         {/* Role info */}
         <div className="space-y-3">
           <div className="glass-panel-light rounded-lg p-3">
-            <div className="text-[10px] text-white/30 font-mono mb-1">ROLE</div>
-            <div className="text-sm text-white/80 capitalize">{character.role}</div>
+            <div className="text-[10px] text-gray-400 font-mono mb-1">ROLE</div>
+            <div className="text-sm text-gray-700 capitalize">{character.role}</div>
           </div>
 
           {character.message && (
             <div className="glass-panel-light rounded-lg p-3">
-              <div className="text-[10px] text-white/30 font-mono mb-1">LAST MESSAGE</div>
-              <div className="text-sm text-white/70">{character.message}</div>
+              <div className="text-[10px] text-gray-400 font-mono mb-1">LAST MESSAGE</div>
+              <div className="text-sm text-gray-600">{character.message}</div>
             </div>
           )}
 
           {character.content && (
             <div className="glass-panel-light rounded-lg p-3">
-              <div className="text-[10px] text-white/30 font-mono mb-1">DETAILED OUTPUT</div>
-              <div className="text-xs text-white/50 whitespace-pre-wrap max-h-[200px] overflow-y-auto font-mono leading-relaxed">
+              <div className="text-[10px] text-gray-400 font-mono mb-1">DETAILED OUTPUT</div>
+              <div className="text-xs text-gray-500 whitespace-pre-wrap max-h-[200px] overflow-y-auto font-mono leading-relaxed">
                 {character.content}
               </div>
             </div>
@@ -91,7 +91,7 @@ export default function CharacterDetailModal({ character, onClose }: CharacterDe
 
           {character.scores && Object.keys(character.scores).length > 0 && (
             <div className="glass-panel-light rounded-lg p-3">
-              <div className="text-[10px] text-white/30 font-mono mb-2">SCORES</div>
+              <div className="text-[10px] text-gray-400 font-mono mb-2">SCORES</div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(character.scores).map(([k, v]) => (
                   <span

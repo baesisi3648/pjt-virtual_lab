@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
-/* ===== Design System: Biotech AI Lab ===== */
+/* ===== Design System: Virtual Lab (Light Theme) ===== */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f8f7;
+  --foreground: #121714;
+  --primary: #1b7440;
+  --primary-light: #e8f5ed;
+  --text-muted: #678373;
+  --border: #dde4e0;
 }
 
 @theme inline {
@@ -12,18 +16,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
-}
-
-.dark {
-  --background: #101922;
-  --foreground: #ededed;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #101922;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -38,89 +30,68 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: #cbd5e1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #137fec;
+  background: #1b7440;
 }
 
-/* ===== Glass Morphism ===== */
+/* ===== Card Panels (replaces glass-panel) ===== */
 .glass-panel {
-  background: rgba(26, 35, 46, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  background: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.glass-panel-hover {
+  background: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
 }
 
 .glass-panel-hover:hover {
-  background: rgba(26, 35, 46, 0.8);
-  border-color: rgba(19, 127, 236, 0.3);
-  box-shadow: 0 0 15px rgba(19, 127, 236, 0.15);
+  border-color: rgba(27, 116, 64, 0.4);
+  box-shadow: 0 4px 12px rgba(27, 116, 64, 0.08);
 }
 
 .glass-panel-light {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* ===== Neon Text ===== */
-.neon-text {
-  text-shadow: 0 0 10px rgba(19, 127, 236, 0.5);
-}
-
-/* ===== Grid Background ===== */
-.bg-grid {
-  background-size: 40px 40px;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-}
-
-/* ===== DNA Background Glow ===== */
-.dna-bg {
-  background: radial-gradient(circle at 50% 50%, rgba(19, 127, 236, 0.08) 0%, transparent 70%);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #dde4e0;
+  border-radius: 8px;
 }
 
 /* ===== Animations ===== */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px 2px rgba(19, 127, 236, 0.3); }
-  50% { box-shadow: 0 0 25px 5px rgba(19, 127, 236, 0.5); }
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(27, 116, 64, 0.15); }
+  50% { box-shadow: 0 0 16px 4px rgba(27, 116, 64, 0.25); }
 }
-@keyframes pulse-glow-purple {
-  0%, 100% { box-shadow: 0 0 15px 2px rgba(139, 92, 246, 0.3); }
-  50% { box-shadow: 0 0 25px 5px rgba(139, 92, 246, 0.5); }
-}
-@keyframes pulse-glow-cyan {
-  0%, 100% { box-shadow: 0 0 15px 2px rgba(6, 182, 212, 0.3); }
-  50% { box-shadow: 0 0 25px 5px rgba(6, 182, 212, 0.5); }
-}
+
+.animate-pulse-glow { animation: pulse-glow 3s infinite; }
+
 @keyframes flow-line {
   0% { stroke-dashoffset: 100; opacity: 0.2; }
   50% { opacity: 1; }
   100% { stroke-dashoffset: 0; opacity: 0.2; }
 }
 
-.animate-pulse-glow { animation: pulse-glow 3s infinite; }
-.animate-pulse-glow-purple { animation: pulse-glow-purple 3s infinite; }
-.animate-pulse-glow-cyan { animation: pulse-glow-cyan 3s infinite; }
-
 .flow-path {
   stroke-dasharray: 10;
   animation: flow-line 2s linear infinite;
 }
 
-/* ===== Report Paper Style (Dark) ===== */
+/* ===== Report Paper Style (Light) ===== */
 .report-paper {
-  background-color: rgba(26, 35, 46, 0.8);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
-  box-shadow: 0 0 50px -12px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 /* ===== Pixel Art Game Board ===== */
@@ -153,8 +124,28 @@ body {
 .animate-scene-fade-in { animation: scene-fade-in 0.5s ease-out; }
 .animate-speech-appear { animation: speech-appear 0.3s ease-out; }
 
+/* ===== Primary Token Utilities ===== */
+.border-primary { border-color: var(--primary); }
+.bg-primary     { background-color: var(--primary); }
+.text-primary   { color: var(--primary); }
+
+.bg-primary:hover,
+.btn-primary:hover { filter: brightness(0.88); }
+
+.spinner-primary { border-color: transparent transparent transparent var(--primary); }
+
+.corner-accent {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 20%, transparent) 0%, transparent 100%);
+}
+
 /* ===== Selection ===== */
 ::selection {
-  background: rgba(19, 127, 236, 0.3);
-  color: white;
+  background: rgba(27, 116, 64, 0.2);
+  color: #121714;
 }
+
+/* ===== Material Symbols Icon Sizes ===== */
+.icon-xl  { font-size: 40px; }
+.icon-lg  { font-size: 32px; }
+.icon-md  { font-size: 22px; }
+.icon-sm  { font-size: 16px; }

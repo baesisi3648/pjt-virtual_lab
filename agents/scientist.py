@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from workflow.state import AgentState
 from tools.rag_search import rag_search_tool
-from tools.web_search import web_search
+from tools.web_search import web_search, efsa_search
 from agents.factory import create_specialist
 
 logger = logging.getLogger(__name__)
@@ -35,11 +35,11 @@ def _extract_sources(text: str) -> list[str]:
     return sources
 
 
-def _perform_searches(topic: str, state: AgentState) -> tuple[str, str]:
-    """RAG + Web 검색을 병렬로 수행하고 캐싱합니다.
+def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
+    """RAG + Web + EFSA 검색을 병렬로 수행하고 캐싱합니다.
 
     Returns:
-        tuple[str, str]: (rag_context, web_context)
+        tuple[str, str, str]: (rag_context, web_context, efsa_context)
     """
     current_round = state.get("current_round", 1)
 
@@ -47,16 +47,18 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str]:
     if current_round > 1:
         cached_rag = state.get("cached_rag_context", "")
         cached_web = state.get("cached_web_context", "")
+        cached_efsa = state.get("cached_efsa_context", "")
         if cached_rag or cached_web:
             print(f"  [CACHE] Using cached search results from Round 1")
             logger.info(f"Using cached search results (Round {current_round})")
-            return cached_rag, cached_web
+            return cached_rag, cached_web, cached_efsa
 
     # Round 1: 검색 수행 (병렬)
-    print(f"  [SEARCH] Running parallel RAG + Web searches...")
+    print(f"  [SEARCH] Running parallel RAG + Web + EFSA searches...")
 
     rag_context = ""
     web_context = ""
+    efsa_context_result = ""
 
     def do_rag_search():
         try:
@@ -76,19 +78,31 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str]:
             logger.warning(f"Web search failed: {e}")
             return ""
 
+    def do_efsa_search():
+        try:
+            result = efsa_search.invoke({"query": f"{topic} NGT safety assessment EFSA"})
+            logger.info(f"EFSA search completed")
+            return f"\n\n[EFSA Journal 검색 결과]\n{result}"
+        except Exception as e:
+            logger.warning(f"EFSA search failed: {e}")
+            return ""
+
     # 병렬 실행
-    with ThreadPoolExecutor(max_workers=2) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         rag_future = executor.submit(do_rag_search)
         web_future = executor.submit(do_web_search)
+        efsa_future = executor.submit(do_efsa_search)
 
         rag_context = rag_future.result()
         web_context = web_future.result()
+        efsa_context_result = efsa_future.result()
 
     print(f"  [SEARCH] Parallel searches completed")
     print(f"    - RAG: {len(rag_context)} chars")
     print(f"    - Web: {len(web_context)} chars")
+    print(f"    - EFSA: {len(efsa_context_result)} chars")
 
-    return rag_context, web_context
+    return rag_context, web_context, efsa_context_result
 
 
 def _run_single_specialist(
@@ -170,7 +184,7 @@ def run_specialists(state: AgentState) -> dict:
     print(f"{'#'*80}\n")
 
     # 검색 병렬 수행 + 캐싱
-    rag_context, web_context = _perform_searches(topic, state)
+    rag_context, web_context, efsa_context = _perform_searches(topic, state)
 
     # 전문가들 병렬 실행
     specialist_outputs = []
@@ -181,9 +195,11 @@ def run_specialists(state: AgentState) -> dict:
     with ThreadPoolExecutor(max_workers=len(team)) as executor:
         futures = []
         for i, profile in enumerate(team):
+            # EFSA context를 web_context에 합쳐서 전달
+            combined_web = web_context + efsa_context
             future = executor.submit(
                 _run_single_specialist,
-                profile, topic, constraints, rag_context, web_context, i, len(team)
+                profile, topic, constraints, rag_context, combined_web, i, len(team)
             )
             futures.append(future)
 
@@ -202,6 +218,7 @@ def run_specialists(state: AgentState) -> dict:
     collected_sources = list(state.get("sources", []))
     collected_sources.extend(_extract_sources(rag_context))
     collected_sources.extend(_extract_sources(web_context))
+    collected_sources.extend(_extract_sources(efsa_context))
     for so in specialist_outputs:
         collected_sources.extend(_extract_sources(so.get("output", "")))
     seen = set()
@@ -221,6 +238,7 @@ def run_specialists(state: AgentState) -> dict:
         # 검색 결과 캐싱 (Round 2, 3에서 재사용)
         "cached_rag_context": rag_context,
         "cached_web_context": web_context,
+        "cached_efsa_context": efsa_context,
     }
 
 

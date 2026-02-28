@@ -37,3 +37,7 @@ class AgentState(TypedDict):
     sources: list[str]  # 참조 출처 목록 (웹 검색 URL, RAG 문헌)
     cached_rag_context: str  # Phase 1: Round 1 RAG 검색 캐시
     cached_web_context: str  # Phase 1: Round 1 Web 검색 캐시
+    cached_efsa_context: str  # EFSA Journal 검색 캐시
+    team_selection_data: dict | None  # 10팀 통계적 선별 데이터
+    specialist_introductions: list[dict]  # 전문가 자기소개
+    word_counts: dict  # 에이전트별 발화 통계
