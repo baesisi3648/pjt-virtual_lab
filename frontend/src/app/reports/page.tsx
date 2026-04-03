@@ -61,6 +61,7 @@ export default function ReportsPage() {
               <span className="text-sm font-bold text-[#1b7440] border-b-2 border-[#1b7440] pb-0.5">
                 Reports
               </span>
+              <Link href="/history" className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5">History</Link>
             </nav>
 
             {/* Right: Back to Home */}

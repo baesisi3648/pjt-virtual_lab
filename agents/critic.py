@@ -8,7 +8,7 @@ import json
 import logging
 import re
 
-from data.guidelines import CRITIQUE_RUBRIC
+from data.guidelines import CRITIQUE_RUBRIC, ACADEMIC_TONE_GUIDE
 from utils.llm import call_gpt
 from workflow.state import AgentState, CritiqueResult
 from tools.web_search import web_search
@@ -16,20 +16,28 @@ from tools.web_search import web_search
 logger = logging.getLogger(__name__)
 
 
-SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 독립적 비평가입니다.
+SYSTEM_PROMPT = f"""당신은 과학적 타당성과 가독성을 검증하는 독립적 비평가입니다.
 
 ## 참고 기준
 {CRITIQUE_RUBRIC}
 
+## 서술 가이드
+{ACADEMIC_TONE_GUIDE}
+
 ## 당신의 임무
 각 과학자 에이전트의 분석 결과를 개별적으로 검토하세요.
+과학적 정확성뿐 아니라, "이해하기 쉬운가"와 "왜 필요한가를 설명하고 있는가"를 함께 평가합니다.
 
 ## 전문가별 평가 기준
 각 전문가에 대해 다음을 평가하세요:
-1. **근거의 적절성**: 주장을 뒷받침하는 과학적 근거가 충분한가?
+1. **근거의 적절성**: 주장을 뒷받침하는 과학적 맥락과 해석이 충분한가?
 2. **논리적 비약 여부**: 전제에서 결론으로의 논리적 연결이 타당한가?
 3. **대안적 해석 가능성**: 다른 해석이나 반론을 충분히 고려했는가?
-4. **판단 기준 일관성**: '적용 가능', '부분 적용', '충분'의 기준이 일관적인가?
+4. **가독성과 용어 설명**: (양방향 검증)
+   - 설명 없는 약어/전문 용어가 있는가? → 감점
+   - 수치/임계값/프로토콜이 포함되어 있는가? → 감점
+   - 비전문가도 이해할 수 있는 평이한 서술인가? → 가점
+   - "왜 이 평가가 필요한가"를 설명하고 있는가? → 가점
 
 ## 평가 유의사항
 - 첫 번째 라운드에서는 특히 엄격하게 평가하세요
@@ -43,19 +51,27 @@ SYSTEM_PROMPT = f"""당신은 과학적 타당성을 검증하는 독립적 비�
   2. 여전히 남아있는 약점
   3. 5/5 만점을 받기 위해 필요한 구체적 조치
 
-## 출력 형식 (JSON)
+## 출력 형식 (JSON) - 축별 점수 필수
 {{
   "decision": "continue",
   "feedback": "전체 요약 피드백 (주요 쟁점, 합의된 사항, 미해결 사항)",
-  "scores": {{"전문가역할명1": 4, "전문가역할명2": 3}},
+  "scores": {{
+    "전문가역할명1": {{"evidence": 3, "universality": 4, "proportionality": 3, "readability": 2}},
+    "전문가역할명2": {{"evidence": 4, "universality": 3, "proportionality": 4, "readability": 3}}
+  }},
   "specialist_feedback": {{
     "전문가역할명1": "구체적 피드백 (강점, 약점, 개선 지시)",
     "전문가역할명2": "구체적 피드백 ..."
   }}
 }}
 
-★ scores 필드는 반드시 포함하세요. 각 전문가에 대해 1~5 사이의 정수 점수를 부여하세요.
-  예: "scores": {{"NGT 분자생물학 전문가": 4, "식품안전성 평가 전문가": 3}}
+★ scores는 전문가별로 4개 축 각각의 점수(1~5)를 반드시 포함하세요:
+  - evidence: 과학적 근거
+  - universality: 범용성
+  - proportionality: 비례성 (과도한 규제 여부)
+  - readability: 가독성과 용어 설명
+★ 5점은 해당 축에서 더 이상 개선할 여지가 없을 때만 부여하세요.
+★ 라운드 1에서는 어떤 축도 5점을 넘기지 마세요. 최대 4점까지만 부여하세요.
 
 참고 정보가 제공된 경우 이를 활용하여 더 정확한 검증을 수행하세요.
 반드시 JSON만 출력하세요. 다른 설명은 불필요합니다.
@@ -137,7 +153,34 @@ def run_critic(state: AgentState) -> dict:
         print(f"[CRITIC ERROR] {type(e).__name__}: {e}")
         raise
 
-    # JSON 파싱
+    # JSON 파싱 — 축별 점수 (evidence, universality, proportionality, readability)
+    SCORE_AXES = ("evidence", "universality", "proportionality", "readability")
+    DEFAULT_AXIS_SCORES = {axis: 3 for axis in SCORE_AXES}
+
+    def _normalize_scores(raw: dict) -> dict:
+        """전문가별 점수를 {역할: {축: int}} 형태로 정규화"""
+        normalized = {}
+        for role, val in raw.items():
+            if isinstance(val, dict):
+                # 축별 점수가 정상적으로 들어온 경우
+                axis_scores = {}
+                for axis in SCORE_AXES:
+                    try:
+                        axis_scores[axis] = int(val.get(axis, 3))
+                    except (ValueError, TypeError):
+                        axis_scores[axis] = 3
+                normalized[role] = axis_scores
+            elif isinstance(val, (int, float)):
+                # 기존 형식(통합 점수)으로 온 경우 → 모든 축에 동일 점수
+                int_val = int(val)
+                normalized[role] = {axis: int_val for axis in SCORE_AXES}
+            else:
+                # 문자열 등 → 숫자 추출 시도
+                m = re.search(r'(\d)', str(val))
+                int_val = int(m.group(1)) if m else 3
+                normalized[role] = {axis: int_val for axis in SCORE_AXES}
+        return normalized
+
     try:
         content = response_content.strip()
         if content.startswith("```"):
@@ -146,29 +189,22 @@ def run_critic(state: AgentState) -> dict:
 
         data = json.loads(content)
         raw_scores = data.get("scores", {})
-        scores = {}
-        for k, v in raw_scores.items():
-            try:
-                scores[k] = int(v)
-            except (ValueError, TypeError):
-                # "4/5", "4점", "4 점" 등 변형 파싱
-                m = re.search(r'(\d)', str(v))
-                scores[k] = int(m.group(1)) if m else 3
+        scores = _normalize_scores(raw_scores)
 
         decision = data.get("decision", "continue")
         feedback = data.get("feedback", "")
         specialist_feedback = data.get("specialist_feedback", {})
 
-        # 점수가 비어있으면 content에서 점수 패턴 추출 시도
+        # 점수가 비어있으면 기본값
         if not scores and specialist_feedback:
             for role in specialist_feedback:
-                scores[role] = 3
-            logger.info(f"Critic scores empty, assigned default 3 for {list(scores.keys())}")
+                scores[role] = dict(DEFAULT_AXIS_SCORES)
+            logger.info(f"Critic scores empty, assigned defaults for {list(scores.keys())}")
 
         # 전문가별 피드백은 있는데 점수에 해당 키가 없는 경우 보충
         for role in specialist_feedback:
             if role not in scores:
-                scores[role] = 3
+                scores[role] = dict(DEFAULT_AXIS_SCORES)
 
         critique = CritiqueResult(
             decision=decision,
@@ -177,32 +213,30 @@ def run_critic(state: AgentState) -> dict:
             specialist_feedback=specialist_feedback,
         )
 
-        print(f"[CRITIC] Decision: {decision}, Scores: {scores}")
-        if specialist_feedback:
-            print(f"[CRITIC] Specialist feedback keys: {list(specialist_feedback.keys())}")
+        # 로그: 축별 점수 출력
+        for role, axis_scores in scores.items():
+            axis_str = " ".join(f"{a[0].upper()}={s}" for a, s in axis_scores.items())
+            print(f"[CRITIC] {role}: {axis_str}")
 
     except (json.JSONDecodeError, KeyError) as e:
         logger.warning(f"Critic JSON parse failed: {e}, defaulting to continue")
-        # 파싱 실패 시 content에서 점수 패턴 추출 시도
-        fallback_scores = {}
-        for m in re.finditer(r'["\']([^"\']+)["\']\s*:\s*(\d)\s*/\s*5', response_content):
-            fallback_scores[m.group(1)] = int(m.group(2))
-        if not fallback_scores:
-            # "전문가명": 4 패턴도 시도
-            for m in re.finditer(r'["\']([^"\']+)["\']\s*:\s*(\d)', response_content):
-                name, val = m.group(1), int(m.group(2))
-                if 1 <= val <= 5 and name not in ("decision", "feedback", "scores", "specialist_feedback"):
-                    fallback_scores[name] = val
         critique = CritiqueResult(
             decision="continue",
-            feedback=response_content[:500] if not fallback_scores else "JSON 파싱 실패, 점수만 추출됨",
-            scores=fallback_scores,
+            feedback=response_content[:500],
+            scores={},
             specialist_feedback={},
         )
 
     # 메시지 로그
     messages = list(state.get("messages", []))
-    scores_str = ", ".join(f"{k}={v}" for k, v in (critique.scores or {}).items())
+    scores_parts = []
+    for role, axis_scores in (critique.scores or {}).items():
+        if isinstance(axis_scores, dict):
+            avg = sum(axis_scores.values()) / len(axis_scores) if axis_scores else 0
+            scores_parts.append(f"{role}=avg{avg:.1f}")
+        else:
+            scores_parts.append(f"{role}={axis_scores}")
+    scores_str = ", ".join(scores_parts)
     messages.append({
         "role": "critic",
         "content": f"[라운드 {current_round}] 전문가 분석을 검토했습니다. (점수: {scores_str})\n{critique.feedback}",

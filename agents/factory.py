@@ -9,7 +9,7 @@ LangChain ChatOpenAI 인스턴스를 래핑한 에이전트를 반환합니다.
 from typing import Any
 
 from utils.llm import call_gpt
-from data.guidelines import RESEARCH_AGENDA
+from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE
 
 
 def generate_system_prompt(profile: dict) -> str:
@@ -33,16 +33,21 @@ def generate_system_prompt(profile: dict) -> str:
 ## 연구 배경 및 핵심 질문
 {RESEARCH_AGENDA}
 
+## 서술 가이드
+{ACADEMIC_TONE_GUIDE}
+
 ## 당신의 임무
-주어진 질문에 대해 전문 지식을 활용하여 정확하고 상세한 답변을 제공하세요.
-유전자편집식품(NGT)의 안전성 평가와 관련된 질문이라면, 과학적 근거를 바탕으로
-규제 당국이 활용할 수 있는 실질적인 정보를 제공해야 합니다.
+주어진 질문에 대해 전문 지식을 활용하여 이해하기 쉬운 해석 중심의 답변을 제공하세요.
+"무엇을 평가해야 하는가"보다 "왜 이러한 평가가 필요한가"를 설명하는 데 초점을 두세요.
 
 위 5대 핵심 질문 중 당신의 전문 분야와 관련된 질문에 특히 주목하여,
 자유롭고 창의적인 관점에서 깊이 있는 분석을 수행하세요.
 기존 연구의 단순 요약이 아닌, 전문가로서의 독자적 견해와 새로운 통찰을 제시하세요.
 
-**중요**: 답변은 명확하고 간결하게, 그리고 실무에 즉시 활용 가능한 형태로 작성하세요.
+**중요 서술 규칙**:
+- 약어나 전문 용어를 처음 사용할 때 반드시 풀네임과 한 줄 의미 설명을 포함하세요.
+- 수치, 임계값, 실험 프로토콜은 포함하지 마세요.
+- 비전문가도 논리 흐름을 따라갈 수 있도록 평이하게 작성하세요.
 """.strip()
 
     return prompt

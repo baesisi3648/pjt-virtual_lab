@@ -107,6 +107,12 @@ export default function TimelinePage({
               >
                 Reports
               </Link>
+              <Link
+                href="/history"
+                className="px-4 py-2 text-sm text-[#678373] hover:text-[#121714] transition-colors"
+              >
+                History
+              </Link>
             </nav>
 
             {/* Right: Back Link */}

@@ -47,6 +47,12 @@ export default function HomePage() {
             >
               Reports
             </Link>
+            <Link
+              href="/history"
+              className="px-5 py-2 text-[var(--text-muted)] hover:text-[var(--primary)] rounded-full text-sm font-medium transition-colors"
+            >
+              History
+            </Link>
           </nav>
 
           {/* Right: Backend Status */}

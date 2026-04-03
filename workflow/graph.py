@@ -19,15 +19,36 @@ from agents.scientist import run_specialists, run_round_revision
 from agents.critic import run_critic
 from agents.pi import run_pi_planning, run_pi_summary, run_final_synthesis
 
-MAX_ROUNDS = 3
+MAX_ROUNDS = 5
 
 
 def check_round(state: AgentState) -> Literal["increment_round", "final_synthesis"]:
-    """라운드 확인: 3라운드 미만이면 계속, 아니면 최종 합성"""
+    """라운드 확인: 만점 시 조기 종료, 최대 5라운드까지 진행"""
     current_round = state.get("current_round", 1)
+    critique = state.get("critique")
 
     print(f"\n{'='*60}")
     print(f"[CHECK_ROUND] current_round={current_round}, MAX_ROUNDS={MAX_ROUNDS}")
+
+    # 조기 종료: 모든 전문가의 모든 축이 5점
+    if critique and critique.scores:
+        all_perfect = True
+        for role, axis_scores in critique.scores.items():
+            if isinstance(axis_scores, dict):
+                for axis, score in axis_scores.items():
+                    if score < 5:
+                        all_perfect = False
+                        break
+            else:
+                # 기존 형식 호환 (통합 점수)
+                if axis_scores < 5:
+                    all_perfect = False
+            if not all_perfect:
+                break
+        if all_perfect and critique.scores:
+            print(f"  -> EARLY STOP: All axes 5/5 at round {current_round}")
+            print(f"{'='*60}\n")
+            return "final_synthesis"
 
     if current_round < MAX_ROUNDS:
         print(f"  -> INCREMENT_ROUND (round {current_round} < {MAX_ROUNDS})")

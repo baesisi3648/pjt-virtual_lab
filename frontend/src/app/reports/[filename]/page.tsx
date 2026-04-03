@@ -159,6 +159,12 @@ export default function ReportViewerPage({
                 >
                   Reports
                 </Link>
+                <Link
+                  href="/history"
+                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                >
+                  History
+                </Link>
               </nav>
             </div>
 

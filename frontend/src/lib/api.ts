@@ -162,3 +162,49 @@ export async function fetchReportContent(filename: string): Promise<ReportConten
 
   return response.json();
 }
+
+// ── Session History API ──────────────────────────────────
+
+export interface SessionListItem {
+  id: string;
+  topic: string;
+  constraints: string;
+  status: string;
+  total_rounds: number;
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface SessionEvent {
+  id: number;
+  session_id: string;
+  event_type: string;
+  agent: string;
+  agent_name: string;
+  round: number;
+  content: string;
+  scores: Record<string, number> | null;
+  timestamp: string;
+  metadata: Record<string, unknown> | null;
+}
+
+export interface SessionDetail {
+  session_id: string;
+  topic: string;
+  status: string;
+  total_rounds: number;
+  events: SessionEvent[];
+}
+
+export async function fetchSessions(): Promise<SessionListItem[]> {
+  const response = await fetch(`${API_BASE_URL}/api/sessions`);
+  if (!response.ok) throw new Error(`Failed to fetch sessions: ${response.statusText}`);
+  const data = await response.json();
+  return data.sessions;
+}
+
+export async function fetchSessionEvents(sessionId: string): Promise<SessionDetail> {
+  const response = await fetch(`${API_BASE_URL}/api/sessions/${sessionId}/events`);
+  if (!response.ok) throw new Error(`Failed to fetch session events: ${response.statusText}`);
+  return response.json();
+}

@@ -36,6 +36,7 @@ REPORTS_DIR.mkdir(exist_ok=True)
 
 from workflow.graph import create_workflow
 from workflow.state import AgentState
+from db import create_session, add_event, complete_session, fail_session, list_sessions, get_session, get_session_events
 
 # Celery는 선택적 (Redis 없이도 서버 시작 가능)
 try:
@@ -384,10 +385,14 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         print(f"  Constraints: {constraints}")
         print(f"{'*'*80}\n")
 
+        # DB 세션 생성
+        session_id = create_session(topic, constraints)
+
         # 시작 이벤트
         yield send_event("start", {
             "message": "연구 프로세스를 시작합니다...",
-            "topic": topic
+            "topic": topic,
+            "session_id": session_id,
         })
 
         # 워크플로우 생성
@@ -462,6 +467,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         "message": f"전문가 팀을 구성했습니다. ({len(team)}명)",
                         "content": team_summary,
                     })
+                    add_event(session_id, "planning", agent="pi", content=team_summary)
 
                     # 전문가 자기소개 전송
                     intros = node_state.get("specialist_introductions", [])
@@ -479,7 +485,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     # Round 1 시작 알림
                     yield send_event("iteration", {
                         "round": 1,
-                        "message": "===== 팀 회의 - 라운드 1/3 =====",
+                        "message": "===== 팀 회의 - 라운드 1 =====",
                     })
                     # researching phase 시작 알림
                     yield send_event("phase", {
@@ -500,6 +506,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                             "specialist_focus": so.get("focus", ""),
                             "round": current_round,
                         })
+                        add_event(session_id, "researching", agent="specialist", agent_name=so.get("role", ""), round_num=current_round, content=so.get("output", ""))
 
                 elif node_name == "critique":
                     critique = node_state.get("critique")
@@ -519,6 +526,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                             event_data["specialist_feedback"] = critique.specialist_feedback
 
                         yield send_event("decision", event_data)
+                        add_event(session_id, "critique", agent="critic", round_num=current_round, content=critique.feedback, scores=critique.scores, metadata={"specialist_feedback": critique.specialist_feedback} if critique.specialist_feedback else None)
 
                 elif node_name == "pi_summary":
                     summary = node_state.get("draft", "")
@@ -529,6 +537,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         "content": summary,
                         "round": current_round,
                     })
+                    add_event(session_id, "pi_summary", agent="pi", round_num=current_round, content=summary)
 
                 elif node_name == "increment_round":
                     new_round = node_state.get("current_round", current_round + 1)
@@ -536,8 +545,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     sse_logger.info(f"Round incremented to {current_round}")
                     yield send_event("iteration", {
                         "round": current_round,
-                        "message": f"===== 팀 회의 - 라운드 {current_round}/3 =====",
+                        "message": f"===== 팀 회의 - 라운드 {current_round} =====",
                     })
+                    add_event(session_id, "iteration", round_num=current_round)
 
                 elif node_name == "round_revision":
                     specialist_outputs = node_state.get("specialist_outputs", [])
@@ -557,15 +567,17 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                             "specialist_focus": so.get("focus", ""),
                             "round": current_round,
                         })
+                        add_event(session_id, "round_revision", agent="specialist", agent_name=so.get("role", ""), round_num=current_round, content=so.get("output", ""))
 
                 elif node_name == "final_synthesis":
                     final = node_state.get("final_report", "")
                     yield send_event("agent", {
                         "agent": "pi",
                         "phase": "final_synthesis",
-                        "message": "PI: 3라운드 팀 회의 결과를 종합하여 최종 보고서를 작성했습니다.",
+                        "message": f"PI: {current_round}라운드 팀 회의 결과를 종합하여 최종 보고서를 작성했습니다.",
                         "content": final,
                     })
+                    add_event(session_id, "final_synthesis", agent="pi", round_num=current_round, content=final[:5000])
 
                 # 각 노드의 결과에서 필요한 값 수집
                 if "final_report" in node_state and node_state["final_report"]:
@@ -584,6 +596,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             except Exception as e:
                 sse_logger.warning(f"Failed to save report file: {e}")
 
+        # DB 세션 완료
+        complete_session(session_id, current_round, final_report)
+
         # 완료 이벤트
         yield send_event("complete", {
             "message": "연구 프로세스 완료",
@@ -591,6 +606,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "rounds": current_round,
             "messages": all_messages,
             "saved_filename": saved_filename,
+            "session_id": session_id,
         })
 
     except Exception as e:
@@ -606,6 +622,11 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
         sse_logger.error(f"SSE Error: {error_detail}")
 
+        try:
+            fail_session(session_id, f"{type(e).__name__}: {str(e)}")
+        except Exception:
+            pass
+
         # 에러 이벤트 - 상세 정보 포함
         yield send_event("error", {
             "message": f"에러 발생: {str(e)}",
@@ -615,7 +636,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
 @app.post("/api/research/stream")
 async def stream_research(request: ResearchRequest):
-    """연구 프로세스를 SSE로 스트리밍합니다. (3라운드 팀 회의)
+    """연구 프로세스를 SSE로 스트리밍합니다. (최대 5라운드, 만점 시 조기 종료)
 
     실시간으로 에이전트 상태를 전송하여 프론트엔드에서 타임라인을 표시할 수 있습니다.
 
@@ -809,3 +830,36 @@ def delete_report(filename: str):
         raise HTTPException(status_code=403, detail="Access denied")
     filepath.unlink()
     return {"message": "삭제되었습니다.", "filename": filename}
+
+
+# ── Session Tracking API ──────────────────────────────────
+
+@app.get("/api/sessions")
+def api_list_sessions(limit: int = 50):
+    """연구 세션 목록을 최신순으로 반환합니다."""
+    return {"sessions": list_sessions(limit)}
+
+
+@app.get("/api/sessions/{session_id}")
+def api_get_session(session_id: str):
+    """특정 세션의 상세 정보를 반환합니다."""
+    session = get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    return session
+
+
+@app.get("/api/sessions/{session_id}/events")
+def api_get_session_events(session_id: str):
+    """세션의 라운드별 진행 과정(이벤트)을 반환합니다."""
+    session = get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    events = get_session_events(session_id)
+    return {
+        "session_id": session_id,
+        "topic": session.get("topic", ""),
+        "status": session.get("status", ""),
+        "total_rounds": session.get("total_rounds", 0),
+        "events": events,
+    }
