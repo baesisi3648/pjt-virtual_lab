@@ -272,7 +272,7 @@ export default function ProcessTimeline({
         ) : isStreaming ? (
           <div className="flex items-center gap-2 text-gray-400 text-sm font-mono">
             <div className="animate-pulse h-2 w-2 rounded-full bg-cyan-400"></div>
-            <span>3라운드 팀 회의 진행 중...</span>
+            <span>팀 회의 진행 중...</span>
           </div>
         ) : (
           <div className="text-gray-500 text-sm font-mono">IDLE</div>

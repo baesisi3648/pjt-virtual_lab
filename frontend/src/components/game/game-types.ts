@@ -56,7 +56,7 @@ export const INITIAL_GAME_STATE: GameState = {
   phase: 'idle',
   scene: 'meeting',
   currentRound: 1,
-  maxRounds: 3,
+  maxRounds: 5,
   characters: [
     { id: 'pi', role: 'pi', name: 'PI', status: 'idle' },
     { id: 'critic', role: 'critic', name: 'Critic', status: 'idle' },

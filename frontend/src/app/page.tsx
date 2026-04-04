@@ -262,7 +262,7 @@ export default function HomePage() {
                   Workflow Pipeline
                 </p>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-                  3라운드 팀 회의 파이프라인을 단계별 카드로 시각화하고 에이전트 활동을 실시간 추적합니다.
+                  최대 5라운드 팀 회의 파이프라인을 단계별 카드로 시각화하고 에이전트 활동을 실시간 추적합니다.
                 </p>
               </div>
             </Link>
