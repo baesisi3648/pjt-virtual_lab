@@ -161,7 +161,9 @@ export default function HistoryDetailPage() {
                               <div className="flex gap-1">
                                 {Object.entries(event.scores).map(([role, score]) => (
                                   <span key={role} className="text-xs bg-white/80 px-2 py-0.5 rounded">
-                                    {role.split(' ')[0]}: {score}/5
+                                    {role.split(' ')[0]}: {typeof score === 'object' && score !== null
+                                      ? Object.entries(score).map(([k, v]) => `${k}:${v}`).join(' ')
+                                      : `${score}/5`}
                                   </span>
                                 ))}
                               </div>
