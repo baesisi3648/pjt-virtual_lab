@@ -37,6 +37,63 @@ export default function HistoryDetailPage() {
     }
   };
 
+  const [copied, setCopied] = useState(false);
+
+  const buildFullText = (detail: SessionDetail) => {
+    const lines: string[] = [];
+    lines.push(`=== ${detail.topic} ===`);
+    lines.push(`상태: ${detail.status === 'completed' ? '완료' : detail.status}`);
+    if (detail.total_rounds > 0) lines.push(`총 ${detail.total_rounds}라운드`);
+    lines.push(`이벤트: ${detail.events.length}개`);
+    lines.push('');
+
+    const groups = groupByRound(detail.events);
+    for (const group of groups) {
+      lines.push(`--- ${group.round === 0 ? '사전 준비' : `라운드 ${group.round}`} ---`);
+      for (const ev of group.events) {
+        const name = ev.agent_name || ev.agent || 'System';
+        const label = eventLabel(ev.event_type);
+        lines.push(`[${name}] ${label}`);
+        if (ev.scores) {
+          const scoreStr = Object.entries(ev.scores)
+            .map(([role, score]) => {
+              if (typeof score === 'object' && score !== null) {
+                return `${role}: ${Object.entries(score).map(([k, v]) => `${k}=${v}`).join(', ')}`;
+              }
+              return `${role}: ${score}/5`;
+            })
+            .join(' | ');
+          lines.push(`  점수: ${scoreStr}`);
+        }
+        if (ev.content) {
+          lines.push(ev.content);
+        }
+        lines.push('');
+      }
+    }
+    return lines.join('\n');
+  };
+
+  const handleCopy = () => {
+    if (!data) return;
+    navigator.clipboard.writeText(buildFullText(data)).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const handleDownload = () => {
+    if (!data) return;
+    const text = buildFullText(data);
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.topic.replace(/[^a-zA-Z0-9가-힣\s]/g, '').trim().slice(0, 50)}_session.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const eventLabel = (type: string) => {
     const labels: Record<string, string> = {
       planning: '팀 구성',
@@ -118,16 +175,36 @@ export default function HistoryDetailPage() {
                 <span>{data.events.length}개 이벤트</span>
               </div>
 
-              {/* 리포트 연결 링크 */}
-              {data.status === 'completed' && (
-                <Link
-                  href="/reports"
-                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#1b7440] text-white rounded-lg text-sm font-medium hover:bg-[#145530] transition-colors"
+              <div className="flex items-center gap-3 mt-4">
+                {/* 리포트 연결 링크 */}
+                {data.status === 'completed' && (
+                  <Link
+                    href="/reports"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1b7440] text-white rounded-lg text-sm font-medium hover:bg-[#145530] transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">description</span>
+                    최종 보고서 보기
+                  </Link>
+                )}
+
+                <button
+                  onClick={handleCopy}
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-[#dde4e0] bg-white rounded-lg text-sm font-medium text-[#3a4d42] hover:bg-[#f6f8f7] transition-colors"
                 >
-                  <span className="material-symbols-outlined text-sm">description</span>
-                  최종 보고서 보기
-                </Link>
-              )}
+                  <span className="material-symbols-outlined text-sm">
+                    {copied ? 'check' : 'content_copy'}
+                  </span>
+                  {copied ? '복사 완료' : '전체 복사'}
+                </button>
+
+                <button
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-[#dde4e0] bg-white rounded-lg text-sm font-medium text-[#3a4d42] hover:bg-[#f6f8f7] transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">download</span>
+                  TXT 저장
+                </button>
+              </div>
             </div>
 
             {/* 라운드별 타임라인 */}
