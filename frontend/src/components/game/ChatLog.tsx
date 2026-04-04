@@ -91,7 +91,34 @@ function StatusBadge({ status, phase }: { status: 'completed' | 'active' | 'pend
   );
 }
 
-function ScoreBadge({ role, score }: { role: string; score: number }) {
+const AXIS_LABELS: Record<string, string> = {
+  evidence: '근거',
+  universality: '범용',
+  proportionality: '비례',
+  readability: '가독',
+};
+
+function ScoreBadge({ role, score }: { role: string; score: number | Record<string, number> }) {
+  // 축별 점수 객체인 경우 평균으로 색상 결정 + 축별 표시
+  if (typeof score === 'object' && score !== null) {
+    const values = Object.values(score);
+    const avg = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+    const color =
+      avg >= 5 ? 'bg-blue-100 text-blue-700 border-blue-200' :
+      avg >= 4 ? 'bg-emerald-100 text-emerald-700 border-emerald-200' :
+      avg >= 3 ? 'bg-amber-100 text-amber-700 border-amber-200' :
+                 'bg-red-100 text-red-700 border-red-200';
+    const axisStr = Object.entries(score)
+      .map(([k, v]) => `${AXIS_LABELS[k] || k}${v}`)
+      .join(' ');
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${color}`}>
+        {role && <span className="opacity-70">{role.split(' ')[0]}</span>}
+        <span>{axisStr}</span>
+      </span>
+    );
+  }
+
   const color =
     score >= 5 ? 'bg-blue-100 text-blue-700 border-blue-200' :
     score >= 4 ? 'bg-emerald-100 text-emerald-700 border-emerald-200' :
