@@ -110,9 +110,15 @@ export default function HistoryDetailPage() {
     return labels[type] || type;
   };
 
+  const formatDuration = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.round(seconds % 60);
+    return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+  };
+
   // 이벤트를 라운드별로 그룹핑
   const groupByRound = (events: SessionEvent[]) => {
-    const groups: { round: number; events: SessionEvent[] }[] = [];
+    const groups: { round: number; events: SessionEvent[]; duration?: number }[] = [];
     let currentRound = 0;
     let currentGroup: SessionEvent[] = [];
 
@@ -129,6 +135,17 @@ export default function HistoryDetailPage() {
     }
     if (currentGroup.length > 0) {
       groups.push({ round: currentRound, events: currentGroup });
+    }
+
+    // 각 그룹의 소요시간 계산 (첫 이벤트 ~ 마지막 이벤트)
+    for (const group of groups) {
+      if (group.events.length >= 2) {
+        const first = new Date(group.events[0].timestamp).getTime();
+        const last = new Date(group.events[group.events.length - 1].timestamp).getTime();
+        if (first && last && last > first) {
+          group.duration = (last - first) / 1000;
+        }
+      }
     }
     return groups;
   };
@@ -173,6 +190,17 @@ export default function HistoryDetailPage() {
                 </span>
                 {data.total_rounds > 0 && <span>총 {data.total_rounds}라운드 진행</span>}
                 <span>{data.events.length}개 이벤트</span>
+                {data.events.length >= 2 && (() => {
+                  const first = new Date(data.events[0].timestamp).getTime();
+                  const last = new Date(data.events[data.events.length - 1].timestamp).getTime();
+                  const totalSec = (last - first) / 1000;
+                  return totalSec > 0 ? (
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">timer</span>
+                      총 {formatDuration(totalSec)}
+                    </span>
+                  ) : null;
+                })()}
               </div>
 
               <div className="flex items-center gap-3 mt-4">
@@ -215,6 +243,12 @@ export default function HistoryDetailPage() {
                     {group.round || 0}
                   </span>
                   {group.round === 0 ? '사전 준비' : `라운드 ${group.round}`}
+                  {group.duration != null && group.duration > 0 && (
+                    <span className="ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-[#678373] flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">timer</span>
+                      {formatDuration(group.duration)}
+                    </span>
+                  )}
                 </h2>
 
                 <div className="space-y-3 ml-4 border-l-2 border-[#dde4e0] pl-6">

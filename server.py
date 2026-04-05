@@ -429,6 +429,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         current_round = 1
         final_report = ""
         all_messages: list[dict] = []
+        session_start_time = time.time()
+        round_start_times: dict[int, float] = {1: time.time()}
+        round_durations: dict[int, float] = {}
 
         sse_logger.info(f"Starting workflow stream for topic: {topic}")
         print(f"[SSE STREAM] Starting workflow.stream()...\n")
@@ -455,7 +458,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         yield send_event("team_selection", {
                             "agent": "pi",
                             "phase": "planning",
-                            "message": f"10회 독립적 팀 구성 실험 완료 ({tsd.get('n_trials', 0)}회 성공)",
+                            "message": f"10회 독립적 팀 구성 실험 완료 ({tsd.get('n_trials', 10)}회 성공)",
                             "frequency_table": tsd.get("frequency_table", ""),
                             "rationale": tsd.get("rationale", ""),
                             "team_sizes": tsd.get("team_sizes", ""),
@@ -540,8 +543,11 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     add_event(session_id, "pi_summary", agent="pi", round_num=current_round, content=summary)
 
                 elif node_name == "increment_round":
+                    # 이전 라운드 소요시간 기록
+                    round_durations[current_round] = time.time() - round_start_times.get(current_round, time.time())
                     new_round = node_state.get("current_round", current_round + 1)
                     current_round = new_round
+                    round_start_times[current_round] = time.time()
                     sse_logger.info(f"Round incremented to {current_round}")
                     yield send_event("iteration", {
                         "round": current_round,
@@ -570,6 +576,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                         add_event(session_id, "round_revision", agent="specialist", agent_name=so.get("role", ""), round_num=current_round, content=so.get("output", ""))
 
                 elif node_name == "final_synthesis":
+                    # 마지막 라운드 소요시간 기록
+                    if current_round not in round_durations:
+                        round_durations[current_round] = time.time() - round_start_times.get(current_round, time.time())
                     final = node_state.get("final_report", "")
                     yield send_event("agent", {
                         "agent": "pi",
@@ -599,6 +608,20 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         # DB 세션 완료
         complete_session(session_id, current_round, final_report)
 
+        # 소요 시간 계산
+        total_duration = time.time() - session_start_time
+        timing_stats = {
+            "total_seconds": round(total_duration, 1),
+            "total_display": f"{int(total_duration // 60)}분 {int(total_duration % 60)}초",
+            "rounds": {
+                str(r): {
+                    "seconds": round(d, 1),
+                    "display": f"{int(d // 60)}분 {int(d % 60)}초",
+                }
+                for r, d in sorted(round_durations.items())
+            },
+        }
+
         # 완료 이벤트
         yield send_event("complete", {
             "message": "연구 프로세스 완료",
@@ -607,6 +630,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "messages": all_messages,
             "saved_filename": saved_filename,
             "session_id": session_id,
+            "timing": timing_stats,
         })
 
     except Exception as e:

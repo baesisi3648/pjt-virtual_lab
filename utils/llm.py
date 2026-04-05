@@ -135,7 +135,18 @@ def call_llm(
                     error_body = response.text
                     raise RuntimeError(f"OpenAI API rate limit exceeded after {max_retries} retries: {error_body}")
 
-            # HTTP 에러 체크
+            # 서버 에러 (502, 503, 500 등) — 재시도 가능
+            if response.status_code in (500, 502, 503, 504):
+                if attempt < max_retries - 1:
+                    wait = min(5 * (attempt + 1), 30)
+                    print(f"[LLM SERVER ERROR] HTTP {response.status_code} - waiting {wait}s before retry ({attempt+1}/{max_retries})")
+                    logger.warning(f"[LLM] Server error {response.status_code}, retrying in {wait}s (attempt {attempt+1})")
+                    time.sleep(wait)
+                    continue
+                else:
+                    raise RuntimeError(f"OpenAI API server error (HTTP {response.status_code}) after {max_retries} retries")
+
+            # 기타 HTTP 에러 체크
             if response.status_code != 200:
                 error_body = response.text
                 print(f"\n{'!'*80}")

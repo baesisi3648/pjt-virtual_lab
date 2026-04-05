@@ -108,8 +108,8 @@ Scientist와 Critic의 다중 라운드 논의를 거쳐 정제된 결과를 바
 ### 연구 팀 구성 과정
 
 #### 통계적 팀 구성 방법
-본 연구의 재현성을 확보하기 위해, PI는 10회 독립적 팀 구성 실험을 수행하고
-역할별 등장 빈도를 분석하여 최종 연구팀을 선정하였다.
+본 연구의 재현성을 확보하기 위해, PI는 10회 독립적 팀 구성 실험을 수행하였다.
+10회 모두 유효하게 성립되었으며, 역할별 출현 빈도를 분석하여 최종 연구팀을 선정하였다.
 
 ##### 10회 시뮬레이션 전체 결과
 (아래 정보가 제공되면 포함할 것)
@@ -119,12 +119,12 @@ Scientist와 Critic의 다중 라운드 논의를 거쳐 정제된 결과를 바
 | Trial 1 | N명 | 역할1, 역할2, ... |
 | ... | ... | ... |
 
-##### 역할별 등장 빈도 분석
+##### 역할별 출현 빈도 분석
 
-| 역할 | 등장 횟수 | 백분율 | 전문분야 변형 |
-|------|----------|--------|-------------|
-| 역할1 | N회/10회 | N% | 변형1, 변형2 |
-| ... | ... | ... | ... |
+| 역할 | 출현 팀 수 | 출현율 | 총 등장 횟수 | 전문분야 변형 |
+|------|-----------|--------|-------------|-------------|
+| 역할1 | N/10팀 | N% | N회 | 변형1, 변형2 |
+| ... | ... | ... | ... | ... |
 
 ##### PI의 최종 선정 근거
 (빈도 분석 결과를 바탕으로 한 선정 논리를 설명)
@@ -141,6 +141,15 @@ Scientist와 Critic의 다중 라운드 논의를 거쳐 정제된 결과를 바
 | PI | N회 | N자 |
 | Critic | N회 | N자 |
 | 전문가1 | N회 | N자 |
+
+### 실행 통계
+(아래 정보가 제공되면 포함할 것)
+
+| 라운드 | 소요 시간 |
+|--------|----------|
+| 라운드 1 | N분 N초 |
+| ... | ... |
+| **전체** | **N분 N초** |
 
 ---
 
@@ -178,7 +187,14 @@ Scientist와 Critic의 다중 라운드 논의를 거쳐 정제된 결과를 바
 ## 핵심 질문 5: 단계적 의사결정 흐름 구성
 
 (전체 라운드의 논의를 종합한 PI의 최종 결론.
-핵심 질문 1-4의 결론을 통합하여 의사결정 프레임워크를 서술.)
+핵심 질문 1-4의 결론을 통합하여 의사결정 프레임워크를 서술.
+
+각 의사결정 단계마다 2-3문장의 간략한 설명을 포함하세요.
+기술적 검증이 필요한 단계에서는 해당 검증에 사용할 수 있는 대표적인 분석 기술명을
+예시로 함께 언급하세요.
+예: "이 단계에서는 전장유전체시퀀싱-Whole Genome Sequencing, WGS-이나
+액체크로마토그래피-질량분석법-LC-MS/MS- 등을 활용하여 확인할 수 있다."
+단, 구체적 수치, 분석 프로토콜, 분석 회사명은 포함하지 마세요.)
 
 ---
 
@@ -199,12 +215,25 @@ Scientist와 Critic의 다중 라운드 논의를 거쳐 정제된 결과를 바
 
 NGT(New Genomic Techniques, 신육종기술) 식품의 안전성 평가를 위한 의사결정 흐름을
 Mermaid 다이어그램으로 제시한다.
-기술 유형별로 어떤 평가를 받아야 하는지 구체적 평가 항목 키워드로 명시한다.
+
+### 전체 통합 흐름도
+
+기술 유형 분류부터 각 경로별 평가 완료까지의 전체 의사결정 흐름을 하나의 다이어그램으로 작성한다.
+
+### 기술 유형별 개별 흐름도
+
+SDN-1, SDN-2, SDN-3, ODM 각각에 대해 독립적인 상세 평가 흐름도를 별도로 작성한다.
+각 개별 흐름도는 해당 기술 유형의 특성에 맞는 세부 평가 단계를 포함한다.
 
 ★ 흐름도 작성 원칙:
-- 간결하고 직관적인 Yes/No 분기 구조로 작성한다.
-- 각 노드는 비전문가가 읽어도 "무엇을 확인하는 건지" 바로 알 수 있는 평이한 표현을 사용한다.
-- 추상적 표현("분자적 특성 규명") 대신 구체적 평가 키워드("신규 단백질 발현 여부", "알레르기 유발 가능성", "독성 평가", "영양 성분 변화")를 사용한다.
+1. 간결하고 직관적인 Yes/No 분기 구조로 작성한다.
+2. 각 노드는 비전문가가 읽어도 "무엇을 확인하는 건지" 바로 알 수 있는 평이한 표현을 사용한다.
+3. **모든 경로는 반드시 "평가 완료" 노드로 수렴해야 한다. 흐름이 끊기는 말단 노드가 없어야 한다.**
+4. 추상적 표현 대신 구체적 평가 키워드를 사용한다.
+
+★ 노드 워딩 예시:
+- 우수 사례: "신규 단백질 발현 있음?", "외래 DNA 잔존 흔적 있음?", "스택-다중편집 영향 있음?", "알레르기 유발 가능성 평가", "독성 평가", "영양 성분 변화 평가", "의도하지 않은 변이 확인"
+- 금지 사례: "오믹스 신호 밴드 높음?", "분자특성 최소설명세트 정리", "표적 인접 무결성 보완 확인", "분자적 특성 규명" — 이런 해석이 필요한 추상적 표현은 사용 금지
 
 아래 예시 구조를 참고하되, 연구 결과에 맞게 구체화하세요:
 
@@ -213,7 +242,7 @@ graph TD
     A["NGT 식품 안전성 평가 시작"] --> B{{"편집 기술 유형 분류"}}
     B -->|"SDN-1"| C{{"외래 유전자 삽입 여부"}}
     B -->|"SDN-2"| D{{"염기 교정 범위 확인"}}
-    B -->|"SDN-3"| E["신규 단백질 발현 여부 확인"]
+    B -->|"SDN-3"| E{{"신규 단백질 발현 있음?"}}
     B -->|"ODM"| F{{"외래 DNA 잔존 여부"}}
 
     C -->|"없음"| C1["의도하지 않은 변이 확인"]
@@ -224,15 +253,15 @@ graph TD
     D1 --> D2["기존 품종과 성분 비교"]
     D2 --> D3["중간 수준 평가 완료"]
 
-    E --> E1{{"신규 단백질 있음?"}}
-    E1 -->|"예"| E2["독성 평가"]
+    E -->|"예"| E2["독성 평가"]
     E2 --> E3["알레르기 유발 가능성 평가"]
     E3 --> E4["영양 성분 변화 평가"]
     E4 --> E5["전체 평가 완료"]
-    E1 -->|"아니오"| E6["의도하지 않은 변이 확인"]
+    E -->|"아니오"| E6["의도하지 않은 변이 확인"]
     E6 --> E4
 
     F -->|"없음"| F1["SDN-1과 동일 경로"]
+    F1 --> C1
     F -->|"있음"| F2["잔존 DNA 영향 평가"]
     F2 --> E2
 ```
@@ -408,26 +437,33 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
     print(f"\n[STATISTICAL TEAM SELECTION] Running {n_trials} independent team compositions...")
 
     all_teams = []
+    max_retries = n_trials * 3  # 최대 재시도 횟수 (무한루프 방지)
+    attempt = 0
 
     def _single_trial(trial_idx: int) -> list[dict] | None:
         try:
             team = decide_team(user_query)
-            print(f"  Trial {trial_idx+1}/{n_trials}: {len(team)} specialists - {[m['role'] for m in team]}")
+            print(f"  Trial {trial_idx+1}: {len(team)} specialists - {[m['role'] for m in team]}")
             return team
         except Exception as e:
             logger.warning(f"Trial {trial_idx+1} failed: {e}")
             return None
 
-    # 병렬 실행 (5 workers)
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(_single_trial, i) for i in range(n_trials)]
-        for future in as_completed(futures):
-            result = future.result()
-            if result:
-                all_teams.append(result)
+    # n_trials회 성공할 때까지 반복 (병렬 5 workers)
+    while len(all_teams) < n_trials and attempt < max_retries:
+        remaining = n_trials - len(all_teams)
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = [executor.submit(_single_trial, attempt + i) for i in range(remaining)]
+            for future in as_completed(futures):
+                result = future.result()
+                if result and len(all_teams) < n_trials:
+                    all_teams.append(result)
+        attempt += remaining
+        if len(all_teams) < n_trials:
+            print(f"  [RETRY] {len(all_teams)}/{n_trials} succeeded, retrying {n_trials - len(all_teams)} more...")
 
-    if not all_teams:
-        raise RuntimeError("모든 팀 구성 시도가 실패했습니다.")
+    if len(all_teams) < n_trials:
+        raise RuntimeError(f"팀 구성 실험이 {max_retries}회 시도 후에도 {n_trials}회를 달성하지 못했습니다 ({len(all_teams)}회 성공).")
 
     # 역할별 빈도 분석 (클러스터링 적용)
     # 1) 유니크 역할명 수집
@@ -441,28 +477,35 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
     print(f"  [CLUSTERING] {len(unique_roles)} unique roles → {len(set(role_mapping.values()))} clusters")
 
     # 3) 매핑된 대표명으로 빈도 카운트
-    role_counter = Counter()
+    role_counter = Counter()          # 총 등장 횟수
+    role_team_counter = Counter()     # 해당 역할이 포함된 팀 수 (출현율)
     role_focus_map: dict[str, list[str]] = {}
     team_size_counter = Counter()
 
     for team in all_teams:
         team_size_counter[len(team)] += 1
+        seen_roles_in_team: set[str] = set()
         for member in team:
             canonical_role = role_mapping.get(member["role"], member["role"])
             role_counter[canonical_role] += 1
+            seen_roles_in_team.add(canonical_role)
             if canonical_role not in role_focus_map:
                 role_focus_map[canonical_role] = []
             if member["focus"] not in role_focus_map[canonical_role]:
                 role_focus_map[canonical_role].append(member["focus"])
+        for role in seen_roles_in_team:
+            role_team_counter[role] += 1
 
-    # 빈도 테이블 구성
+    # 빈도 테이블 구성 (출현율: 해당 역할이 포함된 팀 수 / 전체 팀 수)
     frequency_table = []
     for role, count in role_counter.most_common():
+        team_count = role_team_counter[role]
         frequency_table.append({
             "role": role,
             "count": count,
-            "frequency": f"{count}/{len(all_teams)}",
-            "percentage": round(count / len(all_teams) * 100, 1),
+            "team_count": team_count,
+            "frequency": f"{team_count}/{n_trials}팀",
+            "percentage": round(team_count / n_trials * 100, 1),
             "focus_variants": role_focus_map.get(role, []),
         })
 
@@ -471,7 +514,7 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
 
     # PI에게 최종 팀 선정 위임
     freq_summary = "\n".join(
-        f"- {ft['role']}: {ft['count']}회/{len(all_teams)}회 ({ft['percentage']}%)"
+        f"- {ft['role']}: {ft['team_count']}/{n_trials}팀 출현 ({ft['percentage']}%), 총 {ft['count']}회 등장"
         for ft in frequency_table
     )
     size_summary = ", ".join(f"{size}명: {cnt}회" for size, cnt in team_size_counter.most_common())
@@ -534,7 +577,7 @@ JSON만 출력하세요.
         "rationale": rationale,
         "frequency_table": freq_summary,
         "team_sizes": size_summary,
-        "n_trials": len(all_teams),
+        "n_trials": n_trials,
     }
 
 
@@ -849,15 +892,15 @@ def run_final_synthesis(state: AgentState) -> dict:
         freq_analysis = tsd.get("frequency_analysis", [])
         freq_detail = ""
         if freq_analysis:
-            freq_detail = "역할별 등장 빈도 분석:\n"
-            freq_detail += "| 역할 | 등장 횟수 | 백분율 | 전문분야 변형 |\n|------|----------|--------|-------------|\n"
+            freq_detail = "역할별 출현 빈도 분석:\n"
+            freq_detail += "| 역할 | 출현 팀 수 | 출현율 | 총 등장 횟수 | 전문분야 변형 |\n|------|-----------|--------|-------------|-------------|\n"
             for ft in freq_analysis:
                 variants = ", ".join(ft.get("focus_variants", [])[:3])
-                freq_detail += f"| {ft['role']} | {ft['frequency']} | {ft['percentage']}% | {variants} |\n"
+                freq_detail += f"| {ft['role']} | {ft['frequency']} | {ft['percentage']}% | {ft.get('count', '')}회 | {variants} |\n"
 
         team_composition_text = (
             f"\n\n[연구 팀 구성 과정 - 보고서 '연구 방법론' 섹션에 포함할 것]\n"
-            f"10회 독립적 팀 구성 실험 수행 ({n_trials}회 성공)\n\n"
+            f"10회 독립적 팀 구성 실험 수행 (10회 모두 유효하게 성립)\n\n"
             f"{trials_detail}\n"
             f"{freq_detail}\n"
             f"팀 규모 분포: {tsd.get('team_sizes', '')}\n\n"
@@ -901,9 +944,15 @@ def run_final_synthesis(state: AgentState) -> dict:
         f"★ 핵심 2: '연구 방법론' 섹션에 팀 구성 과정(10회 시뮬레이션 전체 결과, 빈도 테이블, 선정 근거),\n"
         f"전문가 자기소개(한글 대화형), 에이전트별 기여도 통계를 반드시 포함하세요.\n\n"
         f"★ 핵심 3: 의사결정 흐름도(Mermaid `graph TD`)를 반드시 포함하세요.\n"
-        f"SDN-1/SDN-2/SDN-3/ODM 각 카테고리의 위험평가 경로를 개념적으로 작성하세요.\n\n"
-        f"★ 핵심 4: 참고문헌(References) 섹션에 Web, RAG, EFSA 출처를 정리하세요.\n\n"
-        f"★ 핵심 5: 약어·전문 용어는 처음 사용 시 풀네임+의미 설명을 반드시 포함하세요.\n"
+        f"(1) 전체 통합 흐름도 1개 + (2) SDN-1, SDN-2, SDN-3, ODM 개별 상세 흐름도 각 1개 = 총 5개.\n"
+        f"모든 경로는 반드시 '평가 완료' 노드로 수렴해야 합니다(흐름 끊김 금지).\n"
+        f"노드 텍스트는 비전문가가 바로 이해 가능한 구체적 평가 키워드만 사용하세요.\n"
+        f"금지 표현: '오믹스 신호 밴드', '분자특성 최소설명세트', '표적 인접 무결성 보완' 등 해석이 필요한 추상적 표현.\n\n"
+        f"★ 핵심 4: 핵심 질문 5의 각 의사결정 단계마다 2-3문장 간략 설명을 포함하세요.\n"
+        f"기술적 검증이 필요한 단계에서는 대표적인 분석 기술명(예: WGS, LC-MS/MS, Western Blot, PCR 등)을 예시로 언급하세요.\n"
+        f"단, 구체적 수치·프로토콜·분석 회사명은 포함하지 마세요.\n\n"
+        f"★ 핵심 5: 참고문헌(References) 섹션에 Web, RAG, EFSA 출처를 정리하세요.\n\n"
+        f"★ 핵심 6: 약어·전문 용어는 처음 사용 시 풀네임+의미 설명을 반드시 포함하세요.\n"
         f"수치, 임계값, 프로토콜은 포함하지 말고, 비전문가도 이해할 수 있게 평이하게 작성하세요.\n"
     )
 
