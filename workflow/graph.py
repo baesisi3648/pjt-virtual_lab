@@ -19,11 +19,11 @@ from agents.scientist import run_specialists, run_round_revision
 from agents.critic import run_critic
 from agents.pi import run_pi_planning, run_pi_summary, run_final_synthesis
 
-MAX_ROUNDS = 5
+MAX_ROUNDS = 7
 
 
 def check_round(state: AgentState) -> Literal["increment_round", "final_synthesis"]:
-    """라운드 확인: 만점 시 조기 종료, 최대 5라운드까지 진행"""
+    """라운드 확인: 만점 시 조기 종료, 최대 7라운드까지 진행"""
     current_round = state.get("current_round", 1)
     critique = state.get("critique")
 
