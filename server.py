@@ -596,18 +596,6 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
         sse_logger.info(f"Workflow complete. Report length: {len(final_report)}, rounds: {current_round}")
 
-        # 보고서 파일 저장
-        saved_filename = ""
-        if final_report:
-            try:
-                saved_filename = save_report_to_file(final_report, topic)
-                sse_logger.info(f"Report saved to file: {saved_filename}")
-            except Exception as e:
-                sse_logger.warning(f"Failed to save report file: {e}")
-
-        # DB 세션 완료
-        complete_session(session_id, current_round, final_report)
-
         # 소요 시간 계산
         total_duration = time.time() - session_start_time
         timing_stats = {
@@ -621,6 +609,34 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                 for r, d in sorted(round_durations.items())
             },
         }
+
+        # 보고서에 실행 통계 삽입
+        if final_report:
+            timing_table = "\n\n### 실행 통계\n\n"
+            timing_table += "| 라운드 | 소요 시간 |\n|--------|----------|\n"
+            for r, d in sorted(round_durations.items()):
+                timing_table += f"| 라운드 {r} | {int(d // 60)}분 {int(d % 60)}초 |\n"
+            timing_table += f"| **전체** | **{int(total_duration // 60)}분 {int(total_duration % 60)}초** |\n"
+
+            # 보고서 말미(참고문헌 앞 또는 끝)에 삽입
+            if "## 참고문헌" in final_report:
+                final_report = final_report.replace("## 참고문헌", timing_table + "\n---\n\n## 참고문헌")
+            elif "## 의사결정 흐름도" in final_report:
+                final_report = final_report.replace("## 의사결정 흐름도", timing_table + "\n---\n\n## 의사결정 흐름도")
+            else:
+                final_report += timing_table
+
+        # 보고서 파일 저장
+        saved_filename = ""
+        if final_report:
+            try:
+                saved_filename = save_report_to_file(final_report, topic)
+                sse_logger.info(f"Report saved to file: {saved_filename}")
+            except Exception as e:
+                sse_logger.warning(f"Failed to save report file: {e}")
+
+        # DB 세션 완료
+        complete_session(session_id, current_round, final_report)
 
         # 완료 이벤트
         yield send_event("complete", {
