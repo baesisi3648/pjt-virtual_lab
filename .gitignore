@@ -48,3 +48,6 @@ claude_skills/
 
 # Claude Code settings and state
 .claude/
+
+# folder
+reference/
