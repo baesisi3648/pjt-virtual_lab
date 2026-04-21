@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import AppHeader from '@/components/AppHeader';
 import { fetchSessionEvents, type SessionDetail, type SessionEvent } from '@/lib/api';
+import { useLocale, type TranslationKey } from '@/lib/i18n';
 
 export default function HistoryDetailPage() {
   const params = useParams();
@@ -12,6 +14,7 @@ export default function HistoryDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
+  const { t, locale } = useLocale();
 
   useEffect(() => {
     fetchSessionEvents(sessionId)
@@ -95,24 +98,28 @@ export default function HistoryDetailPage() {
   };
 
   const eventLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      planning: '팀 구성',
-      introductions: '전문가 소개',
-      researching: '분석',
-      critique: '비평 평가',
-      pi_summary: 'PI 종합',
-      iteration: '라운드 변경',
-      round_revision: '수정 분석',
-      final_synthesis: '최종 보고서',
-      team_selection: '통계적 선별',
-      error: '오류',
+    const keyMap: Record<string, TranslationKey> = {
+      planning: 'event.planning',
+      introductions: 'event.introductions',
+      researching: 'event.researching',
+      critique: 'event.critique',
+      pi_summary: 'event.pi_summary',
+      iteration: 'event.iteration',
+      round_revision: 'event.round_revision',
+      final_synthesis: 'event.final_synthesis',
+      team_selection: 'event.team_selection',
+      error: 'event.errorLabel',
     };
-    return labels[type] || type;
+    const key = keyMap[type];
+    return key ? t(key) : type;
   };
 
   const formatDuration = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = Math.round(seconds % 60);
+    if (locale === 'en') {
+      return m > 0 ? `${m}m ${s}s` : `${s}s`;
+    }
     return m > 0 ? `${m}분 ${s}초` : `${s}초`;
   };
 
@@ -152,28 +159,10 @@ export default function HistoryDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#f6f8f7] text-[#121714]">
-      <header className="sticky top-0 z-50 bg-white border-b border-[#dde4e0] shadow-sm">
-        <div className="max-w-[1800px] mx-auto px-10 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="Virtual Lab" className="h-12" />
-            </div>
-            <nav className="flex items-center gap-6">
-              <Link href="/" className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5">Dashboard</Link>
-              <Link href="/timeline" className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5">Agents</Link>
-              <Link href="/reports" className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5">Reports</Link>
-              <Link href="/history" className="text-sm font-bold text-[#1b7440] border-b-2 border-[#1b7440] pb-0.5">History</Link>
-            </nav>
-            <Link href="/history" className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-[#678373] hover:text-[#1b7440] hover:bg-[#1b7440]/5 transition-all">
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              Back to History
-            </Link>
-          </div>
-        </div>
-      </header>
+      <AppHeader current="history" />
 
       <main className="max-w-[1200px] mx-auto px-10 py-8">
-        {loading && <p className="text-[#678373]">로딩 중...</p>}
+        {loading && <p className="text-[#678373]">{t('history.loading')}</p>}
         {error && <p className="text-red-600">{error}</p>}
 
         {data && (
@@ -186,10 +175,21 @@ export default function HistoryDetailPage() {
                   data.status === 'completed' ? 'bg-green-100 text-green-700' :
                   data.status === 'running' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'
                 }`}>
-                  {data.status === 'completed' ? '완료' : data.status === 'running' ? '진행 중' : '오류'}
+                  {data.status === 'completed'
+                    ? t('history.status.completed')
+                    : data.status === 'running'
+                    ? t('history.status.running')
+                    : t('history.status.error')}
                 </span>
-                {data.total_rounds > 0 && <span>총 {data.total_rounds}라운드 진행</span>}
-                <span>{data.events.length}개 이벤트</span>
+                {data.total_rounds > 0 && (
+                  <span>
+                    {t('historyDetail.totalRoundsPrefix')} {data.total_rounds}{' '}
+                    {t('historyDetail.totalRoundsSuffix')}
+                  </span>
+                )}
+                <span>
+                  {data.events.length} {t('historyDetail.eventsSuffix')}
+                </span>
                 {data.events.length >= 2 && (() => {
                   const first = new Date(data.events[0].timestamp).getTime();
                   const last = new Date(data.events[data.events.length - 1].timestamp).getTime();
@@ -197,7 +197,7 @@ export default function HistoryDetailPage() {
                   return totalSec > 0 ? (
                     <span className="flex items-center gap-1">
                       <span className="material-symbols-outlined text-xs">timer</span>
-                      총 {formatDuration(totalSec)}
+                      {t('historyDetail.totalPrefix')} {formatDuration(totalSec)}
                     </span>
                   ) : null;
                 })()}
@@ -211,7 +211,7 @@ export default function HistoryDetailPage() {
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#1b7440] text-white rounded-lg text-sm font-medium hover:bg-[#145530] transition-colors"
                   >
                     <span className="material-symbols-outlined text-sm">description</span>
-                    최종 보고서 보기
+                    {t('historyDetail.viewFinalReport')}
                   </Link>
                 )}
 
@@ -222,7 +222,7 @@ export default function HistoryDetailPage() {
                   <span className="material-symbols-outlined text-sm">
                     {copied ? 'check' : 'content_copy'}
                   </span>
-                  {copied ? '복사 완료' : '전체 복사'}
+                  {copied ? t('historyDetail.copied') : t('historyDetail.copy')}
                 </button>
 
                 <button
@@ -230,7 +230,7 @@ export default function HistoryDetailPage() {
                   className="inline-flex items-center gap-2 px-4 py-2 border border-[#dde4e0] bg-white rounded-lg text-sm font-medium text-[#3a4d42] hover:bg-[#f6f8f7] transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">download</span>
-                  TXT 저장
+                  {t('historyDetail.downloadTxt')}
                 </button>
               </div>
             </div>
@@ -242,7 +242,9 @@ export default function HistoryDetailPage() {
                   <span className="w-8 h-8 bg-[#1b7440] text-white rounded-full flex items-center justify-center text-sm font-bold">
                     {group.round || 0}
                   </span>
-                  {group.round === 0 ? '사전 준비' : `라운드 ${group.round}`}
+                  {group.round === 0
+                    ? t('historyDetail.preparation')
+                    : `${t('historyDetail.roundPrefix')} ${group.round}`}
                   {group.duration != null && group.duration > 0 && (
                     <span className="ml-2 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-[#678373] flex items-center gap-1">
                       <span className="material-symbols-outlined text-xs">timer</span>
@@ -281,7 +283,7 @@ export default function HistoryDetailPage() {
                             )}
                           </div>
                           <span className="text-xs text-[#678373]">
-                            {isExpanded ? '접기' : '펼치기'}
+                            {isExpanded ? t('historyDetail.collapse') : t('historyDetail.expand')}
                           </span>
                         </div>
 

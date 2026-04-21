@@ -2,8 +2,10 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import AppHeader from '@/components/AppHeader';
 import ReportEditor from '@/components/ReportEditor';
 import { fetchReportContent, regenerateSection, translateReport } from '@/lib/api';
+import { useLocale } from '@/lib/i18n';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -27,6 +29,7 @@ export default function ReportViewerPage({
   const [lang, setLang] = useState<'ko' | 'en'>('ko');
   const [downloadHref, setDownloadHref] = useState('');
   const [downloadName, setDownloadName] = useState('');
+  const { t } = useLocale();
 
   useEffect(() => {
     fetchReportContent(decodedFilename)
@@ -95,7 +98,7 @@ export default function ReportViewerPage({
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-3"></div>
-          <p className="text-slate-500 text-sm">Loading report...</p>
+          <p className="text-slate-500 text-sm">{t('reportDetail.loading')}</p>
         </div>
       </div>
     );
@@ -106,14 +109,14 @@ export default function ReportViewerPage({
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="bg-white border-2 border-red-200 p-8 rounded-xl max-w-md text-center shadow-sm">
           <span className="material-icons text-red-400 text-4xl mb-4 block">error</span>
-          <h2 className="text-xl font-bold text-red-600 mb-2">보고서를 불러올 수 없습니다</h2>
+          <h2 className="text-xl font-bold text-red-600 mb-2">{t('reportDetail.errorTitle')}</h2>
           <p className="text-red-500 text-sm mb-6">{error}</p>
           <Link
             href="/reports"
             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium text-slate-700 transition-all"
           >
             <span className="material-icons text-sm">arrow_back</span>
-            보고서 목록으로
+            {t('reportDetail.errorBack')}
           </Link>
         </div>
       </div>
@@ -132,52 +135,7 @@ export default function ReportViewerPage({
         />
       )}
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center">
-                <img src="/logo.png" alt="Virtual Lab" className="h-12" />
-              </div>
-              <nav className="hidden md:flex items-center gap-1 text-sm">
-                <Link
-                  href="/"
-                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/timeline"
-                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-                >
-                  Agents
-                </Link>
-                <Link
-                  href="/reports"
-                  className="px-3 py-1.5 rounded-md text-white bg-primary font-medium transition-colors"
-                >
-                  Reports
-                </Link>
-                <Link
-                  href="/history"
-                  className="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 font-medium transition-colors"
-                >
-                  History
-                </Link>
-              </nav>
-            </div>
-
-            <Link
-              href="/reports"
-              className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-700 font-medium transition-all"
-            >
-              <span className="material-icons text-base">arrow_back</span>
-              목록
-            </Link>
-          </div>
-        </div>
-      </header>
+      <AppHeader current="reports" />
 
       {/* Content */}
       <div className="container mx-auto px-6 py-8">
@@ -240,7 +198,7 @@ export default function ReportViewerPage({
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
                 <span className="text-slate-600 text-sm">
-                  {isTranslating ? 'Translating to English...' : '재생성 중...'}
+                  {isTranslating ? t('reportDetail.translating') : t('reportDetail.regenerating')}
                 </span>
               </div>
             </div>
@@ -276,7 +234,7 @@ export default function ReportViewerPage({
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  한국어
+                  {t('reportDetail.lang.ko')}
                 </button>
                 <button
                   onClick={() => setLang('en')}
@@ -286,7 +244,7 @@ export default function ReportViewerPage({
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  English
+                  {t('reportDetail.lang.en')}
                 </button>
               </div>
             ) : (
@@ -298,10 +256,10 @@ export default function ReportViewerPage({
                 {isTranslating ? (
                   <>
                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
-                    Translating...
+                    {t('reportDetail.translating')}
                   </>
                 ) : (
-                  <>Translate to English</>
+                  <>{t('reportDetail.translate')}</>
                 )}
               </button>
             )}

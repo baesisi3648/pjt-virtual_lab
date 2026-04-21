@@ -9,8 +9,14 @@ from typing import List, Dict, Optional
 from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from .chroma_client import get_chroma_client, get_or_create_collection
 from .embeddings import get_embedding_function
+
+# chroma_client는 PDF → ChromaDB 저장 함수에서만 사용 (optional)
+try:
+    from .chroma_client import get_chroma_client, get_or_create_collection
+except ImportError:
+    get_chroma_client = None  # type: ignore
+    get_or_create_collection = None  # type: ignore
 
 
 def extract_text_from_pdf(pdf_path: str) -> str:

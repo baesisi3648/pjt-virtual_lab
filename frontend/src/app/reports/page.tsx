@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AppHeader from '@/components/AppHeader';
 import { fetchReports, deleteReport, type ReportListItem } from '@/lib/api';
+import { useLocale } from '@/lib/i18n';
 
 export default function ReportsPage() {
   const [reports, setReports] = useState<ReportListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { t } = useLocale();
 
   useEffect(() => {
     fetchReports()
@@ -35,63 +38,24 @@ export default function ReportsPage() {
 
   return (
     <div className="min-h-screen bg-[#f6f8f7] text-[#121714]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#dde4e0] shadow-sm">
-        <div className="max-w-[1800px] mx-auto px-10 py-3">
-          <div className="flex items-center justify-between">
-            {/* Left: Logo + Brand */}
-            <div className="flex items-center">
-              <img src="/logo.png" alt="Virtual Lab" className="h-12" />
-            </div>
-
-            {/* Center: Nav Links */}
-            <nav className="flex items-center gap-6">
-              <Link
-                href="/"
-                className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/timeline"
-                className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5"
-              >
-                Agents
-              </Link>
-              <span className="text-sm font-bold text-[#1b7440] border-b-2 border-[#1b7440] pb-0.5">
-                Reports
-              </span>
-              <Link href="/history" className="text-sm font-medium text-[#678373] hover:text-[#1b7440] transition-colors pb-0.5">History</Link>
-            </nav>
-
-            {/* Right: Back to Home */}
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-[#678373] hover:text-[#1b7440] hover:bg-[#1b7440]/5 transition-all"
-            >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </header>
+      <AppHeader current="reports" />
 
       {/* Main */}
       <main className="max-w-[1200px] mx-auto px-6 py-10">
         {/* Page Title Section */}
         <div className="mb-8">
           <div className="flex items-center gap-2 text-sm text-[#678373] mb-4">
-            <Link href="/" className="hover:text-[#1b7440] transition-colors">Home</Link>
+            <Link href="/" className="hover:text-[#1b7440] transition-colors">{t('reports.breadcrumbHome')}</Link>
             <span className="material-symbols-outlined text-base">chevron_right</span>
-            <span>Research Reports</span>
+            <span>{t('reports.breadcrumbSelf')}</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-lg bg-[#1b7440]/10 flex items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-[#1b7440] text-2xl">description</span>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-[#121714]">Research Reports</h1>
-              <p className="text-[#678373] mt-1">AI가 생성한 연구 보고서 목록</p>
+              <h1 className="text-4xl font-bold text-[#121714]">{t('reports.title')}</h1>
+              <p className="text-[#678373] mt-1">{t('reports.subtitle')}</p>
             </div>
           </div>
         </div>
@@ -101,7 +65,7 @@ export default function ReportsPage() {
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1b7440] mx-auto mb-3"></div>
-              <p className="text-[#678373] text-sm">Loading reports...</p>
+              <p className="text-[#678373] text-sm">{t('reports.loading')}</p>
             </div>
           </div>
         )}
@@ -124,16 +88,16 @@ export default function ReportsPage() {
                 folder_open
               </span>
             </div>
-            <h3 className="text-xl font-semibold text-[#121714] mb-2">보고서가 없습니다</h3>
+            <h3 className="text-xl font-semibold text-[#121714] mb-2">{t('reports.empty.title')}</h3>
             <p className="text-[#678373] text-sm mb-6">
-              연구를 실행하면 보고서가 자동으로 저장됩니다.
+              {t('reports.empty.desc')}
             </p>
             <Link
-              href="/timeline"
+              href="/"
               className="inline-flex items-center gap-2 px-6 py-3 border border-slate-300 hover:bg-slate-50 rounded-xl font-medium text-[#121714] transition-colors"
             >
               <span className="material-symbols-outlined text-sm">play_arrow</span>
-              연구 시작하기
+              {t('reports.empty.cta')}
             </Link>
           </div>
         )}
@@ -183,10 +147,10 @@ export default function ReportsPage() {
                     <button
                       onClick={(e) => handleDelete(report.filename, e)}
                       className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                      title="보고서 삭제"
+                      title={t('reports.deleteBtnTitle')}
                     >
                       <span className="material-symbols-outlined text-base">delete</span>
-                      <span className="hidden sm:inline">삭제</span>
+                      <span className="hidden sm:inline">{t('reports.deleteBtn')}</span>
                     </button>
                     <Link href={`/reports/${encodeURIComponent(report.filename)}`}>
                       <span className="material-symbols-outlined text-[#678373] group-hover:text-[#1b7440] transition-colors duration-200 text-2xl">

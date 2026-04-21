@@ -1,7 +1,8 @@
 /**
- * @TASK P4-T2 - Timeline Demo Page (Light Theme)
+ * @TASK P4-T2 - Timeline Page (Light Theme)
  *
  * Virtual Lab - Pipeline 스타일 Agent Activity 시각화
+ * Dashboard의 START 버튼으로부터 URL 파라미터(topic)를 받아 자동 실행.
  */
 
 'use client';
@@ -9,6 +10,7 @@
 import { useState, useCallback, useEffect, use, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import AppHeader from '@/components/AppHeader';
 import { useGameSSE } from '@/hooks/useGameSSE';
 import RoundProgressBar from '@/components/game/RoundProgressBar';
 import ChatLog from '@/components/game/ChatLog';
@@ -70,62 +72,14 @@ export default function TimelinePage({
   };
 
   const handleReset = () => {
+    // Agents 페이지는 메뉴에서 숨김 상태이므로 Dashboard로 이동
     resetGame();
-    setIsSubmitted(false);
-    setTopic('');
-    setConstraints('');
-    setFinalReport('');
-    setSavedFilename('');
-    setError('');
+    router.push('/');
   };
 
   return (
     <div className="min-h-screen bg-[#f6f8f7] text-[#121714]">
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#dde4e0] shadow-sm">
-        <div className="max-w-[1800px] mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Left: Logo */}
-            <div className="flex items-center">
-              <img src="/logo.png" alt="Virtual Lab" className="h-12" />
-            </div>
-
-            {/* Center: Nav */}
-            <nav className="flex items-center gap-1">
-              <Link
-                href="/"
-                className="px-4 py-2 text-sm text-[#678373] hover:text-[#121714] transition-colors"
-              >
-                Dashboard
-              </Link>
-              <div className="px-4 py-2 text-sm font-bold text-[#1b7440] border-b-2 border-[#1b7440]">
-                Agents
-              </div>
-              <Link
-                href="/reports"
-                className="px-4 py-2 text-sm text-[#678373] hover:text-[#121714] transition-colors"
-              >
-                Reports
-              </Link>
-              <Link
-                href="/history"
-                className="px-4 py-2 text-sm text-[#678373] hover:text-[#121714] transition-colors"
-              >
-                History
-              </Link>
-            </nav>
-
-            {/* Right: Back Link */}
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#dde4e0] hover:bg-[#e8f5ed] text-sm text-[#121714] transition-colors"
-            >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              <span>Back to Home</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Main Content */}
       <main className="max-w-[1800px] mx-auto px-6 py-8">
@@ -347,14 +301,14 @@ export default function TimelinePage({
               </div>
             )}
 
-            {/* Reset Button */}
+            {/* Dashboard로 돌아가기 */}
             <div className="mt-8 text-center">
               <button
                 onClick={handleReset}
                 className="px-8 py-3 border border-[#dde4e0] hover:bg-[#e8f5ed] text-[#121714] rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
               >
-                <span className="material-symbols-outlined">restart_alt</span>
-                <span>New Research</span>
+                <span className="material-symbols-outlined">home</span>
+                <span>Dashboard로 돌아가기</span>
               </button>
             </div>
           </>
