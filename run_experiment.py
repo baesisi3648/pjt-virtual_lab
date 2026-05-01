@@ -171,7 +171,7 @@ def main() -> int:
         rows.append(f"| **Total** | **{_hms(total_duration)}** |")
         new_table = "| Round | Duration |\n|-------|----------|\n" + "\n".join(rows) + "\n"
         placeholder_re = _re.compile(
-            r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\| (?:Round \d+|\*\*Total\*\*) \|[^\n]*\n)+",
+            r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\|[^\n]*\|\n)+",
             _re.MULTILINE,
         )
         if placeholder_re.search(final_report):

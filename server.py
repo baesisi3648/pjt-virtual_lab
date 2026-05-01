@@ -674,8 +674,12 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             )
 
             import re as _re
+            # Match the whole markdown table that follows the "| Round | Duration |"
+            # header — regardless of whether each data row has Round N, Total,
+            # **Total**, or an ellipsis placeholder. We greedily consume every row
+            # until the first non-table line.
             placeholder_re = _re.compile(
-                r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\| (?:Round \d+|\*\*Total\*\*) \|[^\n]*\n)+",
+                r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\|[^\n]*\|\n)+",
                 _re.MULTILINE,
             )
             if placeholder_re.search(final_report):
