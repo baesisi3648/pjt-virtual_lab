@@ -33,6 +33,8 @@ export interface ReportContent {
   topic: string;
   created_at: string;
   content: string;
+  lang?: 'en' | 'ko';
+  ko_available?: boolean;
 }
 
 export interface RegenerateRequest {
@@ -151,10 +153,15 @@ export async function translateReport(
 }
 
 /**
- * 보고서 내용 조회 (메타데이터 + 본문)
+ * 보고서 내용 조회 (메타데이터 + 본문). lang 파라미터로 영/한 선택.
  */
-export async function fetchReportContent(filename: string): Promise<ReportContent> {
-  const response = await fetch(`${API_BASE_URL}/api/reports/${encodeURIComponent(filename)}/content`);
+export async function fetchReportContent(
+  filename: string,
+  lang: 'en' | 'ko' = 'en',
+): Promise<ReportContent> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/reports/${encodeURIComponent(filename)}/content?lang=${lang}`,
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch report content: ${response.statusText}`);

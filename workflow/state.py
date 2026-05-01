@@ -31,7 +31,8 @@ class AgentState(TypedDict):
     critique: CritiqueResult | None  # Critic의 비평 결과
     current_round: int  # 1, 2, 3 (라운드 번호)
     meeting_history: list[dict]  # 라운드별 기록 아카이브
-    final_report: str  # PI가 확정한 최종 보고서
+    final_report: str  # PI's confirmed final report (English, primary language)
+    final_report_ko: str  # Auto-generated Korean translation of the final report
     messages: list[dict]  # 에이전트 간 메시지 로그
     parallel_views: list[dict]  # 병렬 분석 결과 (Map-Reduce)
     sources: list[str]  # 참조 출처 목록 (웹 검색 URL, RAG 문헌)

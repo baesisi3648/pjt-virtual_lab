@@ -164,23 +164,46 @@ class TranslateResponse(BaseModel):
     translated: str
 
 
-def save_report_to_file(report: str, topic: str) -> str:
-    """최종 보고서를 텍스트 파일로 저장합니다."""
+def save_report_to_file(report: str, topic: str, report_ko: str = "") -> str:
+    """Persist the final report to disk.
+
+    The English report (`report`) is the primary artefact, written to
+    `report_<timestamp>_<topic>.txt`. When a Korean translation is supplied,
+    it is written to a sidecar at `report_<timestamp>_<topic>.ko.txt` so the
+    UI can toggle between languages without an additional API call.
+    """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    # 파일명에서 특수문자 제거
     safe_topic = "".join(c if c.isalnum() or c in (' ', '-', '_') else '_' for c in topic)[:50].strip()
     filename = f"report_{timestamp}_{safe_topic}.txt"
     filepath = REPORTS_DIR / filename
 
+    header_en = (
+        f"{'='*80}\n"
+        f"  Virtual Lab — Final Research Report (English)\n"
+        f"  Topic: {topic}\n"
+        f"  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"{'='*80}\n\n"
+    )
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(f"{'='*80}\n")
-        f.write(f"  Virtual Lab - 최종 연구 보고서\n")
-        f.write(f"  연구 주제: {topic}\n")
-        f.write(f"  생성 일시: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"{'='*80}\n\n")
+        f.write(header_en)
         f.write(report)
 
-    logging.getLogger("report").info(f"Report saved: {filepath}")
+    if report_ko and report_ko.strip():
+        ko_path = REPORTS_DIR / f"report_{timestamp}_{safe_topic}.ko.txt"
+        header_ko = (
+            f"{'='*80}\n"
+            f"  Virtual Lab — 최종 연구 보고서 (한국어 번역)\n"
+            f"  연구 주제: {topic}\n"
+            f"  생성 일시: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+            f"{'='*80}\n\n"
+        )
+        with open(ko_path, "w", encoding="utf-8") as f:
+            f.write(header_ko)
+            f.write(report_ko)
+        logging.getLogger("report").info(f"Report saved (with KO sidecar): {filepath}")
+    else:
+        logging.getLogger("report").info(f"Report saved: {filepath}")
+
     return filename
 
 
@@ -245,6 +268,7 @@ def run_research(request: ResearchRequest):
         "current_round": 1,
         "meeting_history": [],
         "final_report": "",
+        "final_report_ko": "",
         "messages": [],
         "parallel_views": [],
         "sources": [],
@@ -257,10 +281,14 @@ def run_research(request: ResearchRequest):
     # 실행
     result = workflow.invoke(initial_state)
 
-    # 보고서 파일 저장
+    # 보고서 파일 저장 (영어 + 한글 사이드카)
     if result["final_report"]:
         try:
-            save_report_to_file(result["final_report"], request.topic)
+            save_report_to_file(
+                result["final_report"],
+                request.topic,
+                report_ko=result.get("final_report_ko", ""),
+            )
         except Exception as e:
             logging.getLogger("report").warning(f"Failed to save report: {e}")
 
@@ -411,6 +439,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             "current_round": 1,
             "meeting_history": [],
             "final_report": "",
+            "final_report_ko": "",
             "messages": [],
             "parallel_views": [],
             "sources": [],
@@ -436,6 +465,7 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
         sse_logger.info(f"Starting workflow stream for topic: {topic}")
         print(f"[SSE STREAM] Starting workflow.stream()...\n")
 
+        final_report_ko = ""
         for event in workflow.stream(initial_state):
             for node_name, node_state in event.items():
                 print(f"\n{'*'*80}")
@@ -583,14 +613,29 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
                     yield send_event("agent", {
                         "agent": "pi",
                         "phase": "final_synthesis",
-                        "message": f"PI: {current_round}라운드 팀 회의 결과를 종합하여 최종 보고서를 작성했습니다.",
+                        "message": f"PI: synthesised final report from {current_round} rounds of deliberation.",
                         "content": final,
                     })
                     add_event(session_id, "final_synthesis", agent="pi", round_num=current_round, content=final[:5000])
 
+                elif node_name == "translation":
+                    # English → Korean translation completed (sidecar)
+                    ko_text = node_state.get("final_report_ko", "")
+                    if ko_text:
+                        final_report_ko = ko_text
+                    yield send_event("agent", {
+                        "agent": "translator",
+                        "phase": "translation",
+                        "message": "Korean translation generated.",
+                        "content": ko_text[:1000] + ("..." if len(ko_text) > 1000 else ""),
+                    })
+                    add_event(session_id, "translation", agent="translator", round_num=current_round, content=ko_text[:5000])
+
                 # 각 노드의 결과에서 필요한 값 수집
                 if "final_report" in node_state and node_state["final_report"]:
                     final_report = node_state["final_report"]
+                if "final_report_ko" in node_state and node_state["final_report_ko"]:
+                    final_report_ko = node_state["final_report_ko"]
                 if "messages" in node_state:
                     all_messages = node_state["messages"]
 
@@ -626,11 +671,13 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
             else:
                 final_report += timing_table
 
-        # 보고서 파일 저장
+        # 보고서 파일 저장 (영어 + 한글 사이드카)
         saved_filename = ""
         if final_report:
             try:
-                saved_filename = save_report_to_file(final_report, topic)
+                saved_filename = save_report_to_file(
+                    final_report, topic, report_ko=final_report_ko
+                )
                 sse_logger.info(f"Report saved to file: {saved_filename}")
             except Exception as e:
                 sse_logger.warning(f"Failed to save report file: {e}")
@@ -640,8 +687,9 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
         # 완료 이벤트
         yield send_event("complete", {
-            "message": "연구 프로세스 완료",
+            "message": "Research process complete.",
             "report": final_report,
+            "report_ko": final_report_ko,
             "rounds": current_round,
             "messages": all_messages,
             "saved_filename": saved_filename,
@@ -754,40 +802,33 @@ def regenerate_section(request: RegenerateRequest):
 
 @app.post("/api/reports/translate", response_model=TranslateResponse)
 def translate_report(request: TranslateRequest):
-    """보고서를 학술 논문체 영어로 번역합니다.
+    """Translate an English research report into formal academic Korean.
 
-    GPT-4o를 사용하여 높은 품질의 학술 영어 번역을 생성합니다.
+    Reports are now generated in English by the workflow; this endpoint
+    produces an on-demand Korean rendering when the precomputed sidecar
+    is unavailable. Mermaid diagrams, tables, and code fences are
+    preserved verbatim.
     """
-    from utils.llm import call_gpt
+    from agents.translator import translate_en_to_ko
 
     try:
-        system_prompt = (
-            "You are a professional academic translator specializing in biotechnology, "
-            "food safety, and genetic engineering. Translate the following Korean research "
-            "report into formal academic English suitable for publication in a peer-reviewed "
-            "journal. Maintain the original structure (headings, sections, bullet points). "
-            "Use precise scientific terminology. Do not add or remove any content — "
-            "translate faithfully."
-        )
-        user_message = request.content
-
-        translated = call_gpt(system_prompt, user_message, temperature=0.3)
-
+        translated = translate_en_to_ko(request.content)
         return TranslateResponse(translated=translated)
-
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to translate report: {str(e)}"
+            detail=f"Failed to translate report: {str(e)}",
         )
 
 
 @app.get("/api/reports")
 def list_reports():
-    """저장된 보고서 목록을 반환합니다."""
+    """List stored reports. Korean sidecars (`*.ko.txt`) are excluded."""
     reports = []
     for f in sorted(REPORTS_DIR.glob("report_*.txt"), reverse=True):
-        # 파일명에서 정보 추출: report_20260208_143000_topic.txt
+        # Skip the Korean sidecar; only the English primary file is listed.
+        if f.name.endswith(".ko.txt"):
+            continue
         parts = f.stem.split("_", 3)
         topic = parts[3] if len(parts) > 3 else "unknown"
         created = f"{parts[1][:4]}-{parts[1][4:6]}-{parts[1][6:8]} {parts[2][:2]}:{parts[2][2:4]}:{parts[2][4:6]}" if len(parts) > 2 else ""
@@ -817,13 +858,30 @@ def download_report(filename: str):
 
 
 @app.get("/api/reports/{filename}/content")
-def get_report_content(filename: str):
-    """보고서 파일의 내용을 JSON으로 반환합니다. 헤더(=== 블록)를 파싱하여 메타데이터와 본문을 분리합니다."""
-    filepath = REPORTS_DIR / filename
-    if not filepath.exists() or not filepath.is_file():
+def get_report_content(filename: str, lang: str = "en"):
+    """Return the parsed content of a stored report.
+
+    Args:
+        filename: the primary (English) report filename.
+        lang: "en" (default) returns the English file; "ko" returns the
+              precomputed Korean sidecar `<filename>.ko.txt` if present.
+    """
+    primary = REPORTS_DIR / filename
+    if not primary.exists() or not primary.is_file():
         raise HTTPException(status_code=404, detail="Report not found")
-    if filepath.resolve().parent != REPORTS_DIR.resolve():
+    if primary.resolve().parent != REPORTS_DIR.resolve():
         raise HTTPException(status_code=403, detail="Access denied")
+
+    if lang == "ko":
+        ko_path = primary.with_suffix(".ko.txt") if not filename.endswith(".ko.txt") else primary
+        # primary is e.g. `report_..._topic.txt`; the sidecar is `report_..._topic.ko.txt`.
+        if not filename.endswith(".ko.txt"):
+            ko_path = REPORTS_DIR / (primary.stem + ".ko.txt")
+        if not ko_path.exists():
+            raise HTTPException(status_code=404, detail="Korean translation not available for this report")
+        filepath = ko_path
+    else:
+        filepath = primary
 
     raw = filepath.read_text(encoding="utf-8")
 
@@ -842,14 +900,18 @@ def get_report_content(filename: str):
                 header_end = i
                 break
         if header_end > 0:
-            # 헤더 내부에서 메타데이터 추출
+            # Extract metadata from the header block (English or Korean)
             for line in lines[1:header_end]:
                 stripped = line.strip()
-                if stripped.startswith("연구 주제:"):
+                if stripped.startswith("Topic:"):
+                    topic = stripped.replace("Topic:", "").strip()
+                elif stripped.startswith("연구 주제:"):
                     topic = stripped.replace("연구 주제:", "").strip()
+                elif stripped.startswith("Generated:"):
+                    created_at = stripped.replace("Generated:", "").strip()
                 elif stripped.startswith("생성 일시:"):
                     created_at = stripped.replace("생성 일시:", "").strip()
-            # 헤더 이후 빈 줄 제거하고 본문 추출
+            # Body starts after the header
             content = "\n".join(lines[header_end + 1:]).lstrip("\n")
 
     return {
@@ -857,19 +919,27 @@ def get_report_content(filename: str):
         "topic": topic,
         "created_at": created_at,
         "content": content,
+        "lang": lang,
+        "ko_available": (REPORTS_DIR / (Path(filename).stem + ".ko.txt")).exists()
+        if not filename.endswith(".ko.txt") else True,
     }
 
 
 @app.delete("/api/reports/{filename}")
 def delete_report(filename: str):
-    """보고서 파일을 삭제합니다."""
+    """Delete a report and its Korean sidecar (if present)."""
     filepath = REPORTS_DIR / filename
     if not filepath.exists() or not filepath.is_file():
         raise HTTPException(status_code=404, detail="Report not found")
     if filepath.resolve().parent != REPORTS_DIR.resolve():
         raise HTTPException(status_code=403, detail="Access denied")
     filepath.unlink()
-    return {"message": "삭제되었습니다.", "filename": filename}
+    # Best-effort: also remove the Korean sidecar if it exists.
+    if not filename.endswith(".ko.txt"):
+        sidecar = REPORTS_DIR / (Path(filename).stem + ".ko.txt")
+        if sidecar.exists() and sidecar.is_file():
+            sidecar.unlink()
+    return {"message": "Deleted.", "filename": filename}
 
 
 # ── Session Tracking API ──────────────────────────────────

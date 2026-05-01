@@ -18,6 +18,7 @@ from workflow.state import AgentState
 from agents.scientist import run_specialists, run_round_revision
 from agents.critic import run_critic
 from agents.pi import run_pi_planning, run_pi_summary, run_final_synthesis
+from agents.translator import run_translation
 
 MAX_ROUNDS = 7
 
@@ -109,6 +110,7 @@ def create_workflow():
     workflow.add_node("increment_round", increment_round)
     workflow.add_node("round_revision", run_round_revision)
     workflow.add_node("final_synthesis", run_final_synthesis)
+    workflow.add_node("translation", run_translation)
 
     # 엣지 설정
     workflow.set_entry_point("planning")
@@ -125,6 +127,7 @@ def create_workflow():
     )
     workflow.add_edge("increment_round", "round_revision")
     workflow.add_edge("round_revision", "critique")
-    workflow.add_edge("final_synthesis", END)
+    workflow.add_edge("final_synthesis", "translation")
+    workflow.add_edge("translation", END)
 
     return workflow.compile()

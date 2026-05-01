@@ -17,30 +17,46 @@ export default function ReportViewerPage({
   const { filename } = use(params);
   const decodedFilename = decodeURIComponent(filename);
 
-  const [report, setReport] = useState('');
+  // English is now the primary language (the workflow generates EN first,
+  // then auto-translates to KO as a sidecar). The toggle swaps between the
+  // two precomputed renderings; an on-demand fallback via translateReport()
+  // is kept for legacy reports that lack a sidecar.
+  const [reportEn, setReportEn] = useState('');
+  const [reportKo, setReportKo] = useState('');
+  const [koAvailable, setKoAvailable] = useState(false);
   const [topic, setTopic] = useState('');
   const [createdAt, setCreatedAt] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [message, setMessage] = useState('');
-  const [translatedReport, setTranslatedReport] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
-  const [lang, setLang] = useState<'ko' | 'en'>('ko');
+  const [lang, setLang] = useState<'ko' | 'en'>('en');
   const [downloadHref, setDownloadHref] = useState('');
   const [downloadName, setDownloadName] = useState('');
   const { t } = useLocale();
 
   useEffect(() => {
-    fetchReportContent(decodedFilename)
+    fetchReportContent(decodedFilename, 'en')
       .then((data) => {
-        setReport(data.content);
+        setReportEn(data.content);
         setTopic(data.topic);
         setCreatedAt(data.created_at);
+        setKoAvailable(Boolean(data.ko_available));
+        if (data.ko_available) {
+          // Pre-fetch the Korean sidecar so the toggle is instantaneous.
+          fetchReportContent(decodedFilename, 'ko')
+            .then((ko) => setReportKo(ko.content))
+            .catch(() => {
+              // sidecar missing or other error — fall back to on-demand translation
+            });
+        }
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [decodedFilename]);
+
+  const currentReport = lang === 'ko' ? reportKo || reportEn : reportEn;
 
   const handleRegenerate = async (request: { section: string; feedback: string }) => {
     setIsRegenerating(true);
@@ -49,37 +65,44 @@ export default function ReportViewerPage({
       const response = await regenerateSection({
         section: request.section,
         feedback: request.feedback,
-        current_report: report,
+        current_report: currentReport,
       });
-      setReport(response.updated_report);
+      // Update whichever language is currently displayed.
+      if (lang === 'ko') {
+        setReportKo(response.updated_report);
+      } else {
+        setReportEn(response.updated_report);
+      }
       setMessage(response.message);
     } catch (err) {
-      setMessage(`재생성 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+      setMessage(`Regeneration failed: ${err instanceof Error ? err.message : 'unknown error'}`);
     } finally {
       setIsRegenerating(false);
     }
   };
 
   const handleTranslate = async () => {
+    // On-demand fallback for legacy reports without a Korean sidecar.
     setIsTranslating(true);
     setMessage('');
     try {
-      const response = await translateReport(report);
-      setTranslatedReport(response.translated);
-      setLang('en');
+      const response = await translateReport(reportEn);
+      setReportKo(response.translated);
+      setKoAvailable(true);
+      setLang('ko');
       setMessage('Translation completed successfully.');
     } catch (err) {
-      setMessage(`번역 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+      setMessage(`Translation failed: ${err instanceof Error ? err.message : 'unknown error'}`);
     } finally {
       setIsTranslating(false);
     }
   };
 
   const handleDownloadTxt = () => {
-    const content = lang === 'en' && translatedReport ? translatedReport : report;
+    const content = currentReport;
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const suffix = lang === 'en' ? '_EN' : '';
+    const suffix = lang === 'ko' ? '_KO' : '_EN';
     setDownloadName(`${decodedFilename.replace('.txt', '')}${suffix}.txt`);
     setDownloadHref(url);
   };
@@ -185,7 +208,7 @@ export default function ReportViewerPage({
 
             <div className="min-h-[800px]">
               <ReportEditor
-                report={lang === 'en' && translatedReport ? translatedReport : report}
+                report={currentReport}
                 onRegenerate={handleRegenerate}
                 isLoading={isRegenerating}
               />
@@ -224,18 +247,8 @@ export default function ReportViewerPage({
           <div className="w-px h-5 bg-slate-700"></div>
 
           <div className="flex items-center gap-2">
-            {translatedReport ? (
+            {koAvailable || reportKo ? (
               <div className="flex items-center rounded-full overflow-hidden border border-slate-700">
-                <button
-                  onClick={() => setLang('ko')}
-                  className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-full ${
-                    lang === 'ko'
-                      ? 'bg-white text-slate-900'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {t('reportDetail.lang.ko')}
-                </button>
                 <button
                   onClick={() => setLang('en')}
                   className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-full ${
@@ -245,6 +258,16 @@ export default function ReportViewerPage({
                   }`}
                 >
                   {t('reportDetail.lang.en')}
+                </button>
+                <button
+                  onClick={() => setLang('ko')}
+                  className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-full ${
+                    lang === 'ko'
+                      ? 'bg-white text-slate-900'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {t('reportDetail.lang.ko')}
                 </button>
               </div>
             ) : (
@@ -269,7 +292,7 @@ export default function ReportViewerPage({
               className="btn-primary flex items-center gap-1.5 px-4 py-1.5 text-xs text-white bg-primary rounded-full transition-colors font-medium"
             >
               <span className="material-icons text-sm">download</span>
-              Export TXT{lang === 'en' ? ' (EN)' : ''}
+              Export TXT ({lang.toUpperCase()})
             </button>
           </div>
         </div>
