@@ -36,11 +36,27 @@ def _get_http_client() -> httpx.Client:
     return _http_client
 
 
+def _default_temperature() -> float:
+    """Resolve the default sampling temperature.
+
+    The reproducibility study lowers temperature to 0.2 to maximise consistency
+    across independent runs, while still allowing per-call overrides. Set the
+    `VIRTUAL_LAB_TEMPERATURE` environment variable to override globally.
+    """
+    raw = os.environ.get("VIRTUAL_LAB_TEMPERATURE")
+    if raw is not None:
+        try:
+            return float(raw)
+        except ValueError:
+            pass
+    return 0.2
+
+
 def call_llm(
     system_prompt: str,
     user_message: str,
     model: str | None = None,
-    temperature: float = 0.7,
+    temperature: float | None = None,
     max_tokens: int = 32768,
 ) -> str:
     """OpenAI Chat Completion 직접 호출 (httpx)
@@ -55,6 +71,9 @@ def call_llm(
 
     if model is None:
         model = os.environ.get("GPT_MODEL", "gpt-4o")
+
+    if temperature is None:
+        temperature = _default_temperature()
 
     # 메시지 배열: 정확히 2개만
     messages = [

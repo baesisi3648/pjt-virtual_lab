@@ -183,7 +183,16 @@ Use each specialist's role name as the key.
         "content": f"[Round {current_round}] Reviewed specialist analyses. (scores: {scores_str})\n{critique.feedback}",
     })
 
+    # Reproducibility: append a structured snapshot for this round.
+    score_history = list(state.get("critic_score_history", []))
+    score_history.append({
+        "round": current_round,
+        "scores": critique.scores or {},
+        "specialist_feedback": critique.specialist_feedback or {},
+    })
+
     return {
         "critique": critique,
         "messages": messages,
+        "critic_score_history": score_history,
     }

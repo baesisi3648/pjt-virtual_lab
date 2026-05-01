@@ -42,3 +42,5 @@ class AgentState(TypedDict):
     team_selection_data: dict | None  # 10팀 통계적 선별 데이터
     specialist_introductions: list[dict]  # 전문가 자기소개
     word_counts: dict  # 에이전트별 발화 통계
+    critic_score_history: list[dict]  # Per-round critic-score snapshots for reproducibility analysis
+    run_id: str  # Optional run identifier (for experiments/runs/run_<ID>/ dump)
