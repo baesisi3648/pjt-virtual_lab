@@ -17,6 +17,7 @@ from tools.rag_search import rag_search_tool
 from tools.web_search import web_search, efsa_search
 from agents.factory import create_specialist
 from utils.prompt_loader import load_system, render
+from utils.search_query import disambiguate
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
 
     def do_rag_search() -> str:
         try:
-            result = rag_search_tool.invoke({"query": f"{topic} NGT safety assessment"})
+            result = rag_search_tool.invoke({"query": disambiguate(topic, "safety assessment")})
             logger.info("RAG search completed")
             return f"\n\n[Reference regulatory documents]\n{result}"
         except Exception as e:
@@ -78,7 +79,7 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
 
     def do_web_search() -> str:
         try:
-            result = web_search.invoke({"query": f"{topic} NGT regulation 2025"})
+            result = web_search.invoke({"query": disambiguate(topic, "regulation 2025")})
             logger.info("Web search completed")
             return f"\n\n[Recent web search results]\n{result}"
         except Exception as e:
@@ -87,7 +88,7 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
 
     def do_efsa_search() -> str:
         try:
-            result = efsa_search.invoke({"query": f"{topic} NGT safety assessment EFSA"})
+            result = efsa_search.invoke({"query": disambiguate(topic, "EFSA opinion")})
             logger.info("EFSA search completed")
             return f"\n\n[EFSA Journal search results]\n{result}"
         except Exception as e:

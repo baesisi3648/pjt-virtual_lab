@@ -17,6 +17,7 @@ from typing import List
 
 from utils.llm import call_gpt
 from utils.prompt_loader import load_system, render
+from utils.search_query import disambiguate
 from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE
 from workflow.state import AgentState
 from tools.web_search import web_search
@@ -523,7 +524,7 @@ def run_final_synthesis(state: AgentState) -> dict:
     web_context = ""
     pi_sources = []
     try:
-        web_result = web_search.invoke({"query": f"{state['topic']} NGT safety framework 2025"})
+        web_result = web_search.invoke({"query": disambiguate(state["topic"], "safety framework 2025")})
         web_context = f"\n\n## [Web search — recent context]\n{web_result}"
         pi_sources.extend(_extract_sources(web_context))
         logger.info("PI final synthesis web search completed")
@@ -534,7 +535,7 @@ def run_final_synthesis(state: AgentState) -> dict:
     if not efsa_context:
         try:
             from tools.web_search import efsa_search
-            efsa_result = efsa_search.invoke({"query": f"{state['topic']} NGT safety assessment EFSA"})
+            efsa_result = efsa_search.invoke({"query": disambiguate(state["topic"], "EFSA opinion")})
             efsa_context = f"\n\n## [EFSA Journal search results]\n{efsa_result}"
             pi_sources.extend(_extract_sources(efsa_context))
             logger.info("PI final synthesis EFSA search completed")
@@ -647,6 +648,81 @@ def run_final_synthesis(state: AgentState) -> dict:
             f"\n\n[Per-agent contribution statistics — include in the 'Methods' section]\n{wc_lines}\n"
         )
 
+    # Build the per-round, per-axis Critic score table for the
+    # "Critic Score Trajectory" section of the report.
+    critic_trajectory_text = ""
+    score_axes = ("evidence", "universality", "proportionality", "readability")
+    score_history = list(state.get("critic_score_history", []))
+    # Append the final round's critique if not yet snapshotted (final round
+    # exits via final_synthesis without going through increment_round).
+    final_critique = state.get("critique")
+    if final_critique and final_critique.scores:
+        already_present = any(
+            int(s.get("round", -1)) == int(current_round) for s in score_history
+        )
+        if not already_present:
+            score_history.append({
+                "round": current_round,
+                "scores": final_critique.scores,
+            })
+    if score_history:
+        round_axis_means: list[tuple[int, dict[str, float]]] = []
+        for snap in sorted(score_history, key=lambda s: int(s.get("round", 0))):
+            rnd = int(snap.get("round", 0))
+            axis_lists: dict[str, list[int]] = {ax: [] for ax in score_axes}
+            for _role, axis_scores in (snap.get("scores") or {}).items():
+                if not isinstance(axis_scores, dict):
+                    continue
+                for ax in score_axes:
+                    if ax in axis_scores and axis_scores[ax] is not None:
+                        try:
+                            axis_lists[ax].append(int(axis_scores[ax]))
+                        except (TypeError, ValueError):
+                            pass
+            round_axis_means.append((
+                rnd,
+                {ax: (sum(v) / len(v)) if v else float("nan") for ax, v in axis_lists.items()},
+            ))
+
+        def _fmt(v: float) -> str:
+            if v != v:  # NaN
+                return "—"
+            return f"{v:.1f}" if abs(v - round(v)) > 1e-6 else str(int(round(v)))
+
+        # Markdown table
+        ct_lines = ["| Round | Evidence | Universality | Proportionality | Readability |",
+                    "|-------|----------|--------------|-----------------|-------------|"]
+        for rnd, axis_means in round_axis_means:
+            ct_lines.append(
+                f"| R{rnd} | "
+                + " | ".join(_fmt(axis_means[ax]) for ax in score_axes)
+                + " |"
+            )
+        # Mermaid xychart-beta data — one line per axis
+        x_labels = ", ".join(f'"R{rnd}"' for rnd, _ in round_axis_means)
+        per_axis_series = {
+            ax: [axis_means[ax] for _, axis_means in round_axis_means]
+            for ax in score_axes
+        }
+
+        def _series_str(series: list[float]) -> str:
+            return "[" + ", ".join("0" if v != v else f"{v:.2f}".rstrip("0").rstrip(".")
+                                   for v in series) + "]"
+
+        critic_trajectory_text = (
+            "\n\n[Critic score trajectory — include in the 'Critic Score Trajectory (this run)' section.\n"
+            "Use the table verbatim and replace the placeholder Mermaid xychart-beta with the values below.\n"
+            "Do not invent additional rounds or axes.]\n\n"
+            "Per-round, per-axis means (specialist-panel average):\n"
+            + "\n".join(ct_lines)
+            + "\n\nMermaid xychart-beta data (one line per axis, in the order Evidence, Universality, Proportionality, Readability):\n"
+            f"x-axis: [{x_labels}]\n"
+            f"line (Evidence):        {_series_str(per_axis_series['evidence'])}\n"
+            f"line (Universality):    {_series_str(per_axis_series['universality'])}\n"
+            f"line (Proportionality): {_series_str(per_axis_series['proportionality'])}\n"
+            f"line (Readability):     {_series_str(per_axis_series['readability'])}\n"
+        )
+
     user_message = (
         f"Research topic: {state['topic']}\n"
         f"Constraints: {state.get('constraints', '')}\n\n"
@@ -657,6 +733,7 @@ def run_final_synthesis(state: AgentState) -> dict:
         f"{team_composition_text}\n"
         f"{intro_text}\n"
         f"{word_counts_text}\n"
+        f"{critic_trajectory_text}\n"
         f"{sources_text}\n\n"
         f"Synthesise all of the above into the final report.\n\n"
         f"★ Rule 1: Do not include round-level material (specialist analyses, Critic scores/feedback, "

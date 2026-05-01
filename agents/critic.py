@@ -12,6 +12,7 @@ import re
 from data.guidelines import CRITIQUE_RUBRIC, ACADEMIC_TONE_GUIDE
 from utils.llm import call_gpt
 from utils.prompt_loader import load_system, render
+from utils.search_query import disambiguate
 from workflow.state import AgentState, CritiqueResult
 from tools.web_search import web_search
 
@@ -38,7 +39,7 @@ def run_critic(state: AgentState) -> dict:
     # Step 1: gather verification context via web search
     web_context = ""
     try:
-        web_result = web_search.invoke({"query": f"{state['topic']} NGT safety regulation verification"})
+        web_result = web_search.invoke({"query": disambiguate(state["topic"], "regulatory verification")})
         web_context = f"\n\n## [Web search results — verification context]\n{web_result}"
         logger.info("Critic web search completed")
     except Exception as e:

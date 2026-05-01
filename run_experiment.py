@@ -159,6 +159,25 @@ def main() -> int:
 
     final_report = final_state.get("final_report", "") or ""
     final_report_ko = final_state.get("final_report_ko", "") or ""
+
+    # Backfill the Methods → Execution Statistics table with real durations.
+    if final_report and round_durations:
+        import re as _re
+
+        def _hms(s: float) -> str:
+            return f"{int(s // 60)} min {int(s % 60)} s"
+
+        rows = [f"| Round {r} | {_hms(round_durations[r])} |" for r in sorted(round_durations)]
+        rows.append(f"| **Total** | **{_hms(total_duration)}** |")
+        new_table = "| Round | Duration |\n|-------|----------|\n" + "\n".join(rows) + "\n"
+        placeholder_re = _re.compile(
+            r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\| (?:Round \d+|\*\*Total\*\*) \|[^\n]*\n)+",
+            _re.MULTILINE,
+        )
+        if placeholder_re.search(final_report):
+            final_report = placeholder_re.sub(new_table, final_report, count=1)
+        else:
+            final_report += "\n\n### Execution Statistics\n\n" + new_table
     score_history = final_state.get("critic_score_history", []) or []
     messages = final_state.get("messages", []) or []
     team = final_state.get("team", []) or []

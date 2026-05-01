@@ -643,33 +643,46 @@ async def generate_research_events(topic: str, constraints: str) -> AsyncGenerat
 
         # 소요 시간 계산
         total_duration = time.time() - session_start_time
+
+        def _hms(s: float) -> str:
+            return f"{int(s // 60)} min {int(s % 60)} s"
+
         timing_stats = {
             "total_seconds": round(total_duration, 1),
-            "total_display": f"{int(total_duration // 60)}분 {int(total_duration % 60)}초",
+            "total_display": _hms(total_duration),
             "rounds": {
                 str(r): {
                     "seconds": round(d, 1),
-                    "display": f"{int(d // 60)}분 {int(d % 60)}초",
+                    "display": _hms(d),
                 }
                 for r, d in sorted(round_durations.items())
             },
         }
 
-        # 보고서에 실행 통계 삽입
-        if final_report:
-            timing_table = "\n\n### 실행 통계\n\n"
-            timing_table += "| 라운드 | 소요 시간 |\n|--------|----------|\n"
-            for r, d in sorted(round_durations.items()):
-                timing_table += f"| 라운드 {r} | {int(d // 60)}분 {int(d % 60)}초 |\n"
-            timing_table += f"| **전체** | **{int(total_duration // 60)}분 {int(total_duration % 60)}초** |\n"
+        # Backfill the "Execution Statistics" table inside the Methods section.
+        # The pi_report template emits a placeholder table with "—" for every
+        # round; replace those rows with real wall-clock figures.
+        if final_report and round_durations:
+            new_rows = []
+            for r in sorted(round_durations.keys()):
+                new_rows.append(f"| Round {r} | {_hms(round_durations[r])} |")
+            new_rows.append(f"| **Total** | **{_hms(total_duration)}** |")
+            new_table = (
+                "| Round | Duration |\n|-------|----------|\n"
+                + "\n".join(new_rows)
+                + "\n"
+            )
 
-            # 보고서 말미(참고문헌 앞 또는 끝)에 삽입
-            if "## 참고문헌" in final_report:
-                final_report = final_report.replace("## 참고문헌", timing_table + "\n---\n\n## 참고문헌")
-            elif "## 의사결정 흐름도" in final_report:
-                final_report = final_report.replace("## 의사결정 흐름도", timing_table + "\n---\n\n## 의사결정 흐름도")
+            import re as _re
+            placeholder_re = _re.compile(
+                r"\| Round \| Duration \|\n\|-+\|-+\|\n(?:\| (?:Round \d+|\*\*Total\*\*) \|[^\n]*\n)+",
+                _re.MULTILINE,
+            )
+            if placeholder_re.search(final_report):
+                final_report = placeholder_re.sub(new_table, final_report, count=1)
             else:
-                final_report += timing_table
+                # Fallback: append as a top-level section if the placeholder is missing.
+                final_report += "\n\n### Execution Statistics\n\n" + new_table
 
         # 보고서 파일 저장 (영어 + 한글 사이드카)
         saved_filename = ""
