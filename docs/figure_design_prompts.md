@@ -74,8 +74,24 @@ VISUAL SYSTEM (apply consistently across all three panels):
   Specialist 3 (Regulatory Science):  #C7B7E0  (pastel purple)
   Specialist 4 (Risk Assessment):     #FFD6A5  (pastel orange)
   Specialist 5 (Bioinformatics):      #95D5B2  (pastel teal)
-  Typography: Inter / Helvetica, sans-serif. Title 14 pt, labels 9 pt.
+  Typography: Inter / Helvetica, sans-serif. Title 16 pt, labels 11 pt,
+              captions 9 pt. (Bias toward LARGER text — small text is the
+              most common readability complaint.)
   Iconography: flat illustration, no 3D, no gradients, no drop shadows.
+              Every agent circle/icon has a 1 pt outline (#1A1A1A) to crisp
+              up edges against the white background. Agent icon diameter
+              should be generous — at least 12% of the panel height — so
+              labels and icons read clearly.
+  Stroke usage: solid lines for primary connectors (1.0 pt). Bidirectional
+              audit channels in Panel A use a dashed stroke (1.2 pt,
+              #4A4A4A) with arrowheads at BOTH ends — not dotted.
+              The Critic→PI synthesis loop in Panel B uses a slightly
+              thicker stroke (1.4 pt) so the round-closing feedback is
+              visually distinct.
+  Color saturation: the pastel specialist hues should read clearly, not
+              blend into the white background. If the literal hex codes
+              look too washed out, increase saturation by ~15% while
+              keeping the same hue family.
   No emojis. No numerical values anywhere on the figure (numbers belong to Figure 2).
 
 PANEL A — "Architecture" (top)
@@ -98,13 +114,27 @@ PANEL A — "Architecture" (top)
   Title / Expertise / Goal / Role.
 
 PANEL B — "Iterative deliberation per round" (middle)
-  Horizontal pipeline. Left to right:
-    Human → "Agenda" → PI → "Guide" → SP1 → SP2 → SP3 → SP4 → SP5 →
-    "Response" arrows into a Critic node → looping back to PI labelled
-    "Synthesis + new questions"
-  Enclose the PI-through-specialists-through-Critic block in a dotted
-  rectangle labelled "× N rounds, until convergence". A final arrow exits
-  the PI on the right into a rectangle labelled "Final framework".
+  CRITICAL: this panel must show PARALLEL fan-out / fan-in, not a sequential
+  chain. The five specialists run concurrently and never pass work to each
+  other. Layout:
+    - Left: Human researcher icon → "Agenda" arrow → PI icon.
+    - PI fans out FIVE simultaneous arrows to SP1, SP2, SP3, SP4, SP5
+      stacked in a vertical column (or vertical arc) to the right of the PI.
+      Every fan-out arrow carries the label "Guide". The specialists are
+      NOT connected to each other — each receives its guide directly from
+      the PI in parallel.
+    - Each specialist emits a single "Response" arrow that fans IN on the
+      Scientific Critic node, placed to the right of the specialist column.
+      This produces five separate arrows converging on the Critic.
+    - From the Critic, a single, slightly thicker curved arrow loops back
+      to the PI labelled "Synthesis + new questions" (label above the line).
+    - Enclose PI / 5 specialists / Critic / loop in a dotted rectangle
+      labelled "× N rounds, until convergence".
+    - A final arrow exits the PI on the right into a "Final framework"
+      rectangle OUTSIDE the dotted rectangle.
+  The visual idea is: one PI broadcasts to many specialists in parallel,
+  the Critic gathers their parallel responses, and the loop synthesises
+  the round into the next agenda.
 
 PANEL C — "Single-shot baseline for comparison" (bottom)
   Grayed-out, smaller version of the same flow with only one specialist:
