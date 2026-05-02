@@ -79,11 +79,14 @@ VISUAL SYSTEM (apply consistently across all three panels):
               most common readability complaint.)
   Iconography: AGENTIC AI CHARACTER STYLE — every agent is a friendly
               humanoid cartoon character (Pixar / Studio Ghibli flat
-              illustration), NOT an abstract icon inside a circle. Each
-              character has a head, body, and a domain-appropriate prop
-              (DNA helix, beaker, gavel, balance scale, laptop, magnifying
-              glass, clipboard). Faces are minimal — two-dot eyes and a
-              small mouth — to stay publication-appropriate. Each
+              illustration), NOT an abstract icon inside a circle.
+              CRITICAL: each character must be drawn as a complete
+              UPPER-BODY figure showing head, neck, shoulders, torso,
+              both arms, AND hands holding the assigned domain prop.
+              Floating-head renderings are not acceptable. The prop must
+              be roughly the size of the character's head so it reads
+              clearly at thumbnail size. Faces are minimal — two-dot eyes
+              and a small mouth — to stay publication-appropriate. Each
               character sits inside a softly tinted circular badge in
               their assigned palette colour so a reader can track the
               same agent across Panels A, B, and C.
@@ -92,20 +95,33 @@ VISUAL SYSTEM (apply consistently across all three panels):
               panel height, with a 1 pt outline (#1A1A1A) for edge
               definition.
 
-  Character roster (use the same characters in all three panels):
-    Human researcher    — casual figure with a notepad, light gray
-    Principal Investigator (PI) — senior scientist in a white lab coat
-                          holding a clipboard, warm-red accent
-    Molecular Genetics  — researcher holding a DNA-helix model
-    Toxicology          — researcher with safety goggles holding a flask
-    Regulatory Science  — researcher in smart-casual attire with a small
-                          gavel or policy clipboard
-    Risk Assessment     — researcher with a notebook and a balance scale
-    Bioinformatics      — hoodie-wearing developer with a laptop showing
-                          a small genome plot
-    Scientific Critic   — bookish figure with reading glasses, magnifying
-                          glass, and red pen — visually distinct from the
-                          specialists; reads as "skeptical reviewer"
+  Character roster (use the same characters in all three panels). For
+  every entry the prop must be visibly held in one hand at chest height,
+  not just implied. Use the Virtual Lab Nature paper figure (referenced
+  at the start of the design conversation) as the model for character
+  completeness — full upper bodies, readable props, distinct silhouettes.
+
+    Human researcher    — torso + arms, casual sweater, holding a small
+                          notepad in one hand. Light-gray badge.
+    Principal Investigator (PI) — senior scientist with visible white
+                          lab-coat collar, holding a clipboard up at
+                          chest height. Warm-red badge.
+    Molecular Genetics  — lab coat, holding a DNA-helix model in one
+                          hand. Pastel-blue badge.
+    Toxicology          — lab coat with safety goggles, holding a flask
+                          with small bubbles in one hand. Pastel-green
+                          badge.
+    Regulatory Science  — smart-casual blazer, holding a clipboard with
+                          policy documents (or a small gavel). Pastel-
+                          purple badge.
+    Risk Assessment     — lab coat, holding a small balance scale.
+                          Pastel-orange badge.
+    Bioinformatics      — hoodie, holding an open laptop showing a small
+                          line plot on its screen. Pastel-teal badge.
+    Scientific Critic   — cardigan + reading glasses, magnifying glass
+                          held up to one eye, red pen in the other hand.
+                          Neutral-gray badge. Visually distinct from the
+                          specialists — reads as "skeptical reviewer".
   Stroke usage: solid lines for primary connectors (1.0 pt). Bidirectional
               audit channels in Panel A use a dashed stroke (1.2 pt,
               #4A4A4A) with arrowheads at BOTH ends — not dotted.
@@ -146,9 +162,15 @@ PANEL A — "Architecture" (top)
       order: Title / Expertise / Goal / Role.
 
 PANEL B — "Iterative deliberation per round" (middle)
-  CRITICAL: this panel must show PARALLEL fan-out / fan-in, not a sequential
-  chain. The five specialists run concurrently and never pass work to each
-  other. Layout:
+  CRITICAL #1: this panel must show PARALLEL fan-out / fan-in, not a
+  sequential chain. The five specialists run concurrently and never pass
+  work to each other.
+  CRITICAL #2: HORIZONTALLY CENTER the dotted "x N rounds" rectangle.
+  The rectangle's center should align with the panel's vertical center
+  axis. The Human researcher and "Agenda" arrow on the left can be
+  compressed to make room; the "Final framework" rectangle on the right
+  remains near the right edge with breathing room on either side.
+  Layout:
     - Left: Human researcher icon → "Agenda" arrow → PI icon.
     - PI fans out FIVE simultaneous arrows to SP1, SP2, SP3, SP4, SP5
       stacked in a vertical column (or vertical arc) to the right of the PI.
@@ -171,6 +193,9 @@ PANEL B — "Iterative deliberation per round" (middle)
 PANEL C — "Single-shot baseline for comparison" (bottom)
   Grayed-out, smaller version of the same flow with only one specialist:
     Human → Agenda → single specialist → Response → Critic → Answer
+  CRITICAL: HORIZONTALLY CENTER the entire baseline strip with ~10-15%
+  padding on both left and right sides of the panel. The "Answer"
+  rectangle should sit clearly past the panel midline, not just barely.
   This panel emphasises the contrast with Panel B.
 
 Caption labels remain abstract throughout: "Specialist", "Critic", "Round",
