@@ -119,6 +119,35 @@ def _embed_batch(texts: list[str]) -> np.ndarray:
     return np.array([row["embedding"] for row in data["data"]], dtype=np.float64)
 
 
+# `text-embedding-3-large` accepts at most 8 191 tokens per input. Keeping a
+# safe margin: ~28 000 characters of English ≈ 7 000 tokens.
+EMBED_MAX_CHARS = 28_000
+
+
+def _embed_long_text(text: str) -> np.ndarray:
+    """Embed an arbitrarily long text by mean-pooling chunk embeddings.
+
+    Reports in this study run 35 000–45 000 characters and exceed the
+    single-input token limit. We split into non-overlapping chunks of
+    `EMBED_MAX_CHARS` characters, embed each, and average the resulting
+    vectors. This is a standard fallback for long-document similarity and
+    preserves the global semantic profile of the report.
+    """
+    if not text:
+        # Return a zero vector with the dimension of one real embedding.
+        return _embed_batch(["placeholder"])[0] * 0.0
+    if len(text) <= EMBED_MAX_CHARS:
+        return _embed_batch([text])[0]
+    chunks = [text[i:i + EMBED_MAX_CHARS] for i in range(0, len(text), EMBED_MAX_CHARS)]
+    chunk_embeds = _embed_batch(chunks)
+    return chunk_embeds.mean(axis=0)
+
+
+def _embed_reports(texts: list[str]) -> np.ndarray:
+    """Return `(n, d)` embeddings for `n` reports, one row per report."""
+    return np.vstack([_embed_long_text(t) for t in texts])
+
+
 def _cosine_matrix(embeddings: np.ndarray) -> np.ndarray:
     """Compute pairwise cosine similarity for an `(n, d)` embedding matrix."""
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
@@ -388,8 +417,8 @@ def main() -> int:
     # ─ Semantic similarity ──
     similarity_summary: dict = {"n": len(runs), "note": "skipped"}
     if not args.skip_embeddings and len(runs) >= 2:
-        log.info("Embedding %d reports with %s …", len(runs), EMBEDDING_MODEL)
-        embeddings = _embed_batch([r["report"] for r in runs])
+        log.info("Embedding %d reports with %s (chunked mean-pool)…", len(runs), EMBEDDING_MODEL)
+        embeddings = _embed_reports([r["report"] for r in runs])
         matrix = _cosine_matrix(embeddings)
         _write_similarity_csv(matrix, run_ids, args.out_dir / "similarity_matrix.csv")
         similarity_summary = _write_similarity_summary(matrix, run_ids, args.out_dir / "similarity_summary.json")
