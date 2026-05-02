@@ -77,11 +77,35 @@ VISUAL SYSTEM (apply consistently across all three panels):
   Typography: Inter / Helvetica, sans-serif. Title 16 pt, labels 11 pt,
               captions 9 pt. (Bias toward LARGER text — small text is the
               most common readability complaint.)
-  Iconography: flat illustration, no 3D, no gradients, no drop shadows.
-              Every agent circle/icon has a 1 pt outline (#1A1A1A) to crisp
-              up edges against the white background. Agent icon diameter
-              should be generous — at least 12% of the panel height — so
-              labels and icons read clearly.
+  Iconography: AGENTIC AI CHARACTER STYLE — every agent is a friendly
+              humanoid cartoon character (Pixar / Studio Ghibli flat
+              illustration), NOT an abstract icon inside a circle. Each
+              character has a head, body, and a domain-appropriate prop
+              (DNA helix, beaker, gavel, balance scale, laptop, magnifying
+              glass, clipboard). Faces are minimal — two-dot eyes and a
+              small mouth — to stay publication-appropriate. Each
+              character sits inside a softly tinted circular badge in
+              their assigned palette colour so a reader can track the
+              same agent across Panels A, B, and C.
+              Style cues: clean line work, no 3D, no gradients, no drop
+              shadows. Agent badge diameter should be at least 12% of the
+              panel height, with a 1 pt outline (#1A1A1A) for edge
+              definition.
+
+  Character roster (use the same characters in all three panels):
+    Human researcher    — casual figure with a notepad, light gray
+    Principal Investigator (PI) — senior scientist in a white lab coat
+                          holding a clipboard, warm-red accent
+    Molecular Genetics  — researcher holding a DNA-helix model
+    Toxicology          — researcher with safety goggles holding a flask
+    Regulatory Science  — researcher in smart-casual attire with a small
+                          gavel or policy clipboard
+    Risk Assessment     — researcher with a notebook and a balance scale
+    Bioinformatics      — hoodie-wearing developer with a laptop showing
+                          a small genome plot
+    Scientific Critic   — bookish figure with reading glasses, magnifying
+                          glass, and red pen — visually distinct from the
+                          specialists; reads as "skeptical reviewer"
   Stroke usage: solid lines for primary connectors (1.0 pt). Bidirectional
               audit channels in Panel A use a dashed stroke (1.2 pt,
               #4A4A4A) with arrowheads at BOTH ends — not dotted.
@@ -95,23 +119,31 @@ VISUAL SYSTEM (apply consistently across all three panels):
   No emojis. No numerical values anywhere on the figure (numbers belong to Figure 2).
 
 PANEL A — "Architecture" (top)
-  Show the agent topology. A central Principal Investigator (PI) icon — a
-  cartoon scientist with a clipboard, outlined in warm red — sits slightly
-  left of the panel centre. From the PI, fan out lines to the right to five
-  specialist agents arranged in an arc, each carrying a distinct domain
-  icon and the pastel hue listed above:
-    SP1 Molecular Genetics    — DNA helix icon, pastel blue
-    SP2 Toxicology            — beaker icon, pastel green
-    SP3 Regulatory Science    — gavel icon, pastel purple
-    SP4 Risk Assessment       — balance-scale icon, pastel orange
-    SP5 Bioinformatics        — computer-chip icon, pastel teal
-  Below the PI, an independent Scientific Critic in a circular badge with a
-  magnifying-glass icon (neutral gray-purple), connected to the PI and to
-  all five specialists by bidirectional arrows.
-  To the left of the PI, a small stick-figure "Human researcher" with a
-  single arrow into the PI labelled "Research agenda".
-  Each node carries a four-line label in caption font, in this order:
-  Title / Expertise / Goal / Role.
+  Show the agent topology as a BALANCED, HORIZONTALLY-CENTERED composition
+  (~10-15% horizontal padding on both sides; do not flush content to one
+  side).
+    - Place the Principal Investigator (PI) character in the horizontal
+      centre of the panel. The PI is a cartoon scientist in a white lab
+      coat with a clipboard, sitting in a warm-red badge.
+    - To the LEFT of the PI, place the Human researcher character (casual
+      figure with a notepad). A single solid arrow points from the Human
+      researcher to the PI, labelled "Research agenda".
+    - To the RIGHT of the PI, the five specialist characters are arranged
+      in a vertical column or shallow arc. Each is a humanoid cartoon
+      character with a domain prop and the assigned pastel hue:
+        SP1 Molecular Genetics  — DNA-helix-holding researcher, pastel blue
+        SP2 Toxicology          — flask-holding researcher with goggles, pastel green
+        SP3 Regulatory Science  — gavel/policy-clipboard researcher, pastel purple
+        SP4 Risk Assessment     — balance-scale researcher, pastel orange
+        SP5 Bioinformatics      — laptop-holding hoodie developer, pastel teal
+      The PI fans out solid arrows to all five specialists.
+    - BELOW the PI, centred horizontally relative to the specialist column,
+      place the Scientific Critic character (bookish, reading glasses,
+      magnifying glass + red pen) in a neutral-gray badge. The Critic is
+      connected to the PI and to every specialist by DASHED bidirectional
+      channels (1.2 pt, #4A4A4A, arrowheads at both ends).
+    - Each character carries a four-line label in caption font, in this
+      order: Title / Expertise / Goal / Role.
 
 PANEL B — "Iterative deliberation per round" (middle)
   CRITICAL: this panel must show PARALLEL fan-out / fan-in, not a sequential
