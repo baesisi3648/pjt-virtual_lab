@@ -12,6 +12,29 @@
 - **Specialist Agents**: PI가 동적으로 구성한 전문가 팀이 RAG + 웹 검색 + EFSA Journal 검색으로 개별 분석
 - **Critic Agent**: 전문가별 4축(근거/범용성/비례성/가독성) 점수 + 개선 피드백
 
+## Code & Prompt Availability
+
+The full source code is publicly available in this repository. The agent
+prompt templates and curated reference text assets used in the published
+study are held privately at `prompts/` (gitignored), with sanitised
+public placeholders at `prompts.example/`. The codebase is fully runnable
+against either prompt set; the loader at `utils/prompt_loader.py` selects
+the available directory automatically and respects the
+`VIRTUAL_LAB_PROMPTS_DIR` environment variable for an explicit override.
+
+The full prompt set — including the four-axis Critic rubric, the report
+template, the decision-tree node wording, and the regulatory text
+excerpts — is available from the corresponding author upon reasonable
+request. This separation follows standard practice for evaluation
+rubrics and assessment templates whose content overlaps with the
+quantitative claims of the manuscript and would constitute target
+leakage if released openly. See `prompts.example/README.md` for details.
+
+The reproducibility study reported in §3.5 of the manuscript can be
+re-executed end-to-end with `python run_experiment.py --run-id <N>`
+and `python -m experiments.reproducibility.analyze`; see
+`experiments/README.md`.
+
 ## 기술 스택
 
 | 구분 | 기술 |
