@@ -254,10 +254,20 @@ VISUAL SYSTEM (identical to Figure 1):
   No emojis. No drop shadows.
 
 PANEL A — "Final specialist team" (top-left)
-  Compact, results-focused version of the architecture in Figure 1 Panel A.
-  PI in centre (warm red). Five specialist nodes around the PI, each
-  labelled with the canonical role title and a one-line focus tag in
-  caption font:
+  CRITICAL: REUSE THE EXACT CHARACTERS FROM FIGURE 1. Same faces, same
+  outfits, same props, same palette — only the size may differ (smaller
+  here). Do not invent new avatars. Without this constraint, the two
+  figures stop reading as one coherent system.
+
+  HORIZONTAL CENTERING: place the PI character in the horizontal centre
+  of the panel's content area. Specialists fan out to the RIGHT of the
+  PI; Scientific Critic sits BELOW the PI. The left half of Panel A
+  must NOT be empty white space.
+
+  Compact, results-focused version of the architecture in Figure 1
+  Panel A. PI in centre (warm red). Five specialist characters around
+  the PI, each labelled with the canonical role title and a one-line
+  focus tag in caption font:
     Molecular Genetics Specialist  — "Edit-type taxonomy and off-target biology"
     Toxicology Specialist          — "Hazard identification, NAMs, and TTC triggers"
     Regulatory Science Specialist  — "Codex / EFSA / OECD alignment and proportionate oversight"
@@ -296,6 +306,16 @@ PANEL C — "Critic-score convergence with cross-run reproducibility band, N = 5
   verbatim or restyle it (same data, same series, same legend) so that
   axis labels and legend font match the typography used in Panels A and B.
   Do not change the data values or the y-axis range.
+
+  IMPORTANT — disambiguate overlapping lines: from round 3 onward the
+  three scientific axes (Evidence, Universality, Proportionality) all
+  hold a value of 5.0 simultaneously. If drawn at the literal y=5.0 on
+  every round, the three lines stack exactly and the topmost line hides
+  the other two. Apply EITHER a small vertical offset (~0.04 units) to
+  the three lines when they sit at the maximum, OR a small horizontal
+  marker stagger (~0.04 round units) so all four series remain
+  individually visible at every round. Underlying data values stay
+  identical.
   Series colours (must remain distinct):
     Evidence       — blue, circle markers
     Universality   — green, square markers
@@ -309,8 +329,10 @@ PANEL D — "Cross-run semantic similarity, final framework"
   verbatim or restyle it (same data, same colour scale, same cell labels).
   5 x 5 heatmap, colour scale viridis, range 0.85 to 1.00, every cell
   annotated with the cosine value to two decimal places. Tick labels
-  "Run 1" through "Run 5" on both axes. Colour-bar on the right labelled
-  "Cosine similarity".
+  "Run 1" through "Run 5" on both axes — DISPLAYED IN FULL, not clipped
+  or truncated. If the labels collide, rotate them 30 deg or increase
+  the bottom margin so the full text fits. Colour-bar on the right
+  labelled "Cosine similarity".
 
 DATA BLOCK (in case you need to re-derive any panel):
   Run 1 round durations:    R1=6m19s, R2=3m00s, R3=2m09s, R4=4m33s, total=18m41s
@@ -341,9 +363,16 @@ DATA BLOCK (in case you need to re-derive any panel):
     Run 5:  0.96   0.95   0.97   0.93   1.00
 
 REQUIREMENTS:
-  - The PI, specialists, and Critic icons in Panel A must be the SAME
-    characters used in Figure 1 Panel A (same avatars, same colours).
+  - The PI, specialists, and Critic in Panel A must be the EXACT
+    characters from Figure 1 Panel A — same faces, outfits, props, and
+    palette. Smaller in scale here, but visually identical otherwise.
+    Do NOT generate new avatars; reuse the Figure 1 character system.
   - All four panels share a consistent typography and grid spacing.
+  - No broken-image placeholder icons (no gray "X" circles) anywhere.
+  - All tick labels are displayed in full (no "n 1" / "n 2" truncation
+    of "Run 1" / "Run 2"). Rotate or expand the margin if needed.
+  - In Panel C, ensure all four series remain visible at every round
+    even where three of them share the same y value.
   - No emojis, no drop shadows, no 3D effects, no decorative gradients.
   - Bold panel labels A / B / C / D in the upper-left of each panel.
 ```
