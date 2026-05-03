@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+/* ===== Design System: Virtual Lab (Light Theme) ===== */
+
+:root {
+  --background: #f6f8f7;
+  --foreground: #121714;
+  --primary: #1b7440;
+  --primary-light: #e8f5ed;
+  --text-muted: #678373;
+  --border: #dde4e0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1b7440;
+}
+
+/* ===== Card Panels (replaces glass-panel) ===== */
+.glass-panel {
+  background: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.glass-panel-hover {
+  background: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(27, 116, 64, 0.4);
+  box-shadow: 0 4px 12px rgba(27, 116, 64, 0.08);
+}
+
+.glass-panel-light {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #dde4e0;
+  border-radius: 8px;
+}
+
+/* ===== Animations ===== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(27, 116, 64, 0.15); }
+  50% { box-shadow: 0 0 16px 4px rgba(27, 116, 64, 0.25); }
+}
+
+.animate-pulse-glow { animation: pulse-glow 3s infinite; }
+
+@keyframes flow-line {
+  0% { stroke-dashoffset: 100; opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.2; }
+}
+
+.flow-path {
+  stroke-dasharray: 10;
+  animation: flow-line 2s linear infinite;
+}
+
+/* ===== Report Paper Style (Light) ===== */
+.report-paper {
+  background-color: white;
+  border: 1px solid #dde4e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* ===== Pixel Art Game Board ===== */
+.pixel-render {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+@keyframes pixel-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes pixel-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-4px) scale(1.02); }
+  75% { transform: translateY(-2px) scale(0.98); }
+}
+@keyframes scene-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes speech-appear {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-pixel-idle { animation: pixel-idle 2s ease-in-out infinite; }
+.animate-pixel-bounce { animation: pixel-bounce 0.8s ease-in-out infinite; }
+.animate-scene-fade-in { animation: scene-fade-in 0.5s ease-out; }
+.animate-speech-appear { animation: speech-appear 0.3s ease-out; }
+
+/* ===== Primary Token Utilities ===== */
+.border-primary { border-color: var(--primary); }
+.bg-primary     { background-color: var(--primary); }
+.text-primary   { color: var(--primary); }
+
+.bg-primary:hover,
+.btn-primary:hover { filter: brightness(0.88); }
+
+.spinner-primary { border-color: transparent transparent transparent var(--primary); }
+
+.corner-accent {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 20%, transparent) 0%, transparent 100%);
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(27, 116, 64, 0.2);
+  color: #121714;
+}
+
+/* ===== Material Symbols Icon Sizes ===== */
+.icon-xl  { font-size: 40px; }
+.icon-lg  { font-size: 32px; }
+.icon-md  { font-size: 22px; }
+.icon-sm  { font-size: 16px; }

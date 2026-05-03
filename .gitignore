@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment Variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Streamlit
+.streamlit/
+
+# Worktree
+worktree/
+
+# Generated Reports (보고서 파일은 로컬만)
+reports/*.txt
+
+# Runtime logs
+search_queries.log
+
+# Claude Skills (external)
+claude_skills/
+
+# Claude Code settings and state
+.claude/
+
+# folder
+reference/
+
+# Author-private prompt assets (English-first; full set held privately for paper review)
+# The runnable public placeholders live in prompts.example/.
+prompts/
+
+# Reproducibility experiment runs (large; regenerated on demand)
+experiments/runs/
+experiments/reproducibility/results/
