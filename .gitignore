@@ -52,6 +52,11 @@ claude_skills/
 # folder
 reference/
 
+# Regulatory documents — keep locally only (sources are public Codex/EFSA;
+# referenced via URLs in data/regulatory/README.md, raw PDFs not redistributed
+# from this repo to keep the public history binary-free)
+data/regulatory/*.pdf
+
 # Author-private prompt assets (English-first; full set held privately for paper review)
 # The runnable public placeholders live in prompts.example/.
 prompts/
