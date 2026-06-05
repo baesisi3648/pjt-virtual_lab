@@ -185,6 +185,22 @@ def main() -> int:
     introductions = final_state.get("specialist_introductions", []) or []
     sources = final_state.get("sources", []) or []
 
+    # ─ Build full conversation log ─────────────────────────────────
+    # meeting_history archives rounds 1..N-1 (added by increment_round).
+    # The final round never passes through increment_round, so append it
+    # manually using the live state fields.
+    meeting_history = final_state.get("meeting_history", []) or []
+    final_critique = final_state.get("critique")
+    final_round_record = {
+        "round": current_round_seen,
+        "specialist_outputs": final_state.get("specialist_outputs", []) or [],
+        "critique_feedback": final_critique.feedback if final_critique else "",
+        "critique_scores": final_critique.scores if final_critique else {},
+        "specialist_feedback": final_critique.specialist_feedback if final_critique else {},
+        "pi_summary": final_state.get("draft", "") or "",
+    }
+    conversations = list(meeting_history) + [final_round_record]
+
     # ─ Persist artefacts ───────────────────────────────────────────
     (out_dir / "final_report.md").write_text(final_report, encoding="utf-8")
     if final_report_ko:
@@ -197,6 +213,11 @@ def main() -> int:
 
     (out_dir / "messages.json").write_text(
         json.dumps(messages, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    (out_dir / "conversations.json").write_text(
+        json.dumps(conversations, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
@@ -232,6 +253,7 @@ def main() -> int:
     print(f"  Final report (EN): {len(final_report):,} chars")
     print(f"  Final report (KO): {len(final_report_ko):,} chars")
     print(f"  Score history snapshots: {len(score_history)}")
+    print(f"  Conversation rounds saved: {len(conversations)}")
     print(f"  Output: {out_dir.resolve()}")
     print(f"{'='*80}\n")
 
