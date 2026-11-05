@@ -11,6 +11,7 @@ build/
 # Virtual Environment
 .venv/
 venv/
+venv_broken_oldpc/
 env/
 
 # Environment Variables
@@ -64,3 +65,9 @@ prompts/
 # Reproducibility experiment runs (large; regenerated on demand)
 experiments/runs/
 experiments/reproducibility/results/
+
+# Revision baseline: archive and diffs contain the original (pre-revision) prompt text.
+# Kept locally until the decision on publishing the original prompts (revision_plan D3).
+experiments/runs_rev/baseline/original_archive.zip
+experiments/runs_rev/prompt_sets/*.patch
+.prompts_*.building/

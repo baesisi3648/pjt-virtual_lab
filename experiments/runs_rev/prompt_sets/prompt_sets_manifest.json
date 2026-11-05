@@ -1,0 +1,174 @@
+{
+  "source_dir": "prompts",
+  "source_hashes": {
+    "data/academic_tone_guide.md": "3b1b76199d5a85c9720fcecaa909cc384f11d4d68b231188b8e5496042540a88",
+    "data/codex_principles.md": "64e933b6fc9cbb0a3e3ac6424db20948d1f46b87f0b0b23e6337af81b93d474f",
+    "data/critique_rubric.md": "2fd31cfb2d0f30eb69cd50dbf9d683e0638c64c60fde0fed2e687025b428628b",
+    "data/regulatory_trends.md": "60272c2ce1c68ed01beae57417b035922fedef820dcf77f10fb64848f73e9f51",
+    "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
+    "data/research_objective.md": "89a32a563f42415de83ea5c406b9e9b037fd8bdf49f9ecfd1e7f49b9636ca993",
+    "system/critic.md": "ee030ecba7fe135e5d4718ecaf0742ff7557f060d325ff1024f1f47b252f8274",
+    "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
+    "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
+    "system/pi_report.md": "e08d3880289f13c268a50b6136ddced053f21f8cd772dace89f98734d1078cb3",
+    "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
+    "system/pi_team_decision.md": "9d57cdd75c5a316aa6656afbeebfa51de1c41753dc193203b5c2ec93b177397f",
+    "system/pi_team_selection.md": "66abc6d159814db5ae95ac6c767e9d0a2aecf54dfec73653fe86a235b122a7ea",
+    "system/role_clustering.md": "0ffde509559794b6551d20da0a19e13826161187ca5cadacbf6e7129622cc3e4",
+    "system/specialist.md": "0c570875906017db8eae4e5140f1f2fc7bc1c6af795e1b515d2750f55cad94e5",
+    "system/specialist_query.md": "71939eef9d06e207e0f2a3c99248a7526b4c4299c3266458c66eaefffffb4452",
+    "system/specialist_revision_query.md": "2b5aead5ecc8a200b05f4af55d95fe791871424cbed68861cf7ebb2465cf0f9a",
+    "system/translator_en_to_ko.md": "e56f2d2753abdef4d43123c47fef7b08501ea16e74cfcc0060af237c621dc930"
+  },
+  "excluded_unused_data_files": [
+    "research_objective.md",
+    "codex_principles.md",
+    "regulatory_trends.md"
+  ],
+  "sets": [
+    {
+      "condition": "A",
+      "changes": [
+        {
+          "condition": "A",
+          "change_id": "P2-rubric-1",
+          "file": "data/critique_rubric.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P2-rubric-2",
+          "file": "data/critique_rubric.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P2-critic-axis",
+          "file": "system/critic.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P3-team-decision-language",
+          "file": "system/pi_team_decision.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P3-team-decision-example",
+          "file": "system/pi_team_decision.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P3-team-selection-example",
+          "file": "system/pi_team_selection.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P3-role-clustering-example",
+          "file": "system/role_clustering.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P4-report-terminal-node",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P4-tone-guide-exception",
+          "file": "data/academic_tone_guide.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "A-critic-scoring-rules",
+          "file": "system/critic.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "A-critic-round1-cap",
+          "file": "system/critic.md"
+        }
+      ],
+      "files": {
+        "data/academic_tone_guide.md": "971322399e90c5568485782eb83d60fbfbb9031a40631605f681e8e97eee7010",
+        "data/critique_rubric.md": "c4401322a8782f84a4ddf6a32245ef50bf8c76460f0ea9d4a5591c12f376f970",
+        "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
+        "system/critic.md": "e4f2deecc84dae12a0f2618be7fa28098dba5bbe20fda76cbde6aadf10c1f692",
+        "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
+        "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
+        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
+        "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
+        "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
+        "system/role_clustering.md": "d74d16743bb7340f9a5662528ff3e25dafd600a940b0fd2ed45319f518745530",
+        "system/specialist.md": "0c570875906017db8eae4e5140f1f2fc7bc1c6af795e1b515d2750f55cad94e5",
+        "system/specialist_query.md": "71939eef9d06e207e0f2a3c99248a7526b4c4299c3266458c66eaefffffb4452",
+        "system/specialist_revision_query.md": "2b5aead5ecc8a200b05f4af55d95fe791871424cbed68861cf7ebb2465cf0f9a",
+        "system/translator_en_to_ko.md": "e56f2d2753abdef4d43123c47fef7b08501ea16e74cfcc0060af237c621dc930"
+      }
+    },
+    {
+      "condition": "B",
+      "changes": [
+        {
+          "condition": "B",
+          "change_id": "P2-rubric-1",
+          "file": "data/critique_rubric.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P2-rubric-2",
+          "file": "data/critique_rubric.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P2-critic-axis",
+          "file": "system/critic.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P3-team-decision-language",
+          "file": "system/pi_team_decision.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P3-team-decision-example",
+          "file": "system/pi_team_decision.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P3-team-selection-example",
+          "file": "system/pi_team_selection.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P3-role-clustering-example",
+          "file": "system/role_clustering.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P4-report-terminal-node",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P4-tone-guide-exception",
+          "file": "data/academic_tone_guide.md"
+        }
+      ],
+      "files": {
+        "data/academic_tone_guide.md": "971322399e90c5568485782eb83d60fbfbb9031a40631605f681e8e97eee7010",
+        "data/critique_rubric.md": "c4401322a8782f84a4ddf6a32245ef50bf8c76460f0ea9d4a5591c12f376f970",
+        "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
+        "system/critic.md": "4be4036de367ddb8de3f4f4935f3fcf00d5b54e9d568f94b4e1ad0cc744799c9",
+        "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
+        "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
+        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
+        "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
+        "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
+        "system/role_clustering.md": "d74d16743bb7340f9a5662528ff3e25dafd600a940b0fd2ed45319f518745530",
+        "system/specialist.md": "0c570875906017db8eae4e5140f1f2fc7bc1c6af795e1b515d2750f55cad94e5",
+        "system/specialist_query.md": "71939eef9d06e207e0f2a3c99248a7526b4c4299c3266458c66eaefffffb4452",
+        "system/specialist_revision_query.md": "2b5aead5ecc8a200b05f4af55d95fe791871424cbed68861cf7ebb2465cf0f9a",
+        "system/translator_en_to_ko.md": "e56f2d2753abdef4d43123c47fef7b08501ea16e74cfcc0060af237c621dc930"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2687 @@
+C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\venv\Lib\site-packages\pytest_asyncio\plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the "fixture" caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to "function" scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+.FFF.ssFFFFFFFFFFFFFFFFFFFFFF.F....FFFFF.............FFFFFF...........FF [ 55%]
+FFFFFFFFFFFF........F.F.....F.....F.....FFFFFFFF......sFFF               [100%]
+=================================== ERRORS ====================================
+___________________ ERROR collecting tests/test_factory.py ____________________
+tests\test_factory.py:20: in <module>
+    _spec.loader.exec_module(_factory)
+<frozen importlib._bootstrap_external>:995: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1132: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1190: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/factory.py'
+_____________ ERROR collecting tests/test_factory_integration.py ______________
+tests\test_factory_integration.py:17: in <module>
+    _spec.loader.exec_module(_factory)
+<frozen importlib._bootstrap_external>:995: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1132: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1190: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/factory.py'
+_________________ ERROR collecting tests/test_pi_decision.py __________________
+tests\test_pi_decision.py:20: in <module>
+    _spec.loader.exec_module(_pi)
+<frozen importlib._bootstrap_external>:995: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1132: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1190: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/pi.py'
+___________ ERROR collecting tests/test_pi_decision_integration.py ____________
+tests\test_pi_decision_integration.py:30: in <module>
+    _spec.loader.exec_module(_pi)
+<frozen importlib._bootstrap_external>:995: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1132: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1190: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/pi.py'
+================================== FAILURES ===================================
+_______________ TestRAGSearchTool.test_rag_search_tool_success ________________
+
+args = (<tests.test_agent_rag_integration.TestRAGSearchTool object at 0x0000020148B11670>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148847500>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestRAGSearchTool.test_rag_search_tool_no_results ______________
+
+args = (<tests.test_agent_rag_integration.TestRAGSearchTool object at 0x0000020148ED26C0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x00000201488477D0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestRAGSearchTool.test_rag_search_tool_exception _______________
+
+args = (<tests.test_agent_rag_integration.TestRAGSearchTool object at 0x0000020148ED1E50>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148C78770>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+__________________ TestScientist.test_returns_draft_in_state __________________
+
+args = (<tests.test_agents.TestScientist object at 0x0000020148F103E0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148E431D0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestScientist.test_includes_guidelines_in_prompt _______________
+
+args = (<tests.test_agents.TestScientist object at 0x0000020148F10620>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3380>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+___________________ TestScientist.test_adds_message_to_log ____________________
+
+args = (<tests.test_agents.TestScientist object at 0x0000020148ED28A0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3410>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestScientist.test_incorporates_critique_feedback ______________
+
+args = (<tests.test_agents.TestScientist object at 0x0000020148ED2210>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3CE0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+____________ TestScientist.test_does_not_mutate_original_messages _____________
+
+args = (<tests.test_agents.TestScientist object at 0x0000020148ED2600>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3560>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+___________________ TestCritic.test_returns_critique_result ___________________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F105C0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3680>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+__________________ TestCritic.test_includes_rubric_in_prompt __________________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F102C0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3740>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestCritic.test_revise_decision_includes_feedback ______________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F108F0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3800>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+__________________ TestCritic.test_approve_decision_message ___________________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F10B90>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED38C0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestCritic.test_invalid_json_defaults_to_approve _______________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F10E30>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED38F0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+____________________ TestCritic.test_scores_are_preserved _____________________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F110D0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3B30>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestCritic.test_does_not_mutate_original_messages ______________
+
+args = (<tests.test_agents.TestCritic object at 0x0000020148F11370>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3C20>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_______________ TestCritic.test_merge_views_removes_duplicates ________________
+
+self = <tests.test_agents.TestCritic object at 0x0000020148F11670>
+
+    def test_merge_views_removes_duplicates(self):
+        """중복된 의견을 제거해야 한다."""
+>       from agents.critic import merge_views
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+
+tests\test_agents.py:341: ImportError
+___________ TestCritic.test_merge_views_selects_conservative_safety ___________
+
+self = <tests.test_agents.TestCritic object at 0x0000020148F11940>
+
+    def test_merge_views_selects_conservative_safety(self):
+        """가장 보수적인 안전 기준을 선택해야 한다."""
+>       from agents.critic import merge_views
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+
+tests\test_agents.py:355: ImportError
+___________ TestCritic.test_merge_views_rejects_unfounded_opinions ____________
+
+self = <tests.test_agents.TestCritic object at 0x0000020148F11C10>
+
+    def test_merge_views_rejects_unfounded_opinions(self):
+        """근거 없는 의견을 기각해야 한다."""
+>       from agents.critic import merge_views
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+
+tests\test_agents.py:368: ImportError
+________________ TestCritic.test_merge_views_handles_conflicts ________________
+
+self = <tests.test_agents.TestCritic object at 0x0000020148F11EE0>
+
+    def test_merge_views_handles_conflicts(self):
+        """상충되는 의견을 합리적으로 해결해야 한다."""
+>       from agents.critic import merge_views
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+
+tests\test_agents.py:382: ImportError
+______________________ TestPI.test_returns_final_report _______________________
+
+args = (<tests.test_agents.TestPI object at 0x0000020148F121E0>,), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3D40>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_______________________ TestPI.test_formats_as_markdown _______________________
+
+args = (<tests.test_agents.TestPI object at 0x0000020148F124B0>,), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3E00>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_______________________ TestPI.test_appends_pi_message ________________________
+
+args = (<tests.test_agents.TestPI object at 0x0000020148ED20F0>,), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3EC0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+__________________ TestPI.test_passes_topic_and_draft_to_llm __________________
+
+args = (<tests.test_agents.TestPI object at 0x0000020148F11F10>,), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148ED3F80>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+________________ TestPI.test_does_not_mutate_original_messages ________________
+
+args = (<tests.test_agents.TestPI object at 0x0000020148F120F0>,), keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148F10080>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+____________________ test_config_loads_with_valid_env_vars ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002014BD44A10>
+
+    def test_config_loads_with_valid_env_vars(monkeypatch):
+        """Test Settings loads correctly with valid environment variables"""
+        # Set valid environment variables
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key-123")
+        monkeypatch.setenv("POSTGRES_URL", "postgresql://virtual_lab:password@localhost:5432/virtual_lab")
+        monkeypatch.setenv("CHROMA_HOST", "localhost")
+        monkeypatch.setenv("CHROMA_PORT", "8001")
+        monkeypatch.setenv("TAVILY_API_KEY", "tvly-test-key-456")
+        monkeypatch.setenv("REDIS_URL", "redis://localhost:6379")
+    
+        # Import after setting env vars
+        from config import Settings
+        settings = Settings()
+    
+        assert settings.OPENAI_API_KEY == "sk-test-key-123"
+>       assert settings.POSTGRES_URL == "postgresql://virtual_lab:password@localhost:5432/virtual_lab"
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_config.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Settings(OPENAI_API_KEY='sk-test-key-123', DATABASE_URL='sqlite:///./virtual_lab.db', VECTOR_DB_TYPE='pinecone', PINEC...=4096, EMBEDDING_MODEL='text-embedding-3-small', CHUNK_SIZE=1000, CHUNK_OVERLAP=200, TOP_K=5, SIMILARITY_THRESHOLD=0.7)
+item = 'POSTGRES_URL'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra and item in pydantic_extra:
+                return pydantic_extra[item]
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'Settings' object has no attribute 'POSTGRES_URL'
+
+venv\Lib\site-packages\pydantic\main.py:1110: AttributeError
+_________________________ test_config_default_values __________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002014BD45550>
+
+    def test_config_default_values(monkeypatch):
+        """Test Settings default values"""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+        monkeypatch.setenv("POSTGRES_URL", "postgresql://localhost/test")
+        monkeypatch.setenv("CHROMA_HOST", "localhost")
+        monkeypatch.setenv("CHROMA_PORT", "8001")
+        monkeypatch.setenv("TAVILY_API_KEY", "tvly-test")
+        monkeypatch.setenv("REDIS_URL", "redis://localhost")
+    
+        from config import Settings
+        settings = Settings()
+    
+        assert settings.FASTAPI_HOST == "0.0.0.0"
+        assert settings.FASTAPI_PORT == 8000
+>       assert settings.GPT_MODEL == "gpt-4o"
+E       AssertionError: assert 'gpt-5' == 'gpt-4o'
+E         
+E         - gpt-4o
+E         + gpt-5
+
+tests\test_config.py:60: AssertionError
+_____________________ test_config_missing_required_field ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002014BA6DD00>
+
+    def test_config_missing_required_field(monkeypatch):
+        """Test Settings raises ValidationError when required field is missing"""
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+        # Missing POSTGRES_URL, CHROMA_HOST, etc.
+    
+        from config import Settings
+    
+>       with pytest.raises(ValidationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+tests\test_config.py:137: Failed
+___________ TestE2EWorkflow.test_full_pipeline_approve_immediately ____________
+
+args = (<tests.test_e2e.TestE2EWorkflow object at 0x000002014943FB30>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x0000020148F13650>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestE2EWorkflow.test_full_pipeline_with_revision _______________
+
+args = (<tests.test_e2e.TestE2EWorkflow object at 0x000002014943FEC0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014943F710>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_______________ TestE2EFastAPI.test_api_returns_valid_response ________________
+
+self = <tests.test_e2e.TestE2EFastAPI object at 0x0000020149468200>
+mock_workflow = <MagicMock name='create_workflow' id='2204590425056'>
+
+    @patch("server.create_workflow")
+    def test_api_returns_valid_response(self, mock_workflow):
+        """API가 올바른 응답을 반환하는지 검증"""
+        from fastapi.testclient import TestClient
+        from server import app
+    
+        # Mock workflow
+        mock_wf = Mock()
+        mock_wf.invoke.return_value = {
+            "final_report": "# 보고서\n## 1. 개요",
+            "messages": [
+                {"role": "scientist", "content": "초안 작성"},
+                {"role": "critic", "content": "승인"},
+                {"role": "pi", "content": "보고서 생성"},
+            ],
+            "iteration": 0,
+        }
+        mock_workflow.return_value = mock_wf
+    
+        client = TestClient(app)
+        response = client.post(
+            "/api/research",
+            json={"topic": "NGT 평가", "constraints": "합리적 규제"}
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+        assert "report" in data
+        assert "messages" in data
+>       assert "iterations" in data
+E       AssertionError: assert 'iterations' in {'report': '# 보고서\n## 1. 개요', 'messages': [{'role': 'scientist', 'content': '초안 작성'}, {'role': 'critic', 'content': '승인'}, {'role': 'pi', 'content': '보고서 생성'}], 'rounds': 3}
+
+tests\test_e2e.py:154: AssertionError
+________ TestE2EScriptScenario.test_over_regulation_critique_scenario _________
+
+args = (<tests.test_e2e.TestE2EScriptScenario object at 0x0000020149468530>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014943F8F0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+____________________ TestGetGPT4o.test_returns_chat_model _____________________
+
+self = <tests.test_llm.TestGetGPT4o object at 0x000002014946A870>
+
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
+    def test_returns_chat_model(self):
+>       from utils.llm import get_gpt4o
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+
+tests\test_llm.py:13: ImportError
+____________________ TestGetGPT4o.test_model_name_is_gpt4o ____________________
+
+self = <tests.test_llm.TestGetGPT4o object at 0x000002014946A360>
+
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
+    def test_model_name_is_gpt4o(self):
+>       from utils.llm import get_gpt4o
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+
+tests\test_llm.py:19: ImportError
+____________________ TestGetGPT4o.test_temperature_is_set _____________________
+
+self = <tests.test_llm.TestGetGPT4o object at 0x0000020149469E80>
+
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
+    def test_temperature_is_set(self):
+>       from utils.llm import get_gpt4o
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+
+tests\test_llm.py:25: ImportError
+__________________ TestGetGPT4oMini.test_returns_chat_model ___________________
+
+self = <tests.test_llm.TestGetGPT4oMini object at 0x00000201494687D0>
+
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
+    def test_returns_chat_model(self):
+>       from utils.llm import get_gpt4o_mini
+E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
+
+tests\test_llm.py:35: ImportError
+_______________ TestGetGPT4oMini.test_model_name_is_gpt4o_mini ________________
+
+self = <tests.test_llm.TestGetGPT4oMini object at 0x0000020149468500>
+
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
+    def test_model_name_is_gpt4o_mini(self):
+>       from utils.llm import get_gpt4o_mini
+E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
+
+tests\test_llm.py:41: ImportError
+______________ TestAPIKeyValidation.test_raises_without_api_key _______________
+
+self = <tests.test_llm.TestAPIKeyValidation object at 0x000002014946B200>
+
+    @patch.dict("os.environ", {}, clear=True)
+    def test_raises_without_api_key(self):
+        # 모듈 캐시 제거하여 재로드
+        import importlib
+        import utils.llm
+        importlib.reload(utils.llm)
+>       from utils.llm import get_gpt4o
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+
+tests\test_llm.py:55: ImportError
+_______________________ test_docker_compose_prod_exists _______________________
+
+    def test_docker_compose_prod_exists():
+        """Test that docker-compose.prod.yml file exists"""
+        compose_file = os.path.join(WORKTREE_ROOT, "docker-compose.prod.yml")
+>       assert os.path.exists(compose_file), "docker-compose.prod.yml should exist"
+E       AssertionError: docker-compose.prod.yml should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\docker-compose.prod.yml')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:26: AssertionError
+__________________________ test_nginx_config_exists ___________________________
+
+    def test_nginx_config_exists():
+        """Test that nginx configuration file exists"""
+        nginx_config = os.path.join(WORKTREE_ROOT, "nginx", "nginx.conf")
+>       assert os.path.exists(nginx_config), "nginx/nginx.conf should exist"
+E       AssertionError: nginx/nginx.conf should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\nginx\\nginx.conf')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:32: AssertionError
+______________________ test_env_validation_script_exists ______________________
+
+    def test_env_validation_script_exists():
+        """Test that environment validation script exists"""
+        validation_script = os.path.join(WORKTREE_ROOT, "scripts", "validate_env.py")
+>       assert os.path.exists(validation_script), "scripts/validate_env.py should exist"
+E       AssertionError: scripts/validate_env.py should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\scripts\\validate_env.py')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:38: AssertionError
+_____________________ test_docker_compose_prod_structure ______________________
+
+    def test_docker_compose_prod_structure():
+        """Test that docker-compose.prod.yml has required services"""
+        compose_file = os.path.join(WORKTREE_ROOT, "docker-compose.prod.yml")
+    
+>       with open(compose_file, 'r') as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\docker-compose.prod.yml'
+
+tests\test_production_deployment.py:45: FileNotFoundError
+_________________________ test_nginx_config_structure _________________________
+
+    def test_nginx_config_structure():
+        """Test that nginx.conf has required configuration"""
+        nginx_config = os.path.join(WORKTREE_ROOT, "nginx", "nginx.conf")
+    
+>       with open(nginx_config, 'r') as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\nginx\\nginx.conf'
+
+tests\test_production_deployment.py:67: FileNotFoundError
+____________________ test_env_validation_script_structure _____________________
+
+    def test_env_validation_script_structure():
+        """Test that validate_env.py has required validation logic"""
+        validation_script = os.path.join(WORKTREE_ROOT, "scripts", "validate_env.py")
+    
+>       with open(validation_script, 'r') as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\scripts\\validate_env.py'
+
+tests\test_production_deployment.py:83: FileNotFoundError
+_______________________ test_frontend_dockerfile_exists _______________________
+
+    def test_frontend_dockerfile_exists():
+        """Test that frontend Dockerfile exists for production build"""
+        frontend_dockerfile = os.path.join(WORKTREE_ROOT, "frontend", "Dockerfile")
+>       assert os.path.exists(frontend_dockerfile), "frontend/Dockerfile should exist"
+E       AssertionError: frontend/Dockerfile should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\frontend\\Dockerfile')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:98: AssertionError
+_______________________ test_backend_dockerfile_exists ________________________
+
+    def test_backend_dockerfile_exists():
+        """Test that backend Dockerfile exists"""
+        backend_dockerfile = os.path.join(WORKTREE_ROOT, "Dockerfile")
+>       assert os.path.exists(backend_dockerfile), "Backend Dockerfile should exist"
+E       AssertionError: Backend Dockerfile should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\Dockerfile')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:104: AssertionError
+_____________________ test_frontend_dockerfile_multistage _____________________
+
+    def test_frontend_dockerfile_multistage():
+        """Test that frontend Dockerfile uses multi-stage build"""
+        frontend_dockerfile = os.path.join(WORKTREE_ROOT, "frontend", "Dockerfile")
+    
+>       with open(frontend_dockerfile, 'r') as f:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\frontend\\Dockerfile'
+
+tests\test_production_deployment.py:111: FileNotFoundError
+_____________________ test_production_env_example_exists ______________________
+
+    def test_production_env_example_exists():
+        """Test that .env.production.example exists"""
+        env_example = os.path.join(WORKTREE_ROOT, ".env.production.example")
+>       assert os.path.exists(env_example), ".env.production.example should exist"
+E       AssertionError: .env.production.example should exist
+E       assert False
+E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\.env.production.example')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_production_deployment.py:123: AssertionError
+____________________ test_production_env_example_structure ____________________
+
+    def test_production_env_example_structure():
+        """Test that .env.production.example has required variables"""
+        env_example = os.path.join(WORKTREE_ROOT, ".env.production.example")
+    
+>       with open(env_example, 'r') as f:
+             ^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\.env.production.example'
+
+tests\test_production_deployment.py:130: FileNotFoundError
+______________________ TestRetriever.test_retrieve_basic ______________________
+
+args = (<tests.test_retriever.TestRetriever object at 0x000002014B61B080>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1451: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'rag.retriever'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rag' has no attribute 'retriever'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\pkgutil.py:528: AttributeError
+___________________ TestRetriever.test_retrieve_with_filter ___________________
+
+args = (<tests.test_retriever.TestRetriever object at 0x000002014B61BAA0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1451: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'rag.retriever'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rag' has no attribute 'retriever'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\pkgutil.py:528: AttributeError
+__________________ TestRetriever.test_retrieve_empty_result ___________________
+
+args = (<tests.test_retriever.TestRetriever object at 0x000002014B619FD0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1451: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'rag.retriever'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+                     ^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rag' has no attribute 'retriever'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\pkgutil.py:528: AttributeError
+______________ TestLangSmithIntegration.test_langsmith_env_vars _______________
+
+self = <tests.test_search_observability.TestLangSmithIntegration object at 0x000002014B61B920>
+
+    def test_langsmith_env_vars(self):
+        """GREEN: LangSmith can be enabled via environment variables"""
+        # Check if LangSmith env vars are documented
+        env_example = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            ".env.example"
+        )
+    
+        with open(env_example, "r") as f:
+>           content = f.read()
+                      ^^^^^^^^
+E           UnicodeDecodeError: 'cp949' codec can't decode byte 0xe2 in position 2: illegal multibyte sequence
+
+tests\test_search_observability.py:145: UnicodeDecodeError
+___________ TestSearchObservabilityAcceptance.test_p2t4_acceptance ____________
+
+self = <tests.test_search_observability.TestSearchObservabilityAcceptance object at 0x000002014B636F00>
+
+    def test_p2t4_acceptance(self):
+        """
+        ACCEPTANCE: Search queries are observable via logs
+    
+        Criteria:
+        1. All search queries are logged with timestamp
+        2. Success/Error states are tracked
+        3. Log file is created automatically
+        4. LangSmith integration is documented (even if not enabled)
+        """
+        with patch("tools.web_search.get_tavily_client") as mock_client:
+            # Mock successful search
+            mock_instance = MagicMock()
+            mock_instance.search_sync.return_value = {
+                "results": [
+                    {
+                        "title": "Acceptance Test",
+                        "content": "Test content",
+                        "url": "https://test.com",
+                        "score": 0.95
+                    }
+                ]
+            }
+            mock_client.return_value = mock_instance
+    
+            # Execute search
+            query = "P2-T4 acceptance test"
+            result = web_search.invoke({"query": query})
+    
+            # Verify observability
+            log_file = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "search_queries.log"
+            )
+    
+            assert os.path.exists(log_file), "1. Log file should exist"
+    
+            with open(log_file, "r", encoding="utf-8") as f:
+                log_content = f.read()
+                assert query in log_content, "2. Query should be logged"
+                assert "SEARCH_SUCCESS" in log_content, "3. Success state should be tracked"
+    
+            # Verify LangSmith documentation
+            env_example = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                ".env.example"
+            )
+            with open(env_example, "r") as f:
+>               content = f.read()
+                          ^^^^^^^^
+E               UnicodeDecodeError: 'cp949' codec can't decode byte 0xe2 in position 2: illegal multibyte sequence
+
+tests\test_search_observability.py:213: UnicodeDecodeError
+------------------------------ Captured log call ------------------------------
+INFO     tools.web_search:web_search.py:127 SEARCH_QUERY | query='P2-T4 acceptance test'
+INFO     tools.web_search:web_search.py:141 SEARCH_SUCCESS | query='P2-T4 acceptance test' | results=1
+____________ TestResearchEndpoint.test_research_returns_iterations ____________
+
+self = <tests.test_server.TestResearchEndpoint object at 0x000002014B9FB200>
+mock_workflow = <MagicMock name='create_workflow' id='2204588128064'>
+client = <starlette.testclient.TestClient object at 0x000002014BB11DF0>
+
+    @patch("server.create_workflow")
+    def test_research_returns_iterations(self, mock_workflow, client):
+        mock_wf = Mock()
+        mock_wf.invoke.return_value = {
+            "final_report": "# report",
+            "messages": [],
+            "iteration": 2,
+        }
+        mock_workflow.return_value = mock_wf
+    
+        response = client.post(
+            "/api/research",
+            json={"topic": "NGT", "constraints": ""}
+        )
+        data = response.json()
+>       assert "iterations" in data
+E       AssertionError: assert 'iterations' in {'report': '# report', 'messages': [], 'rounds': 3}
+
+tests\test_server.py:103: AssertionError
+______________ TestStreamEndpoint.test_stream_sends_agent_events ______________
+
+self = <tests.test_server.TestStreamEndpoint object at 0x000002014B9FB8C0>
+mock_workflow = <MagicMock name='create_workflow' id='2204592015600'>
+client = <starlette.testclient.TestClient object at 0x000002014BECBCB0>
+
+    @patch("server.create_workflow")
+    def test_stream_sends_agent_events(self, mock_workflow, client):
+        """스트림이 에이전트별 이벤트를 전송하는지 테스트"""
+        mock_critique = Mock()
+        mock_critique.decision = "approve"
+        mock_critique.feedback = "Good work"
+    
+        mock_wf = Mock()
+        mock_wf.stream.return_value = iter([
+            {"drafting": {"draft": "draft", "iteration": 0}},
+            {"critique": {"critique": mock_critique, "iteration": 0}},
+        ])
+        mock_workflow.return_value = mock_wf
+    
+        response = client.post(
+            "/api/research/stream",
+            json={"topic": "NGT", "constraints": ""}
+        )
+    
+        content = response.text
+        # Scientist 이벤트 확인
+>       assert '"agent": "scientist"' in content
+E       assert '"agent": "scientist"' in 'data: {"type": "start", "timestamp": 1793867588.508544, "message": "연구 프로세스를 시작합니다...", "topic": "NGT", "session_id":...peError(f\'Object of type {o.__class__.__name__} \'\\nTypeError: Object of type Mock is not JSON serializable\\n"}\n\n'
+
+tests\test_server.py:204: AssertionError
+---------------------------- Captured stdout call -----------------------------
+
+********************************************************************************
+[SSE STREAM] Starting research workflow stream
+  Topic: NGT
+  Constraints: 
+********************************************************************************
+
+[SSE STREAM] Creating workflow graph...
+[SSE STREAM] Workflow graph created successfully
+
+[SSE STREAM] Starting workflow.stream()...
+
+
+********************************************************************************
+[SSE STREAM] Node event received
+  Node: drafting
+  State keys: ['draft', 'iteration']
+********************************************************************************
+
+
+********************************************************************************
+[SSE STREAM] Node event received
+  Node: critique
+  State keys: ['critique', 'iteration']
+********************************************************************************
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[SSE STREAM ERROR] Exception caught in SSE stream!
+  Exception type: TypeError
+  Exception message: Object of type Mock is not JSON serializable
+  Traceback:
+Traceback (most recent call last):
+  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 561, in generate_research_events
+    yield send_event("decision", event_data)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 407, in send_event
+    return f"data: {json.dumps(event_data, ensure_ascii=False)}\n\n"
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Mock is not JSON serializable
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+------------------------------ Captured log call ------------------------------
+ERROR    sse:server.py:728 SSE Error: Traceback (most recent call last):
+  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 561, in generate_research_events
+    yield send_event("decision", event_data)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 407, in send_event
+    return f"data: {json.dumps(event_data, ensure_ascii=False)}\n\n"
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Mock is not JSON serializable
+________________ TestTavilySearchIntegration.test_real_search _________________
+
+self = <tests.test_tavily_client.TestTavilySearchIntegration object at 0x000002014BA481D0>
+
+    @pytest.mark.skipif(
+        not os.environ.get("TAVILY_API_KEY"),
+        reason="TAVILY_API_KEY not set"
+    )
+    @pytest.mark.asyncio
+    async def test_real_search(self):
+        """실제 API 검색 테스트"""
+>       client = TavilySearchClient()
+                 ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_tavily_client.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <search.tavily_client.TavilySearchClient object at 0x000002014BECA240>
+api_key = None, include_domains = None, max_results = 5
+search_depth = 'advanced'
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        include_domains: Optional[List[str]] = None,
+        max_results: int = 5,
+        search_depth: str = "advanced"
+    ):
+        """
+        Initialize Tavily Search Client
+    
+        Args:
+            api_key: Tavily API key (defaults to env TAVILY_API_KEY)
+            include_domains: List of domains to prioritize
+            max_results: Maximum number of results to return
+            search_depth: "basic" or "advanced"
+    
+        Raises:
+            ValueError: If API key is not provided
+        """
+        # Get API key from parameter or environment
+        self.api_key = api_key or os.environ.get("TAVILY_API_KEY")
+    
+        if not self.api_key:
+>           raise ValueError(
+                "TAVILY_API_KEY required. "
+                "Set via environment variable or constructor parameter."
+            )
+E           ValueError: TAVILY_API_KEY required. Set via environment variable or constructor parameter.
+
+search\tavily_client.py:46: ValueError
+_______________ TestTavilySearchIntegration.test_rate_limiting ________________
+
+self = <tests.test_tavily_client.TestTavilySearchIntegration object at 0x000002014BA48590>
+
+    @pytest.mark.skipif(
+        not os.environ.get("TAVILY_API_KEY"),
+        reason="TAVILY_API_KEY not set"
+    )
+    @pytest.mark.asyncio
+    async def test_rate_limiting(self):
+        """Rate limiting 처리 확인"""
+>       client = TavilySearchClient()
+                 ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_tavily_client.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <search.tavily_client.TavilySearchClient object at 0x000002014BEDE420>
+api_key = None, include_domains = None, max_results = 5
+search_depth = 'advanced'
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        include_domains: Optional[List[str]] = None,
+        max_results: int = 5,
+        search_depth: str = "advanced"
+    ):
+        """
+        Initialize Tavily Search Client
+    
+        Args:
+            api_key: Tavily API key (defaults to env TAVILY_API_KEY)
+            include_domains: List of domains to prioritize
+            max_results: Maximum number of results to return
+            search_depth: "basic" or "advanced"
+    
+        Raises:
+            ValueError: If API key is not provided
+        """
+        # Get API key from parameter or environment
+        self.api_key = api_key or os.environ.get("TAVILY_API_KEY")
+    
+        if not self.api_key:
+>           raise ValueError(
+                "TAVILY_API_KEY required. "
+                "Set via environment variable or constructor parameter."
+            )
+E           ValueError: TAVILY_API_KEY required. Set via environment variable or constructor parameter.
+
+search\tavily_client.py:46: ValueError
+__________ TestScientistWebSearch.test_scientist_can_use_web_search ___________
+
+args = (<tests.test_web_search_integration.TestScientistWebSearch object at 0x000002014B9FA9F0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014B8B55E0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_____________ TestCriticWebSearch.test_critic_can_use_web_search ______________
+
+args = (<tests.test_web_search_integration.TestCriticWebSearch object at 0x000002014BA498E0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014B9FB0E0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+_________________ TestPIWebSearch.test_pi_can_use_web_search __________________
+
+args = (<tests.test_web_search_integration.TestPIWebSearch object at 0x000002014BA4A540>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014B9FB6E0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+__ TestWebSearchSystemPrompts.test_scientist_prompt_includes_search_guidance __
+
+self = <tests.test_web_search_integration.TestWebSearchSystemPrompts object at 0x000002014BA4B500>
+
+    def test_scientist_prompt_includes_search_guidance(self):
+        """Scientist의 System Prompt에 web_search 사용 지침이 있어야 한다."""
+>       from agents.scientist import SYSTEM_PROMPT
+E       ImportError: cannot import name 'SYSTEM_PROMPT' from 'agents.scientist' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\scientist.py)
+
+tests\test_web_search_integration.py:170: ImportError
+___ TestWebSearchSystemPrompts.test_critic_prompt_includes_search_guidance ____
+
+self = <tests.test_web_search_integration.TestWebSearchSystemPrompts object at 0x000002014BA490A0>
+
+    def test_critic_prompt_includes_search_guidance(self):
+        """Critic의 System Prompt에 web_search 사용 지침이 있어야 한다."""
+        from agents.critic import SYSTEM_PROMPT
+    
+>       assert "web_search" in SYSTEM_PROMPT
+E       AssertionError: assert 'web_search' in 'You are an independent Scientific Critic responsible for verifying the scientific validity and readability of each sp...nce information is provided, use it to perform more precise verification.\nOutput JSON only. No additional commentary.'
+
+tests\test_web_search_integration.py:179: AssertionError
+_____ TestWebSearchSystemPrompts.test_pi_prompt_includes_search_guidance ______
+
+self = <tests.test_web_search_integration.TestWebSearchSystemPrompts object at 0x000002014BA49370>
+
+    def test_pi_prompt_includes_search_guidance(self):
+        """PI의 System Prompt에 web_search 사용 지침이 있어야 한다."""
+        from agents.pi import SYSTEM_PROMPT
+    
+>       assert "web_search" in SYSTEM_PROMPT
+E       AssertionError: assert 'web_search' in 'You are the Principal Investigator (PI) of the research project.\\n\\n## Research Agenda\\n[Research Agenda \u2014 Five Core ...t integrate Questions 1\u20134.\\n- Write the entire report in formal academic English suitable for a peer-reviewed journal.'
+
+tests\test_web_search_integration.py:186: AssertionError
+_______________ TestWorkflowSingleLoop.test_approve_immediately _______________
+
+args = (<tests.test_workflow.TestWorkflowSingleLoop object at 0x000002014BA4ADB0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014BA48650>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+______________ TestWorkflowRevisionLoop.test_revise_then_approve ______________
+
+args = (<tests.test_workflow.TestWorkflowRevisionLoop object at 0x000002014BA4A240>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014BA4B7D0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+___________ TestWorkflowMaxIterations.test_stops_at_max_iterations ____________
+
+args = (<tests.test_workflow.TestWorkflowMaxIterations object at 0x000002014BA494F0>,)
+keywargs = {}
+
+    @wraps(func)
+    def patched(*args, **keywargs):
+>       with self.decoration_helper(patched,
+                                    args,
+                                    keywargs) as (newargs, newkeywargs):
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1375: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1467: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x000002014BA48FE0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_agent_rag_integration.py::TestRAGSearchTool::test_rag_search_tool_success
+FAILED tests/test_agent_rag_integration.py::TestRAGSearchTool::test_rag_search_tool_no_results
+FAILED tests/test_agent_rag_integration.py::TestRAGSearchTool::test_rag_search_tool_exception
+FAILED tests/test_agents.py::TestScientist::test_returns_draft_in_state - Att...
+FAILED tests/test_agents.py::TestScientist::test_includes_guidelines_in_prompt
+FAILED tests/test_agents.py::TestScientist::test_adds_message_to_log - Attrib...
+FAILED tests/test_agents.py::TestScientist::test_incorporates_critique_feedback
+FAILED tests/test_agents.py::TestScientist::test_does_not_mutate_original_messages
+FAILED tests/test_agents.py::TestCritic::test_returns_critique_result - Attri...
+FAILED tests/test_agents.py::TestCritic::test_includes_rubric_in_prompt - Att...
+FAILED tests/test_agents.py::TestCritic::test_revise_decision_includes_feedback
+FAILED tests/test_agents.py::TestCritic::test_approve_decision_message - Attr...
+FAILED tests/test_agents.py::TestCritic::test_invalid_json_defaults_to_approve
+FAILED tests/test_agents.py::TestCritic::test_scores_are_preserved - Attribut...
+FAILED tests/test_agents.py::TestCritic::test_does_not_mutate_original_messages
+FAILED tests/test_agents.py::TestCritic::test_merge_views_removes_duplicates
+FAILED tests/test_agents.py::TestCritic::test_merge_views_selects_conservative_safety
+FAILED tests/test_agents.py::TestCritic::test_merge_views_rejects_unfounded_opinions
+FAILED tests/test_agents.py::TestCritic::test_merge_views_handles_conflicts
+FAILED tests/test_agents.py::TestPI::test_returns_final_report - AttributeErr...
+FAILED tests/test_agents.py::TestPI::test_formats_as_markdown - AttributeErro...
+FAILED tests/test_agents.py::TestPI::test_appends_pi_message - AttributeError...
+FAILED tests/test_agents.py::TestPI::test_passes_topic_and_draft_to_llm - Att...
+FAILED tests/test_agents.py::TestPI::test_does_not_mutate_original_messages
+FAILED tests/test_config.py::test_config_loads_with_valid_env_vars - Attribut...
+FAILED tests/test_config.py::test_config_default_values - AssertionError: ass...
+FAILED tests/test_config.py::test_config_missing_required_field - Failed: DID...
+FAILED tests/test_e2e.py::TestE2EWorkflow::test_full_pipeline_approve_immediately
+FAILED tests/test_e2e.py::TestE2EWorkflow::test_full_pipeline_with_revision
+FAILED tests/test_e2e.py::TestE2EFastAPI::test_api_returns_valid_response - A...
+FAILED tests/test_e2e.py::TestE2EScriptScenario::test_over_regulation_critique_scenario
+FAILED tests/test_llm.py::TestGetGPT4o::test_returns_chat_model - ImportError...
+FAILED tests/test_llm.py::TestGetGPT4o::test_model_name_is_gpt4o - ImportErro...
+FAILED tests/test_llm.py::TestGetGPT4o::test_temperature_is_set - ImportError...
+FAILED tests/test_llm.py::TestGetGPT4oMini::test_returns_chat_model - ImportE...
+FAILED tests/test_llm.py::TestGetGPT4oMini::test_model_name_is_gpt4o_mini - I...
+FAILED tests/test_llm.py::TestAPIKeyValidation::test_raises_without_api_key
+FAILED tests/test_production_deployment.py::test_docker_compose_prod_exists
+FAILED tests/test_production_deployment.py::test_nginx_config_exists - Assert...
+FAILED tests/test_production_deployment.py::test_env_validation_script_exists
+FAILED tests/test_production_deployment.py::test_docker_compose_prod_structure
+FAILED tests/test_production_deployment.py::test_nginx_config_structure - Fil...
+FAILED tests/test_production_deployment.py::test_env_validation_script_structure
+FAILED tests/test_production_deployment.py::test_frontend_dockerfile_exists
+FAILED tests/test_production_deployment.py::test_backend_dockerfile_exists - ...
+FAILED tests/test_production_deployment.py::test_frontend_dockerfile_multistage
+FAILED tests/test_production_deployment.py::test_production_env_example_exists
+FAILED tests/test_production_deployment.py::test_production_env_example_structure
+FAILED tests/test_retriever.py::TestRetriever::test_retrieve_basic - Attribut...
+FAILED tests/test_retriever.py::TestRetriever::test_retrieve_with_filter - At...
+FAILED tests/test_retriever.py::TestRetriever::test_retrieve_empty_result - A...
+FAILED tests/test_search_observability.py::TestLangSmithIntegration::test_langsmith_env_vars
+FAILED tests/test_search_observability.py::TestSearchObservabilityAcceptance::test_p2t4_acceptance
+FAILED tests/test_server.py::TestResearchEndpoint::test_research_returns_iterations
+FAILED tests/test_server.py::TestStreamEndpoint::test_stream_sends_agent_events
+FAILED tests/test_tavily_client.py::TestTavilySearchIntegration::test_real_search
+FAILED tests/test_tavily_client.py::TestTavilySearchIntegration::test_rate_limiting
+FAILED tests/test_web_search_integration.py::TestScientistWebSearch::test_scientist_can_use_web_search
+FAILED tests/test_web_search_integration.py::TestCriticWebSearch::test_critic_can_use_web_search
+FAILED tests/test_web_search_integration.py::TestPIWebSearch::test_pi_can_use_web_search
+FAILED tests/test_web_search_integration.py::TestWebSearchSystemPrompts::test_scientist_prompt_includes_search_guidance
+FAILED tests/test_web_search_integration.py::TestWebSearchSystemPrompts::test_critic_prompt_includes_search_guidance
+FAILED tests/test_web_search_integration.py::TestWebSearchSystemPrompts::test_pi_prompt_includes_search_guidance
+FAILED tests/test_workflow.py::TestWorkflowSingleLoop::test_approve_immediately
+FAILED tests/test_workflow.py::TestWorkflowRevisionLoop::test_revise_then_approve
+FAILED tests/test_workflow.py::TestWorkflowMaxIterations::test_stops_at_max_iterations
+ERROR tests/test_factory.py - FileNotFoundError: [Errno 2] No such file or di...
+ERROR tests/test_factory_integration.py - FileNotFoundError: [Errno 2] No suc...
+ERROR tests/test_pi_decision.py - FileNotFoundError: [Errno 2] No such file o...
+ERROR tests/test_pi_decision_integration.py - FileNotFoundError: [Errno 2] No...
+66 failed, 61 passed, 3 skipped, 4 errors in 4.23s

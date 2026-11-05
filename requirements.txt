@@ -7,6 +7,9 @@ langgraph>=0.2.0
 # ── OpenAI ─────────────────────────────────────────────────────────────────
 openai>=1.50.0
 
+# ── Anthropic (Scientific Critic, revision) ────────────────────────────────
+anthropic>=2.5.0
+
 # ── Vector DB ──────────────────────────────────────────────────────────────
 pinecone[grpc]>=5.0.0          # rag/pinecone_client.py (PineconeGRPC)
 # chromadb>=0.5.0              # Python 3.14 비호환 (Pydantic V1 충돌) — Pinecone 사용 시 불필요
