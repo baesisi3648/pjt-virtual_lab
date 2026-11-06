@@ -250,3 +250,54 @@ def test_all_candidates_listed():
         runs[0]["dir"] = p
         audit = ar.leakage_audit(runs)
     assert audit["runs"]["A_1"]["candidate_mentions"] == 40 and len(audit["examples"]) == 40
+
+
+def test_extraction_keeps_extra_content_sections():
+    report = REPORT.format(tag="x") + "\n## Explanatory Notes for the Decision Framework\n\nEdit classification notes.\n"
+    text = ar.extract_content(report)
+    assert "Edit classification notes" in text and "Team composition" not in text
+
+
+def test_detector_ignores_list_markers_and_placeholder(tmp_path):
+    _make_run(tmp_path, "A_1", rounds=(4,), critic_inputs=["Concrete actions to reach [score]: (1) Gloss. readability [score] from [score]. (2) Recast"])
+    runs, _ = ar.load_runs(tmp_path)
+    assert ar.leakage_audit(runs)["runs"]["A_1"]["candidate_mentions"] == 0
+
+
+def test_extraction_excludes_template_subtrees_and_unicode_headings():
+    report = ("# T\n\n## Team Composition\nrole table\n\n## Core Question 1: X\nKeep this.\n\n"
+              "### Team Composition\nnested table\n#### Role-frequency Analysis\nfrequency rows\n"
+              "### Notes\nkeep notes\n\n## Per\u2011agent Contribution Statistics\nstats\n")
+    text = ar.extract_content(report)
+    assert "Keep this." in text and "keep notes" in text
+    for bad in ("role table", "nested table", "frequency rows", "stats"):
+        assert bad not in text, bad
+
+
+
+def test_audit_reports_candidates_by_channel(tmp_path):
+    msg = ("[Team meeting Round 2 — critique stage]\n\n[Per-specialist analyses]\nmy readability was 4/5 before\n"
+           "\n## [Web search results — verification context]\nweb text\n\n[Prior-round critique records]\n"
+           "Readability: 4 overall\n\nReview each specialist's analysis individually")
+    _make_run(tmp_path, "A_1", rounds=(4,), critic_inputs=[msg])
+    runs, _ = ar.load_runs(tmp_path)
+    r = ar.leakage_audit(runs)
+    ch = r["runs"]["A_1"]["candidates_by_channel"]
+    assert ch["specialist_outputs"] == 1 and ch["prior_feedback"] == 1 and ch["instructions"] == 0
+    assert {e["channel"] for e in r["examples"]} == {"specialist_outputs", "prior_feedback"}
+    assert "Pass: 0 confirmed" in r["pass_criteria"]
+
+
+def test_detector_catches_parenthesised_score_but_not_list_marker(tmp_path):
+    _make_run(tmp_path, "A_1", rounds=(4,), critic_inputs=["readability holds at (4). Next: (2) Recast the sentence"])
+    runs, _ = ar.load_runs(tmp_path)
+    assert ar.leakage_audit(runs)["runs"]["A_1"]["candidate_mentions"] == 1
+
+
+def test_attempt_selection(tmp_path):
+    _make_run(tmp_path, "A_1", attempt="attempt_02")
+    _make_run(tmp_path, "A_1", attempt="attempt_03")
+    runs, issues = ar.load_runs(tmp_path)
+    assert runs == [] and issues                                  # two successful attempts -> excluded
+    runs, issues = ar.load_runs(tmp_path, attempt="attempt_03")
+    assert [r["attempt"] for r in runs] == ["attempt_03"] and not issues

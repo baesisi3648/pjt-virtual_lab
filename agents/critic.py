@@ -54,11 +54,15 @@ _SCORE_PATTERNS = [
     re.compile(r"\b(?:scored|rated)\s+(?:a\s+)?" + _N + r"\b", re.IGNORECASE),
     # "score of 4", "scores: 3", "rating = 2"
     re.compile(r"\b(?:scores?|rating)\s*(?:of|at|is|was|=|:)?\s*\**\s*" + _N + r"\b", re.IGNORECASE),
-    # "Readability: 4", "evidence: **4**", "Readability (4)", "Universality is 5" — the number
-    # must end the phrase (punctuation, bracket, emphasis, arrow or end of line), so
-    # "Evidence of 3 independent studies" is left untouched.
-    re.compile(r"\b" + _AXIS + r"\b\s*(?:score\s*)?(?:\*\*)?\s*(?:[:=(]|\bis\b|\bwas\b|\bat\b|\bof\b)\s*\**\s*"
-               + _N + r"(?=\s*(?:$|[).,;:*|/\-→=]|\band\b))", re.IGNORECASE | re.MULTILINE),
+    # "Readability: 4", "evidence: **4**", "Readability (4)", "Universality is 5", and (added
+    # after the pilot leakage audit) the Critic's own phrasings "carry universality to 5",
+    # "close the evidence axis at 5", "holding readability below 4", "universality 5." —
+    # the number must end the phrase (punctuation, bracket, emphasis, arrow, dash, "and"/"or"
+    # or end of line), so "Evidence of 3 independent studies" is left untouched.
+    re.compile(r"\b" + _AXIS + r"\b(?:\s+axis)?(?:\s+score)?"
+               r"(?:\s+(?:remains?|stays?|stayed|sits?|holds?|held|reaches?|reached|lands?|landed|is|was|now|currently|still)){0,2}\s*(?:\*\*)?\s*"
+               r"(?:[:=(]|\b(?:is|was|at|of|to|below|above|under|over|beyond|from)\b)?\s*\(?\s*\**\s*"
+               + _N + r"(?=\s*(?:$|[).,;:*|/\-→=—–]|\band\b|\bor\b))", re.IGNORECASE | re.MULTILINE),
 ]
 
 
@@ -71,7 +75,15 @@ def critic_mode() -> str:
 
 
 def mask_score_mentions(text: str) -> tuple[str, int]:
-    """Replace numeric score mentions with "[score]"; return the text and the count."""
+    """Replace numeric score mentions with "[score]"; return the text and the count.
+
+    Narrow rules applied to prior feedback and specialist texts in condition A, as a
+    backstop: scientific numbers ("SDN-1/2", "Evidence from 3 studies") must survive.
+    The primary safeguard is at the source: the condition-A Critic is instructed not
+    to put scores or score targets in its feedback text (prompts_A/system/critic.md).
+    A stricter digit-masking rule tried after the pilot was removed because it
+    damaged scientific content (revision_plan 7.6).
+    """
     total = 0
     for pat in _SCORE_PATTERNS:
         text, n = pat.subn("[score]", text)
@@ -219,9 +231,14 @@ def run_critic(state: AgentState) -> dict:
             "and \"concrete actions to reach 5/5\"."
         )
     else:
+        # Condition A (revision_plan 7.6): actions on the remaining weaknesses, and no
+        # scores or score targets in the feedback text, so prior feedback carries no
+        # score information into the next round.
         closing = (
             "- Include in `specialist_feedback` the items \"what improved\", \"remaining weaknesses\", "
-            "and \"concrete actions to reach 5/5\"."
+            "and \"concrete actions to address the remaining weaknesses\".\n"
+            "- Do not mention numeric scores, score levels or score targets in `feedback` or "
+            "`specialist_feedback`; give scores only in the `scores` object."
         )
 
     # Step 3: build the user message

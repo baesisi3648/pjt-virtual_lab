@@ -40,7 +40,11 @@ MAX_HTTP_RETRIES = 5
 OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 
 # Critic (C16)
-DEFAULT_CRITIC_MODEL = "claude-opus-5-5"
+# Revision pilot (2026-11-06): claude-opus-5-5 refused Critic calls on this food-safety
+# deliberation (stop_reason "refusal", category "bio") in both conditions. Its bio
+# safety classifier is new in Opus 5.5; claude-opus-5 accepted the same refused input.
+# No server-side fallback is used, so one Critic model scores every round of a condition.
+DEFAULT_CRITIC_MODEL = "claude-opus-5"
 DEFAULT_CRITIC_EFFORT = "high"
 CRITIC_MAX_TOKENS = 64000
 

@@ -128,6 +128,19 @@ A_ONLY_CHANGES: list[tuple[str, str, str, str]] = [
         "★ In Round 1, no axis may exceed 4.\n",
         "",
     ),
+    # Added after the pilot leakage audit (revision_plan 7.6): the request for
+    # "actions to reach 5/5" made the Critic restate score levels in its feedback,
+    # which then reached the next round's Critic. Condition A asks for actions on the
+    # remaining weaknesses and keeps scores out of the feedback text.
+    (
+        "A-critic-feedback-without-scores",
+        "system/critic.md",
+        "  3. Concrete actions required to reach 5/5.\n",
+        "  3. Concrete actions to address the remaining weaknesses.\n"
+        "- In `feedback` and in every entry of `specialist_feedback`, do not mention numeric scores, score "
+        "levels or score targets (for example \"4/5\" or \"raise readability to 5\"). Give scores only in the "
+        "`scores` object. Scientific quantities and citations are allowed.\n",
+    ),
 ]
 
 

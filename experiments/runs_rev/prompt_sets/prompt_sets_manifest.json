@@ -83,13 +83,18 @@
           "condition": "A",
           "change_id": "A-critic-round1-cap",
           "file": "system/critic.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "A-critic-feedback-without-scores",
+          "file": "system/critic.md"
         }
       ],
       "files": {
         "data/academic_tone_guide.md": "971322399e90c5568485782eb83d60fbfbb9031a40631605f681e8e97eee7010",
         "data/critique_rubric.md": "c4401322a8782f84a4ddf6a32245ef50bf8c76460f0ea9d4a5591c12f376f970",
         "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
-        "system/critic.md": "e4f2deecc84dae12a0f2618be7fa28098dba5bbe20fda76cbde6aadf10c1f692",
+        "system/critic.md": "4977317b24a5783ac0a9a3aaf97313301491af57a982cf6466bf143ff428c388",
         "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
         "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
         "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",

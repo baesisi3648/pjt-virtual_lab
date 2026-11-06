@@ -17,7 +17,7 @@ Design and rationale: `reference/revision/revision_plan.md` (sections 0, 7–11)
 |---|---|---|
 | Prompt set | `prompts_A/` | `prompts_B/` |
 | Critic mode | `independent`: no prior numeric scores, no raise / do-not-lower rules, no Round-1 cap; score mentions masked in the Critic input | `cumulative`: prior scores and the submitted rules |
-| Common to both | neutral constraint and rubric (P1–P4), same generation model (`GPT_MODEL`), same Critic model (Claude, `CRITIC_MODEL`, default `claude-opus-5-5`, effort high), same fixed retrieval snapshot, up to 7 rounds | |
+| Common to both | neutral constraint and rubric (P1–P4), same generation model (`GPT_MODEL`), same Critic model (Claude, `CRITIC_MODEL`, default `claude-opus-5`, effort high), same fixed retrieval snapshot, up to 7 rounds | |
 
 `prompts_A/` and `prompts_B/` are built from `prompts/` by `scripts/revision/build_prompt_sets.py`;
 their only difference is `system/critic.md`.
@@ -81,6 +81,9 @@ new attempt; low scores or non-convergence are results, not failures.
 GPT-5 requests send no `temperature` (the API does not accept a custom value for this model
 family) and no `reasoning_effort`; provider defaults apply and the omission is recorded per call.
 The Claude Critic is called with `output_config.effort = "high"` and no sampling parameters.
+Claude Opus 5.5 was tried first and refused Critic calls on this content (safety classifier
+category `bio`, a false positive for food-safety assessment); the Critic therefore uses Claude
+Opus 5, with no server-side fallback to any other model.
 The earlier note that runs used temperature 0.2 did not apply to GPT-5 requests.
 
 ## Original runs (`runs/`)

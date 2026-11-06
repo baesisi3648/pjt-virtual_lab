@@ -74,3 +74,8 @@ experiments/runs_rev/prompt_sets/*.patch
 
 # Revision: retrieval snapshot holds third-party web excerpts; publish only after redistribution check (revision_plan section 13)
 experiments/runs_rev/retrieval_snapshot.json
+
+# Revision: pilot runs and pilot analyses contain retrieval excerpts (third-party text); publish only after the redistribution check (revision_plan section 13)
+experiments/runs_rev/pilot/
+experiments/runs_rev/pilot_logs/
+experiments/runs_rev/pilot_analysis_*/

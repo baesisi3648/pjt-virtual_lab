@@ -96,7 +96,7 @@ def test_unknown_mode_rejected(monkeypatch):
 
 # ---------- C16: Claude Critic ----------
 
-def _claude_message(text, stop_reason="end_turn", model="claude-opus-5-5"):
+def _claude_message(text, stop_reason="end_turn", model="claude-opus-5"):
     return SimpleNamespace(
         id="msg_1", model=model, stop_reason=stop_reason, stop_details=None, _request_id="req_1",
         content=[SimpleNamespace(type="thinking", thinking=""), SimpleNamespace(type="text", text=text)],
@@ -125,7 +125,7 @@ def test_claude_call_parameters_and_text(monkeypatch):
     with patch.object(llm_mod, "_get_anthropic_client", return_value=client):
         assert llm_mod.call_claude("sys", "user") == "hello"
     kw = captured[0]
-    assert kw["model"] == "claude-opus-5-5" and kw["output_config"] == {"effort": "high"}
+    assert kw["model"] == "claude-opus-5" and kw["output_config"] == {"effort": "high"}
     for forbidden in ("temperature", "top_p", "top_k", "thinking", "fallbacks", "betas"):
         assert forbidden not in kw
 

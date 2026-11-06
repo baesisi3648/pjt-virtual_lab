@@ -41,10 +41,14 @@ AXES = ("evidence", "universality", "proportionality", "readability")
 CONDITIONS = ("A", "B")
 RUN_DIR = re.compile(r"^(?P<cond>[A-Z])_(?P<run>[^/\\]+)$")
 
-# Report sections that carry the safety-assessment content (C17). Methods,
-# execution statistics, score charts and reference lists are template-driven and
-# excluded from the primary similarity input.
-CONTENT_SECTIONS = re.compile(r"^(core question\s*\d|decision tree)", re.IGNORECASE)
+# Primary similarity input (C17): every "## " section of the report except the
+# template-driven ones listed here (Methods with team tables and statistics, the
+# reference list, score charts). Defined by exclusion so that safety content in
+# additional sections (e.g. "Explanatory Notes for the Decision Framework", seen in
+# the pilot) is kept.
+NON_CONTENT_SECTIONS = re.compile(
+    r"^(methods|references|execution statistics|critic score trajectory|per-agent contribution)",
+    re.IGNORECASE)
 # Template subsections that can end up inside a kept section (e.g. the execution
 # statistics table appended at the end of the submitted reports).
 TEMPLATE_SUBSECTIONS = re.compile(
@@ -54,14 +58,19 @@ TEMPLATE_SUBSECTIONS = re.compile(
 
 # --------------------------------------------------------------------------- loading
 
-def load_runs(runs_dir: Path, conditions=CONDITIONS, excluded: list | None = None) -> tuple[list[dict], list[str]]:
-    """`excluded`, if given, receives runs without exactly one successful attempt and their reasons."""
+def load_runs(runs_dir: Path, conditions=CONDITIONS, excluded: list | None = None,
+              attempt: str | None = None) -> tuple[list[dict], list[str]]:
+    """`excluded`, if given, receives runs without exactly one successful attempt and their reasons.
+
+    `attempt` (e.g. "attempt_03") restricts every run to that attempt folder, for auditing a
+    specific pilot attempt when earlier attempts of the same run also succeeded.
+    """
     runs, issues = [], []
     for d in sorted(runs_dir.iterdir()) if runs_dir.exists() else []:
         m = RUN_DIR.match(d.name)
         if not d.is_dir() or not m or m["cond"] not in conditions:
             continue
-        attempts = sorted(a for a in d.glob("attempt_*") if a.is_dir())
+        attempts = sorted(a for a in d.glob("attempt_*") if a.is_dir() and (attempt is None or a.name == attempt))
         metas = {a: json.loads((a / "meta.json").read_text(encoding="utf-8"))
                  for a in attempts if (a / "meta.json").exists()}
         ok = [a for a, meta in metas.items() if meta.get("status") == "ok"]
@@ -100,19 +109,46 @@ def _natural(s: str):
 
 # --------------------------------------------------------------------------- C17 content extraction
 
+def _norm_heading(line: str) -> str:
+    """Heading text with '#', emphasis and Unicode hyphen variants normalised."""
+    h = line.lstrip("#").strip().strip("*_ ").lower()
+    return re.sub(r"[‐-―−]", "-", h)
+
+
+def _is_template(heading: str) -> bool:
+    return bool(NON_CONTENT_SECTIONS.match(heading) or TEMPLATE_SUBSECTIONS.match(heading))
+
+
+def _drop_template_subtrees(body: str) -> str:
+    """Remove every template subsection together with its nested subsections."""
+    out, skip_level = [], None
+    for block in re.split(r"(?m)^(?=#{3,} )", body):
+        m = re.match(r"(#{3,}) ", block)
+        if m:
+            level = len(m.group(1))
+            if skip_level is not None and level > skip_level:
+                continue                      # nested under an excluded subsection
+            skip_level = None
+            if _is_template(_norm_heading(block.split("\n", 1)[0])):
+                skip_level = level
+                continue
+        elif skip_level is not None:
+            continue
+        out.append(block)
+    return "".join(out)
+
+
 def extract_content(report: str) -> str:
-    """Keep only the '## Core Question ...' and '## Decision Tree' sections."""
+    """Keep every "## " section except Methods, References and other template sections."""
     parts = re.split(r"(?m)^(?=## )", report)
     kept = []
     for part in parts:
-        heading, _, body = part.partition("\n")
-        heading = heading.lstrip("#").strip()
-        if not (part.startswith("## ") and CONTENT_SECTIONS.match(heading)):
+        heading_line, _, body = part.partition("\n")
+        heading = heading_line.lstrip("#").strip()
+        if not part.startswith("## ") or _is_template(_norm_heading(heading_line)):
             continue
-        # Remove template subsections ("### Execution Statistics", ...) inside the section.
-        subs = re.split(r"(?m)^(?=#{3,} )", body)
-        body = "".join(x for x in subs
-                       if not (x.startswith("###") and TEMPLATE_SUBSECTIONS.match(x.split("\n", 1)[0].lstrip("#").strip())))
+        # Remove template subsections ("### Execution Statistics", ...) and their subtrees.
+        body = _drop_template_subtrees(body)
         # Skip placeholder stubs such as "[Conclusions presented above in Core Question 1.]"
         # that the PI sometimes repeats after the decision trees.
         stub = re.sub(r"[-\s]+", " ", body).strip()
@@ -217,12 +253,37 @@ def aggregate_by_round(runs: list[dict]) -> list[dict]:
 DETECTORS = [
     re.compile(r"\b[1-5](?:\.\d)?\s*/\s*5\b"),
     re.compile(r"\b(?:evidence|universality|proportionality|readability|score[sd]?|rated|rating)\b"
-               r"[^\n]{0,30}?(?<![\w.])[1-5](?:\.\d)?(?![\w%])", re.IGNORECASE),
+               # list markers "(2)" are not score mentions
+               r"[^\n]{0,30}?(?<![\w.(])[1-5](?:\.\d)?(?![\w%)])", re.IGNORECASE),
+    # Parenthesised score after an axis or score word, e.g. "readability holds at (4).". A list
+    # marker "(2) Recast ..." is followed by a word and is not matched.
+    re.compile(r"\b(?:evidence|universality|proportionality|readability|score[sd]?|rated|rating)\b"
+               r"[^\n]{0,30}?\(\s*[1-5](?:\.\d)?\s*\)(?!\s*[A-Za-z(])", re.IGNORECASE),
 ]
 
 
 # Fixed instruction text in the Critic message (a target, not a prior score).
 FIXED_PHRASES = ('"concrete actions to reach 5/5"',)
+
+
+# Section markers in the Critic user message (agents/critic.py).
+_CHANNEL_MARKERS = [
+    ("specialist_outputs", "[Per-specialist analyses]"),
+    ("retrieval_context", "## [Web search results"),
+    ("prior_feedback", "[Prior-round critique records]"),
+    ("instructions", "Review each specialist's analysis"),
+]
+CHANNELS = ("specialist_outputs", "retrieval_context", "prior_feedback", "instructions", "header")
+
+
+def _channel_of(text: str, pos: int) -> str:
+    """Channel of the message section that contains `pos`."""
+    starts = sorted((text.find(marker), name) for name, marker in _CHANNEL_MARKERS if text.find(marker) >= 0)
+    channel = "header"
+    for start, name in starts:
+        if pos >= start:
+            channel = name
+    return channel
 
 
 def leakage_audit(runs: list[dict], max_examples_per_run: int | None = None) -> dict:
@@ -235,7 +296,10 @@ def leakage_audit(runs: list[dict], max_examples_per_run: int | None = None) -> 
     is missing, or whose logged Critic rounds do not cover every scored round,
     is reported as not auditable rather than as zero hits.
     """
-    report = {"runs": {}, "examples": [], "note": leakage_audit.__doc__.strip().split("\n\n")[1]}
+    report = {"runs": {}, "examples": [], "note": leakage_audit.__doc__.strip().split("\n\n")[1],
+              "pass_criteria": ("Every candidate is judged by hand. Pass: 0 confirmed prior-score leaks, "
+                                "0 unjudged candidates, 0 scientific-content damage from masking "
+                                "(revision_plan 7.6). Candidate counts need not be 0.")}
     for run in runs:
         if run["condition"] != "A":
             continue
@@ -245,6 +309,7 @@ def leakage_audit(runs: list[dict], max_examples_per_run: int | None = None) -> 
             report["runs"][run["name"]] = {"auditable": False, "reason": "calls.jsonl missing"}
             continue
         hits = masked = n_calls = examples = 0
+        by_channel = {c: 0 for c in CHANNELS}
         audited_rounds = set()
         for line in calls.read_text(encoding="utf-8").splitlines():
             row = json.loads(line)
@@ -258,6 +323,9 @@ def leakage_audit(runs: list[dict], max_examples_per_run: int | None = None) -> 
             for phrase in FIXED_PHRASES:
                 text = text.replace(phrase, "")
             masked += text.count("[score]")
+            # The placeholder itself (and list numbering after it, "reach [score]: (1)") is
+            # not a score mention; replace it with a neutral token before detection.
+            text = text.replace("[score]", "<masked>")
             spans = sorted({(mt.start(), mt.end()) for det in DETECTORS for mt in det.finditer(text)})
             merged: list[list[int]] = []
             for a, b in spans:  # overlapping detector matches count once
@@ -267,15 +335,18 @@ def leakage_audit(runs: list[dict], max_examples_per_run: int | None = None) -> 
                     merged.append([a, b])
             hits += len(merged)
             for a, b in merged:
+                channel = _channel_of(text, a)
+                by_channel[channel] += 1
                 if max_examples_per_run is None or examples < max_examples_per_run:
                     examples += 1
                     report["examples"].append({
                         "run": run["name"], "round": tag.get("round"), "call_id": row.get("call_id"),
-                        "context": text[max(0, a - 60):b + 60].replace("\n", " "), "manual_judgement": None})
+                        "channel": channel, "context": text[max(0, a - 60):b + 60].replace("\n", " "),
+                        "manual_judgement": None})
         missing = sorted(scored_rounds - audited_rounds)
         report["runs"][run["name"]] = {
             "auditable": not missing and n_calls > 0, "missing_rounds": missing, "critic_calls": n_calls,
-            "masked_tokens": masked, "candidate_mentions": hits}
+            "masked_tokens": masked, "candidate_mentions": hits, "candidates_by_channel": by_channel}
     return report
 
 
@@ -344,7 +415,8 @@ def plot_matrix(matrix: np.ndarray, names: list[str], out: Path) -> None:
     plt.close(fig)
 
 
-def analyse(runs_dir: Path, out_dir: Path, embed=None, expected_per_condition: int | None = 5) -> dict:
+def analyse(runs_dir: Path, out_dir: Path, embed=None, expected_per_condition: int | None = 5,
+            attempt: str | None = None) -> dict:
     """Run all analyses. `embed(texts) -> (n, d) array` may be injected (tests).
 
     The output directory must be new or empty, so results of an earlier analysis
@@ -358,7 +430,7 @@ def analyse(runs_dir: Path, out_dir: Path, embed=None, expected_per_condition: i
     (out_dir / "figures").mkdir(exist_ok=True)
     (out_dir / "extracted").mkdir(exist_ok=True)
     excluded: list[dict] = []
-    runs, issues = load_runs(runs_dir, excluded=excluded)
+    runs, issues = load_runs(runs_dir, excluded=excluded, attempt=attempt)
     counts = {c: sum(r["condition"] == c for r in runs) for c in CONDITIONS}
     # expected_per_condition=None disables the completeness check (tests, partial previews).
     complete = expected_per_condition is None or all(n == expected_per_condition for n in counts.values())
@@ -448,9 +520,10 @@ def main() -> int:
     p.add_argument("--out-dir", default="experiments/runs_rev/results", type=Path)
     p.add_argument("--skip-embeddings", action="store_true")
     p.add_argument("--expected-per-condition", type=int, default=5)
+    p.add_argument("--attempt", default=None, help="analyse only this attempt folder, e.g. attempt_03 (pilots)")
     args = p.parse_args()
     summary = analyse(args.runs_dir, args.out_dir, None if args.skip_embeddings else _openai_embedder(),
-                      expected_per_condition=args.expected_per_condition)
+                      expected_per_condition=args.expected_per_condition, attempt=args.attempt)
     print(json.dumps({"runs": len(summary["runs"]), "issues": summary["issues"]}, indent=2))
     return 0
 

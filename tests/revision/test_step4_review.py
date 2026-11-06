@@ -136,7 +136,7 @@ def _anthropic_conn_error():
 def test_anthropic_transport_retries_and_request_id(tmp_path, monkeypatch):
     monkeypatch.setattr(llm_mod.time, "sleep", lambda s: None)
     call_log.configure(tmp_path / "calls.jsonl", {})
-    msg = SimpleNamespace(id="msg", model="claude-opus-5-5", stop_reason="end_turn", stop_details=None,
+    msg = SimpleNamespace(id="msg", model="claude-opus-5", stop_reason="end_turn", stop_details=None,
                           content=[SimpleNamespace(type="text", text="ok")],
                           usage=SimpleNamespace(model_dump=lambda: {}), model_dump=lambda: {"id": "msg"})
     outcomes = [_anthropic_conn_error(), msg]
@@ -303,3 +303,62 @@ def test_selection_post_processing_errors_keep_partial(bad_team):
         with pytest.raises(AgentFailureError) as exc:
             pi_mod.decide_team_statistically("q", n_trials=2)
     assert len(exc.value.partial["team_selection_data"]["all_teams"]) == 2
+
+
+# ---------- pilot-driven changes (2026-11-06): score-free feedback at the source ----------
+
+def _closing(mode, monkeypatch):
+    monkeypatch.setenv("VIRTUAL_LAB_CRITIC_MODE", mode)
+    seen = {}
+
+    def fake(system, user, tag=None):
+        seen["user"] = user
+        return _valid()
+
+    with patch.object(critic_mod, "web_search") as ws, patch.object(critic_mod, "call_critic", side_effect=fake):
+        ws.invoke.return_value = ""
+        critic_mod.run_critic(_state_with_leaky_outputs())
+    return seen["user"]
+
+
+def test_condition_a_asks_for_score_free_feedback(monkeypatch):
+    msg = _closing("independent", monkeypatch)
+    assert "concrete actions to address the remaining weaknesses" in msg
+    assert "Do not mention numeric scores" in msg and "reach 5/5" not in msg
+
+
+def test_condition_b_closing_unchanged(monkeypatch):
+    msg = _closing("cumulative", monkeypatch)
+    assert "concrete actions to reach 5/5" in msg and "Do not mention numeric scores" not in msg
+    assert "do not lower the score" in msg
+
+
+def test_prompts_a_and_b_feedback_instructions():
+    root = Path(__file__).resolve().parents[2]
+    a = (root / "prompts_A" / "system" / "critic.md").read_text(encoding="utf-8")
+    b = (root / "prompts_B" / "system" / "critic.md").read_text(encoding="utf-8")
+    assert "Concrete actions to address the remaining weaknesses." in a and "do not mention numeric scores" in a
+    assert "Concrete actions required to reach 5/5." in b and "do not mention numeric scores" not in b
+
+
+@pytest.mark.parametrize("text", ["readability remains (4)", "Readability stays at 4.", "carry universality to 5."])
+def test_narrow_backstop_catches_known_phrasings(text):
+    masked, n = critic_mod.mask_score_mentions(text)
+    assert n >= 1 and not any(d in masked for d in "12345"), masked
+
+
+@pytest.mark.parametrize("text", [
+    "SDN-1/2 edits", "SDN-1 and SDN-3 edits; CXG 45-2003; 20 nucleotides; (1) Gloss the term",
+    "Round 2 feedback", "Step 3 applies", "Evidence from 3 studies supports SDN-1.",
+])
+def test_narrow_backstop_keeps_scientific_content(text):
+    assert critic_mod.mask_score_mentions(text) == (text, 0)
+
+
+def test_no_aggressive_rule_remains():
+    assert not hasattr(critic_mod, "mask_feedback_scores")
+
+
+def test_narrow_backstop_holds_at():
+    masked, n = critic_mod.mask_score_mentions("readability holds at (4).")
+    assert n == 1 and "4" not in masked

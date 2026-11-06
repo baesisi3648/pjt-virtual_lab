@@ -28,7 +28,8 @@ For each specialist, assess:
 - **Per-specialist feedback structure** must include:
   1. What improved relative to the previous round (if any).
   2. Remaining weaknesses.
-  3. Concrete actions required to reach 5/5.
+  3. Concrete actions to address the remaining weaknesses.
+- In `feedback` and in every entry of `specialist_feedback`, do not mention numeric scores, score levels or score targets (for example "4/5" or "raise readability to 5"). Give scores only in the `scores` object. Scientific quantities and citations are allowed.
 
 ## Output Format (JSON) — per-axis scores required
 {
