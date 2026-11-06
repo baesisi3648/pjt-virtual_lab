@@ -41,6 +41,13 @@ python -B run_experiment.py --condition B --run-id 1 --attempt 1
 #    output: runs_rev/main/<COND>_<RUN>/attempt_<NN>/ (existing folders are never overwritten)
 #    pilot runs: add --out-dir experiments/runs_rev/pilot
 
+#    main runs: freeze the inputs once, then run in manifest order (one process per run)
+python -B scripts/revision/build_manifest.py          # writes runs_rev/experiment_manifest.json
+python -B run_experiment.py --condition B --run-id 1 --attempt 1 `
+    --manifest experiments/runs_rev/experiment_manifest.json
+#    run_experiment.py refuses a main run whose code, prompts, snapshot, topic/constraints,
+#    models, Python/package versions, order or attempt number differ from the manifest
+
 # 3. Analysis (add --skip-embeddings to skip the embedding calls)
 python -B -m experiments.reproducibility.analyze_revision `
     --runs-dir experiments/runs_rev/main --out-dir experiments/runs_rev/results

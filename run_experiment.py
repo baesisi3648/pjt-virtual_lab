@@ -83,6 +83,8 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--retrieval-mode", default="replay", choices=["replay", "live"],
                    help="replay: fixed snapshot (pilot and main runs); live: debugging only")
     p.add_argument("--retrieval-snapshot", default="experiments/runs_rev/retrieval_snapshot.json")
+    p.add_argument("--manifest", default=None,
+                   help="experiment manifest; required for runs written under experiments/runs_rev/main")
     return p.parse_args()
 
 
@@ -119,6 +121,43 @@ def _configure_retrieval(args) -> dict:
         raise SystemExit(f"retrieval snapshot not found: {snapshot} "
                          f"(build it with scripts/revision/build_retrieval_snapshot.py)")
     return {"mode": args.retrieval_mode, "snapshot": str(snapshot)}
+
+
+MAIN_OUT = (ROOT / "experiments" / "runs_rev" / "main").resolve()
+
+
+def _check_manifest(args) -> dict | None:
+    """Refuse to start when the inputs differ from the manifest (revision_plan 7.3, C7)."""
+    out = (ROOT / args.out_dir).resolve()
+    is_main = out == MAIN_OUT or MAIN_OUT in out.parents
+    if args.manifest is None:
+        if is_main:
+            raise SystemExit("main runs require --manifest experiments/runs_rev/experiment_manifest.json")
+        return None
+    if out != MAIN_OUT:
+        raise SystemExit(f"runs checked against the manifest must use --out-dir experiments/runs_rev/main "
+                         f"(got {out}); subfolders would bypass the order check and the analysis")
+    from dotenv import load_dotenv
+    from utils import manifest as mf
+    load_dotenv(ROOT / ".env")  # GPT_MODEL is compared below
+    path = (ROOT / args.manifest).resolve()
+    if not path.is_file():
+        raise SystemExit(f"manifest not found: {path}")
+    manifest, digest = mf.load(path)
+    snapshot = (ROOT / args.retrieval_snapshot).resolve()
+    if snapshot != (ROOT / manifest["retrieval"]["snapshot_path"]).resolve():
+        raise SystemExit(f"--retrieval-snapshot {snapshot} is not the manifest snapshot")
+    problems = mf.verify(manifest, condition=args.condition, run_id=str(args.run_id), attempt=args.attempt,
+                         retrieval_mode=args.retrieval_mode, snapshot_path=snapshot,
+                         topic=args.topic, constraints=args.constraints,
+                         runs_dir=MAIN_OUT)
+    if problems:
+        raise SystemExit("inputs differ from the manifest, run not started:\n  - " + "\n  - ".join(problems))
+    try:
+        shown = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        shown = str(path)
+    return {"path": shown, "sha256": digest, "verified": True}
 
 
 def _sha256(path: Path) -> str:
@@ -218,6 +257,7 @@ def main() -> int:
     args = _parse_args()
     cond = _configure_condition(args.condition)
     _configure_retrieval(args)
+    manifest_info = _check_manifest(args)
 
     out_dir = ROOT / args.out_dir / f"{args.condition}_{args.run_id}" / f"attempt_{args.attempt:02d}"
     if out_dir.exists():
@@ -253,7 +293,7 @@ def main() -> int:
         _write_json(out_dir / "meta.json", {
             "status": "failed_init", "error": _error(e), "condition": args.condition,
             "run_id": str(args.run_id), "attempt": args.attempt, "started": _times(time.time()),
-            "prompts_dir": cond["prompts_dir"], "code": _git_info(),
+            "prompts_dir": cond["prompts_dir"], "code": _git_info(), "manifest": manifest_info,
         })
         print(f"\n[EXPERIMENT] INITIALISATION FAILED: {type(e).__name__}: {redact(str(e))}\n")
         return 1
@@ -344,6 +384,7 @@ def main() -> int:
         "call_log": call_log.summary(),
         "retrieval": {**retrieval_snapshot.info(), "sha256_at_start": retrieval_at_start.get("sha256")},
         "code": _git_info(),
+        "manifest": manifest_info,
         "environment": {"python": sys.version, "platform": platform.platform(), "packages": _package_versions()},
         "team": final_state.get("team", []),
         "team_selection_rationale": tsd.get("rationale", ""),
