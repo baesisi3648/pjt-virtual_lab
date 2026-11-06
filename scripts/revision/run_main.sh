@@ -15,8 +15,8 @@ unset VIRTUAL_LAB_PROMPTS_DIR VIRTUAL_LAB_CRITIC_MODE VIRTUAL_LAB_CRITIC_PROVIDE
       CRITIC_MODEL CRITIC_EFFORT
 export PYTHONIOENCODING=utf-8
 
-MAX=$("$PY" -c "import json;print(json.load(open('$MANIFEST',encoding='utf-8'))['retry_policy']['max_attempts_per_run'])" | tr -d '')
-ORDER=$("$PY" -c "import json;[print(e['condition'],e['run_id']) for e in sorted(json.load(open('$MANIFEST',encoding='utf-8'))['order'],key=lambda e:e['seq'])]" | tr -d '')
+MAX=$("$PY" -c "import json;print(json.load(open('$MANIFEST',encoding='utf-8'))['retry_policy']['max_attempts_per_run'])" | tr -d '\r')
+ORDER=$("$PY" -c "import json;[print(e['condition'],e['run_id']) for e in sorted(json.load(open('$MANIFEST',encoding='utf-8'))['order'],key=lambda e:e['seq'])]" | tr -d '\r')
 
 while read -r COND RUN; do
   for ((ATT=1; ATT<=MAX; ATT++)); do
