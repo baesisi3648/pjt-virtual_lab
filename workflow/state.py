@@ -44,3 +44,4 @@ class AgentState(TypedDict):
     word_counts: dict  # 에이전트별 발화 통계
     critic_score_history: list[dict]  # Per-round critic-score snapshots for reproducibility analysis
     run_id: str  # Optional run identifier (for experiments/runs/run_<ID>/ dump)
+    translation_error: str  # Revision: non-fatal translation failure, recorded in meta.json

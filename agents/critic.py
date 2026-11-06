@@ -6,11 +6,12 @@ feedback. The system prompt and reference rubric are loaded from external
 prompt assets so they can be kept private when publishing the codebase.
 """
 import json
+import os
 import logging
 import re
 
 from data.guidelines import CRITIQUE_RUBRIC, ACADEMIC_TONE_GUIDE
-from utils.llm import call_gpt
+from utils.llm import call_critic
 from utils.prompt_loader import load_system, render
 from utils.search_query import disambiguate
 from workflow.state import AgentState, CritiqueResult
@@ -28,6 +29,53 @@ SYSTEM_PROMPT: str = render(
 
 
 SCORE_AXES = ("evidence", "universality", "proportionality", "readability")
+
+CRITIC_MODES = ("cumulative", "independent")
+
+# Score mentions hidden from the Critic input in the "independent" mode (condition A).
+# Applied to prior feedback and to specialist texts, because specialists receive their
+# scores (common design element) and may restate them in revised analyses.
+# Covers "4/5", "4.5 / 5", "score of 4", "scored 3", "rated 5", "evidence=4",
+# "readability: **4**", "Readability (4)", "Universality is 5", "from 3 to 4".
+# Kept deliberately narrow so that scientific content ("Evidence from 3 studies",
+# "SDN-1", "20 nucleotides") is never masked.
+_AXIS = r"(?:evidence|universality|proportionality|readability)"
+_N = r"[1-5](?:\.\d)?"
+_SCORE_PATTERNS = [
+    # "4/5", "4.5 / 5"
+    re.compile(_N + r"\s*/\s*5\b"),
+    # "from 3 to 4", "3 -> 4", "3 → 4"
+    re.compile(r"\bfrom\s+" + _N + r"\s+to\s+" + _N + r"\b", re.IGNORECASE),
+    re.compile(r"\b" + _N + r"\s*(?:->|→|=>)\s*" + _N + r"\b"),
+    # table rows: "| Readability | 3 | 4 |"
+    re.compile(r"\b" + _AXIS + r"\b\**\s*\|(?:\s*\**\s*" + _N + r"\s*\**\s*\|)+", re.IGNORECASE),
+    # "scored 3", "rated a 4"
+    re.compile(r"\b(?:scored|rated)\s+(?:a\s+)?" + _N + r"\b", re.IGNORECASE),
+    # "score of 4", "scores: 3", "rating = 2"
+    re.compile(r"\b(?:scores?|rating)\s*(?:of|at|is|was|=|:)?\s*\**\s*" + _N + r"\b", re.IGNORECASE),
+    # "Readability: 4", "evidence: **4**", "Readability (4)", "Universality is 5" — the number
+    # must end the phrase (punctuation, bracket, emphasis, arrow or end of line), so
+    # "Evidence of 3 independent studies" is left untouched.
+    re.compile(r"\b" + _AXIS + r"\b\s*(?:score\s*)?(?:\*\*)?\s*(?:[:=(]|\bis\b|\bwas\b|\bat\b|\bof\b)\s*\**\s*"
+               + _N + r"(?=\s*(?:$|[).,;:*|/\-→=]|\band\b))", re.IGNORECASE | re.MULTILINE),
+]
+
+
+def critic_mode() -> str:
+    """Critic scoring mode from VIRTUAL_LAB_CRITIC_MODE (default: submitted 'cumulative')."""
+    mode = os.environ.get("VIRTUAL_LAB_CRITIC_MODE", "cumulative")
+    if mode not in CRITIC_MODES:
+        raise ValueError(f"Unknown VIRTUAL_LAB_CRITIC_MODE: {mode}")
+    return mode
+
+
+def mask_score_mentions(text: str) -> tuple[str, int]:
+    """Replace numeric score mentions with "[score]"; return the text and the count."""
+    total = 0
+    for pat in _SCORE_PATTERNS:
+        text, n = pat.subn("[score]", text)
+        total += n
+    return text, total
 
 # Same-input retries allowed when the Critic response fails validation (C3).
 CRITIC_VALIDATION_RETRIES = 1
@@ -115,11 +163,23 @@ def run_critic(state: AgentState) -> dict:
     logger.info("Critic web search completed")
 
     # Step 2: assemble specialist outputs
+    # Condition (C2, revision): "cumulative" = submitted scoring rules (condition B);
+    # "independent" = current content only (condition A): no prior numeric scores,
+    # score mentions masked in specialist texts and prior feedback, no
+    # score-comparison rules. The specialists themselves still receive their scores
+    # in both conditions (common design element).
+    mode = critic_mode()
+    masked_total = 0
+
     specialist_context = ""
     for so in specialist_outputs:
+        output = so.get('output', '')
+        if mode == "independent":
+            output, n = mask_score_mentions(output)
+            masked_total += n
         specialist_context += (
             f"\n\n### [{so.get('role', 'Specialist')}] ({so.get('focus', '')})\n"
-            f"{so.get('output', '')}\n"
+            f"{output}\n"
         )
 
     # prior-round records (per-specialist scores and feedback accumulated)
@@ -131,16 +191,36 @@ def run_critic(state: AgentState) -> dict:
             scores = record.get("critique_scores", {})
             feedback = record.get("critique_feedback", "")
             spec_fb = record.get("specialist_feedback", {})
+            if mode == "independent":
+                feedback, n = mask_score_mentions(feedback)
+                masked_total += n
             history_context += f"\n[Round {round_num} critique record]\n"
             history_context += f"Overall feedback: {feedback}\n"
-            if scores:
+            if scores and mode == "cumulative":
                 history_context += "Per-specialist scores:\n"
                 for role, score in scores.items():
                     history_context += f"  - {role}: {score}/5\n"
             if spec_fb:
                 history_context += "Per-specialist detailed feedback:\n"
                 for role, fb in spec_fb.items():
+                    if mode == "independent":
+                        fb, n = mask_score_mentions(fb)
+                        masked_total += n
                     history_context += f"  - {role}: {fb}\n"
+
+    if mode == "cumulative":
+        closing = (
+            f"★ Round {current_round} scoring rules:\n"
+            "- If a weakness flagged in a previous round has been resolved, raise the score.\n"
+            "- If previously credited strengths persist, do not lower the score.\n"
+            "- Include in `specialist_feedback` the items \"what improved\", \"remaining weaknesses\", "
+            "and \"concrete actions to reach 5/5\"."
+        )
+    else:
+        closing = (
+            "- Include in `specialist_feedback` the items \"what improved\", \"remaining weaknesses\", "
+            "and \"concrete actions to reach 5/5\"."
+        )
 
     # Step 3: build the user message
     user_message = f"""[Team meeting Round {current_round} — critique stage]
@@ -154,10 +234,7 @@ def run_critic(state: AgentState) -> dict:
 Review each specialist's analysis individually and respond in JSON.
 Use each specialist's role name as the key, exactly as written here: {expected_keys}.
 
-★ Round {current_round} scoring rules:
-- If a weakness flagged in a previous round has been resolved, raise the score.
-- If previously credited strengths persist, do not lower the score.
-- Include in `specialist_feedback` the items "what improved", "remaining weaknesses", and "concrete actions to reach 5/5"."""
+{closing}"""
 
     # Step 4: call the Critic model and validate the response (C3, revision).
     # The submitted version filled missing or malformed scores with a default of 3
@@ -168,7 +245,12 @@ Use each specialist's role name as the key, exactly as written here: {expected_k
     last_error: Exception | None = None
     for attempt in range(1 + CRITIC_VALIDATION_RETRIES):
         print(f"[CRITIC] Calling Critic model (attempt {attempt + 1})")
-        response_content = call_gpt(SYSTEM_PROMPT, user_message)
+        response_content = call_critic(
+            SYSTEM_PROMPT, user_message,
+            tag={"agent": "Critic", "step": "critique", "round": current_round,
+                 "validation_attempt": attempt + 1, "critic_mode": mode,
+                 "masked_score_mentions": masked_total},
+        )
         attempts.append(response_content)
         try:
             critique = parse_and_validate_critique(response_content, expected_roles)

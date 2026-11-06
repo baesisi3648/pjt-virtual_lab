@@ -34,6 +34,7 @@ def translate_en_to_ko(report_en: str) -> str:
         report_en,
         temperature=0.2,
         max_tokens=65536,
+        tag={"agent": "Translator", "step": "translation"},
     )
 
 
@@ -50,12 +51,16 @@ def run_translation(state: AgentState) -> dict:
         logger.warning("Translation skipped: empty final_report")
         return {"final_report_ko": ""}
 
+    # Revision: the Korean translation is a secondary artefact. A failure does not
+    # abort the run, but it is recorded in the state (and in meta.json).
+    translation_error = ""
     try:
         report_ko = translate_en_to_ko(report_en)
         print(f"[TRANSLATION] Korean rendering: {len(report_ko)} chars")
     except Exception as e:
         logger.warning(f"Translation failed: {e}")
         report_ko = ""
+        translation_error = f"{type(e).__name__}: {e}"[:1000]
 
     messages = list(state.get("messages", []))
     messages.append({
@@ -69,5 +74,6 @@ def run_translation(state: AgentState) -> dict:
 
     return {
         "final_report_ko": report_ko,
+        "translation_error": translation_error,
         "messages": messages,
     }

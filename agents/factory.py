@@ -35,8 +35,8 @@ class SpecialistAgent:
     def __init__(self, system_prompt: str):
         self.system_prompt = system_prompt
 
-    def invoke(self, query: str, max_tokens: int = 32768) -> str:
-        return call_gpt(self.system_prompt, query, max_tokens=max_tokens)
+    def invoke(self, query: str, max_tokens: int = 32768, tag: dict | None = None) -> str:
+        return call_gpt(self.system_prompt, query, max_tokens=max_tokens, tag=tag)
 
 
 def create_specialist(profile: dict) -> SpecialistAgent:

@@ -131,7 +131,7 @@ def _run_single_specialist(
             RAG_CONTEXT=rag_context,
             WEB_CONTEXT=web_context,
         )
-        output = agent.invoke(query)
+        output = agent.invoke(query, tag={"agent": role, "step": "specialist_analysis", "round": 1})
 
         output_preview = output[:200] + "..." if len(output) > 200 else output
         message = {
@@ -346,7 +346,10 @@ def run_round_revision(state: AgentState) -> dict:
                 PI_SUMMARY=pi_summary,
                 SCORE_GUIDANCE=score_guidance,
             )
-            output = agent.invoke(query, max_tokens=32768)
+            output = agent.invoke(
+                query, max_tokens=32768,
+                tag={"agent": role, "step": "specialist_revision", "round": current_round},
+            )
 
             output_preview = output[:200] + "..." if len(output) > 200 else output
             message = {

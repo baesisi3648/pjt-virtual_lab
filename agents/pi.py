@@ -21,7 +21,7 @@ from utils.search_query import disambiguate
 from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE
 from workflow.state import AgentState
 from tools.web_search import web_search
-from utils.errors import AgentFailureError
+from utils.errors import AgentFailureError, PipelineError
 
 
 def _sanitize_mermaid(report: str) -> str:
@@ -102,7 +102,7 @@ def decide_team(user_query: str) -> List[dict]:
         "Reply only with a JSON array."
     )
 
-    response = call_gpt(TEAM_DECISION_PROMPT, user_message)
+    response = call_gpt(TEAM_DECISION_PROMPT, user_message, tag={"agent": "PI", "step": "team_trial"})
 
     try:
         content = response.strip()
@@ -137,7 +137,8 @@ def _cluster_similar_roles(unique_roles: list[str]) -> dict[str, str]:
     role_list = "\n".join(f"- {r}" for r in unique_roles)
     prompt = render(load_system("role_clustering"), ROLE_LIST=role_list)
 
-    response = call_gpt(prompt, "Perform role-name clustering.", temperature=0.2)
+    response = call_gpt(prompt, "Perform role-name clustering.", temperature=0.2,
+                        tag={"agent": "PI", "step": "role_clustering"})
     try:
         content = response.strip()
         if content.startswith("```"):
@@ -241,10 +242,13 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
         if len(all_teams) < n_trials:
             print(f"  [RETRY] {len(all_teams)}/{n_trials} succeeded, retrying {n_trials - len(all_teams)} more...")
 
+    partial = {"team_selection_data": {"all_teams": all_teams, "failed_trial_attempts": failed_trials,
+                                       "n_trials": n_trials}}
     if len(all_teams) < n_trials:
-        raise RuntimeError(
+        raise AgentFailureError(
             f"Team composition did not reach {n_trials} trials after {max_retries} attempts "
-            f"({len(all_teams)} succeeded)."
+            f"({len(all_teams)} succeeded).",
+            partial=partial,
         )
 
     # collect unique role names
@@ -254,7 +258,13 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
             unique_roles.add(member["role"])
 
     # LLM-driven clustering of similar roles
-    role_mapping = _cluster_similar_roles(list(unique_roles))
+    try:
+        role_mapping = _cluster_similar_roles(list(unique_roles))
+    except PipelineError as e:
+        e.partial.update(partial)
+        raise
+    except Exception as e:
+        raise AgentFailureError(f"{type(e).__name__}: {e}", partial=partial) from e
     print(f"  [CLUSTERING] {len(unique_roles)} unique roles → {len(set(role_mapping.values()))} clusters")
 
     role_counter: Counter = Counter()
@@ -299,32 +309,48 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
         f"{size} members: {cnt} times" for size, cnt in team_size_counter.most_common()
     )
 
-    selection_prompt = render(
-        load_system("pi_team_selection"),
-        N_TRIALS=str(n_trials),
-        FREQUENCY_SUMMARY=freq_summary,
-        SIZE_SUMMARY=size_summary,
-        RECOMMENDED_SIZE=str(most_common_size),
-    )
-
-    response = call_gpt(selection_prompt, f"Research topic: {user_query}")
+    partial["team_selection_data"].update({"frequency_analysis": frequency_table, "role_mapping": role_mapping,
+                                           "team_sizes": size_summary})
+    # Everything from prompt rendering to role-name post-processing runs inside one
+    # boundary, so any failure keeps the completed trials in the run record.
     try:
-        content = response.strip()
-        if content.startswith("```"):
-            lines = content.split("\n")
-            content = "\n".join(lines[1:-1])
-        data = json.loads(content)
-        final_team = data.get("team", [])
-        rationale = data.get("rationale", "")
-    except (json.JSONDecodeError, KeyError) as e:
-        # C15 (revision): no silent frequency-table fallback; fail closed.
-        raise AgentFailureError(f"PI final team selection could not be parsed: {e}") from e
-    if not final_team or not all(m.get("role") and m.get("focus") for m in final_team):
-        raise AgentFailureError("PI final team selection returned an empty or incomplete team")
+        selection_prompt = render(
+            load_system("pi_team_selection"),
+            N_TRIALS=str(n_trials),
+            FREQUENCY_SUMMARY=freq_summary,
+            SIZE_SUMMARY=size_summary,
+            RECOMMENDED_SIZE=str(most_common_size),
+        )
+        response = call_gpt(selection_prompt, f"Research topic: {user_query}",
+                            tag={"agent": "PI", "step": "team_selection"})
+        try:
+            content = response.strip()
+            if content.startswith("```"):
+                lines = content.split("\n")
+                content = "\n".join(lines[1:-1])
+            data = json.loads(content)
+            final_team = data.get("team", [])
+            rationale = data.get("rationale", "")
+        except (json.JSONDecodeError, KeyError, AttributeError) as e:
+            # C15 (revision): no silent frequency-table fallback; fail closed.
+            raise AgentFailureError(f"PI final team selection could not be parsed: {e}") from e
+        if not isinstance(final_team, list) or not final_team or not all(
+            isinstance(m, dict) and isinstance(m.get("role"), str) and m["role"].strip()
+            and isinstance(m.get("focus"), str) and m["focus"].strip()
+            for m in final_team
+        ):
+            raise AgentFailureError("PI final team selection returned an empty or incomplete team")
 
-    # Apply deterministic short-name post-processing
-    for member in final_team:
-        member["role"] = _shorten_role_name(member.get("role", ""))
+        # Apply deterministic short-name post-processing
+        for member in final_team:
+            member["role"] = _shorten_role_name(member.get("role", ""))
+        if len({m["role"] for m in final_team}) != len(final_team):
+            raise AgentFailureError(f"Duplicate role names after normalisation: {[m['role'] for m in final_team]}")
+    except PipelineError as e:
+        e.partial.update(partial)
+        raise
+    except Exception as e:
+        raise AgentFailureError(f"{type(e).__name__}: {e}", partial=partial) from e
 
     print(f"[STATISTICAL TEAM SELECTION] Final team: {len(final_team)} specialists")
     for m in final_team:
@@ -362,7 +388,8 @@ def generate_self_introductions(team: List[dict]) -> list[dict]:
         # The limit is raised, and a failure aborts the run instead of inserting a
         # synthetic sentence (C15).
         try:
-            intro = call_gpt(intro_system, prompt, max_tokens=INTRO_MAX_TOKENS)
+            intro = call_gpt(intro_system, prompt, max_tokens=INTRO_MAX_TOKENS,
+                             tag={"agent": "PI", "step": "self_introduction", "role": role})
         except Exception as e:
             logger.error(f"Introduction generation failed for {role}: {e}")
             raise AgentFailureError(f"Self-introduction failed for {role}: {e}") from e
@@ -397,7 +424,15 @@ def run_pi_planning(state: AgentState) -> dict:
         f"from {team_selection_data['n_trials']} trials"
     )
 
-    introductions = generate_self_introductions(team)
+    try:
+        introductions = generate_self_introductions(team)
+    except PipelineError as e:
+        # Keep the completed team selection in the run record.
+        e.partial.update({"team": team, "team_selection_data": team_selection_data})
+        raise
+    except Exception as e:
+        raise AgentFailureError(f"{type(e).__name__}: {e}",
+                                partial={"team": team, "team_selection_data": team_selection_data}) from e
 
     team_summary = "\n".join(
         [f"- **{m['role']}**: {m['focus']}" for m in team]
@@ -481,7 +516,8 @@ def run_pi_summary(state: AgentState) -> dict:
     logger.info("PI summary: Calling OpenAI directly...")
 
     try:
-        summary = call_gpt(PI_SUMMARY_PROMPT, user_message)
+        summary = call_gpt(PI_SUMMARY_PROMPT, user_message,
+                           tag={"agent": "PI", "step": "round_summary", "round": current_round})
         print(f"[PI SUMMARY] OpenAI call succeeded - Summary: {len(summary)} chars")
     except Exception as e:
         print(f"[PI SUMMARY ERROR] {type(e).__name__}: {e}")
@@ -780,7 +816,8 @@ def run_final_synthesis(state: AgentState) -> dict:
     logger.info("PI final synthesis: Calling OpenAI directly...")
 
     try:
-        final_report = call_gpt(SYSTEM_PROMPT, user_message, max_tokens=65536)
+        final_report = call_gpt(SYSTEM_PROMPT, user_message, max_tokens=65536,
+                                tag={"agent": "PI", "step": "final_synthesis", "round": current_round})
         final_report = _sanitize_mermaid(final_report)
         print(f"[PI FINAL SYNTHESIS] OpenAI call succeeded - Final report: {len(final_report)} chars")
     except Exception as e:

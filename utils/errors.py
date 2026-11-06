@@ -9,7 +9,15 @@ retried under the pre-registered retry policy.
 
 
 class PipelineError(RuntimeError):
-    """Base class for technical failures that must abort a run."""
+    """Base class for technical failures that must abort a run.
+
+    `partial` may carry records produced before the failure (for example the
+    team-selection trials) so the run log can keep them.
+    """
+
+    def __init__(self, *args, partial: dict | None = None):
+        super().__init__(*args)
+        self.partial = partial or {}
 
 
 class LLMIncompleteError(PipelineError):

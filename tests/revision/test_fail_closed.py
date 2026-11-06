@@ -70,7 +70,7 @@ def _critic_state():
 def test_run_critic_retries_once_then_succeeds():
     replies = iter(["not json", _critic_json()])
     with patch.object(critic_mod, "web_search") as ws, \
-         patch.object(critic_mod, "call_gpt", side_effect=lambda *a, **k: next(replies)) as cg:
+         patch.object(critic_mod, "call_critic", side_effect=lambda *a, **k: next(replies)) as cg:
         ws.invoke.return_value = ""
         out = critic_mod.run_critic(_critic_state())
     assert cg.call_count == 2 and set(out["critique"].scores) == set(ROLES)
@@ -78,7 +78,7 @@ def test_run_critic_retries_once_then_succeeds():
 
 def test_run_critic_fails_closed_after_retry():
     with patch.object(critic_mod, "web_search") as ws, \
-         patch.object(critic_mod, "call_gpt", return_value=_critic_json(drop="Beta Specialist")):
+         patch.object(critic_mod, "call_critic", return_value=_critic_json(drop="Beta Specialist")):
         ws.invoke.return_value = ""
         with pytest.raises(CritiqueValidationError):
             critic_mod.run_critic(_critic_state())
