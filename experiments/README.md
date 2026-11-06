@@ -1,82 +1,91 @@
-# Reproducibility Experiments
+# Experiments
 
-This directory hosts the artefacts and analysis pipeline for the
-reproducibility study described in §2.6 and §3.5 of the manuscript.
+Two sets of runs live here.
 
-## Layout
+| Folder | What it is |
+|---|---|
+| `runs/` | The five runs of the originally submitted manuscript (preserved, not regenerated). |
+| `runs_rev/` | The revision experiment: conditions A and B, five runs each, plus preparation records. |
 
-```
-experiments/
-├── runs/                                # one folder per independent execution
-│   ├── run_1/
-│   │   ├── final_report.md              # English final report (primary)
-│   │   ├── final_report.ko.md           # Korean translation (sidecar)
-│   │   ├── critic_scores.json           # per-round, per-specialist, per-axis
-│   │   ├── messages.json                # full agent message log
-│   │   └── meta.json                    # durations, team, sources, …
-│   ├── run_2/
-│   └── …
-└── reproducibility/
-    ├── analyze.py                       # metrics + figures
-    └── results/
-        ├── similarity_matrix.csv
-        ├── similarity_summary.json
-        ├── critic_cv.csv
-        ├── critic_per_run.csv
-        ├── manuscript_numbers.md        # paste-ready snippets for §3.1/§2.6/§3.5
-        └── figures/
-            ├── figure2c_critic_trajectory.png
-            └── figure2d_similarity_heatmap.png
-```
+Design and rationale: `reference/revision/revision_plan.md` (sections 0, 7–11).
 
-## Step 1 — Generate runs
+## Revision experiment (`runs_rev/`)
 
-For each independent run (target: N = 5):
+### Conditions
 
-```bash
-python run_experiment.py --run-id 1
-python run_experiment.py --run-id 2
-python run_experiment.py --run-id 3
-python run_experiment.py --run-id 4
-python run_experiment.py --run-id 5
-```
+| | A (revised scoring) | B (submitted scoring rules) |
+|---|---|---|
+| Prompt set | `prompts_A/` | `prompts_B/` |
+| Critic mode | `independent`: no prior numeric scores, no raise / do-not-lower rules, no Round-1 cap; score mentions masked in the Critic input | `cumulative`: prior scores and the submitted rules |
+| Common to both | neutral constraint and rubric (P1–P4), same generation model (`GPT_MODEL`), same Critic model (Claude, `CRITIC_MODEL`, default `claude-opus-5-5`, effort high), same fixed retrieval snapshot, up to 7 rounds | |
 
-Each invocation executes the full LangGraph workflow once (English
-report → Korean translation) and writes the per-run dossier under
-`experiments/runs/run_<ID>/`. Expect roughly 16–18 minutes per run.
+`prompts_A/` and `prompts_B/` are built from `prompts/` by `scripts/revision/build_prompt_sets.py`;
+their only difference is `system/critic.md`.
 
-The temperature is held at 0.2 (configurable via
-`VIRTUAL_LAB_TEMPERATURE`) to maximise consistency across runs while
-preserving the model's natural variation.
+Notes on condition A:
+- In both conditions the specialists still receive their own scores and the Critic's prior
+  feedback (common design element). Condition A changes only what the Critic receives.
+- Masking of score mentions in the Critic input is rule-based and narrow (scientific numbers are
+  never masked), so some phrasings may remain. The analysis reports every remaining candidate
+  mention for manual review (`leakage_audit.json`).
 
-## Step 2 — Compute metrics and figures
+### Steps
 
-```bash
-python -m experiments.reproducibility.analyze
+```powershell
+# 1. Build the fixed retrieval snapshot once (never overwritten)
+python -B scripts/revision/build_retrieval_snapshot.py
+
+# 2. One run = one process. Condition, run number and attempt are explicit.
+python -B run_experiment.py --condition A --run-id 1 --attempt 1
+python -B run_experiment.py --condition B --run-id 1 --attempt 1
+#    output: runs_rev/main/<COND>_<RUN>/attempt_<NN>/ (existing folders are never overwritten)
+#    pilot runs: add --out-dir experiments/runs_rev/pilot
+
+# 3. Analysis (add --skip-embeddings to skip the embedding calls)
+python -B -m experiments.reproducibility.analyze_revision `
+    --runs-dir experiments/runs_rev/main --out-dir experiments/runs_rev/results
 ```
 
-This computes:
-- **(a) Cross-run semantic textual similarity** — pairwise cosine similarity
-  of the English `final_report.md` files via OpenAI
-  `text-embedding-3-large`. Reported as a 5×5 matrix (Figure 2D) and a
-  mean ± SD over the off-diagonal pairs.
-- **(b) Critic-score Coefficient of Variation** — for each round and each
-  of the four axes (evidence, universality, proportionality, readability),
-  the mean and population SD across runs, plus the CV (= SD / mean).
-  Plotted as Figure 2C with error bars.
+### Analysis outputs (`analyze_revision.py`)
 
-Use `--skip-embeddings` to skip the OpenAI call (CV-only re-runs).
+The output folder must be new or empty. The main set is flagged incomplete unless each condition
+has `--expected-per-condition` (default 5) runs with exactly one successful attempt; a
+representative run chosen from an incomplete set is marked provisional.
 
-## Step 3 — Paste into the manuscript
+- `runs.json`: runs, attempts, failed attempts with reasons, issues, extraction hashes
+- `extracted/`: safety-content text (Core Questions 1–5 and decision trees; Methods, statistics,
+  score charts, references and placeholder stubs removed) used for the primary similarity
+- `similarity_content.csv`, `similarity_full.csv`, `similarity_summary.json`: cosine similarity
+  (descriptive; pairs share runs and are not independent)
+- `representative.json`: condition-A medoid (highest mean content similarity; ties: smaller run number)
+- `critic_by_round.csv` (mean, population SD only when n ≥ 2, n runs), `critic_per_run.csv`,
+  `critic_run_summary.csv`, `condition_summary.json` (termination-round distribution, runs that
+  reached all 5, score decreases)
+- `leakage_audit.json`: candidate score mentions in condition-A Critic inputs with call IDs and an
+  empty `manual_judgement` field; a run without a complete call log is marked not auditable
+- `output_stats.csv`: turns and characters from full outputs, with the definition
 
-`results/manuscript_numbers.md` contains paste-ready snippets formatted to
-match the tables expected in §3.1, §2.6, and §3.5 of the manuscript.
+### What each run records
 
-## Reproducibility checklist
+`calls.jsonl` (every LLM call: inputs, parameters sent and omitted, all attempts, raw response,
+model identifier reported by the provider, usage, stop reason, request id),
+`conversations.json`, `critic_scores.json`, `team_selection.json`, `final_report.md`,
+`meta.json` (status, condition, models, prompt hashes, retrieval snapshot hash, code version,
+package versions, UTC/KST times, output statistics, errors). API keys are redacted.
 
-- Same `VIRTUAL_LAB_PROMPTS_DIR` (i.e. the same `prompts/` directory) is
-  loaded for every run.
-- Same `GPT_MODEL` and `VIRTUAL_LAB_TEMPERATURE` environment variables.
-- Same `topic` and `constraints` strings (defaults baked into
-  `run_experiment.py`).
-- Same RAG corpus version (Pinecone index unchanged between runs).
+A failed run keeps its `meta.json` (status `failed`) and partial records and is retried as a
+new attempt; low scores or non-convergence are results, not failures.
+
+### Sampling parameters
+
+GPT-5 requests send no `temperature` (the API does not accept a custom value for this model
+family) and no `reasoning_effort`; provider defaults apply and the omission is recorded per call.
+The Claude Critic is called with `output_config.effort = "high"` and no sampling parameters.
+The earlier note that runs used temperature 0.2 did not apply to GPT-5 requests.
+
+## Original runs (`runs/`)
+
+Produced by the submitted version of `run_experiment.py` and analysed with
+`reproducibility/analyze.py`. Their `messages.json` holds only 200-character previews of the
+specialist outputs; full per-round outputs were not saved for these runs. The model snapshot
+used was not recorded.
