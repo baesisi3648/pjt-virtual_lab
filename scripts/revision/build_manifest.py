@@ -37,12 +37,20 @@ MAX_ATTEMPTS_PER_RUN = 3
 
 
 def run_order() -> list[dict]:
+    """Seeded A/B order within each block, balanced: each condition goes first in 2 or 3 of the 5 blocks.
+
+    The unrestricted draw used first gave B first in all five blocks, which would align the
+    condition with time (revision_plan 7.3, RUN_LOG 2026-11-06); the restriction was added
+    before any main run.
+    """
+    import itertools
     rng = random.Random(SEED_ORDER)
+    balanced = [seq for seq in itertools.product("AB", repeat=RUNS_PER_CONDITION)
+                if 2 <= seq.count("A") <= 3]       # which condition goes first in each block
+    firsts = rng.choice(balanced)
     order, seq = [], 0
-    for block in range(1, RUNS_PER_CONDITION + 1):
-        pair = ["A", "B"]
-        rng.shuffle(pair)
-        for cond in pair:
+    for block, first in enumerate(firsts, start=1):
+        for cond in (first, "B" if first == "A" else "A"):
             seq += 1
             order.append({"seq": seq, "block": block, "condition": cond, "run_id": str(block)})
     return order
@@ -137,6 +145,8 @@ def main() -> int:
         },
         "runs_per_condition": RUNS_PER_CONDITION,
         "order_seed": SEED_ORDER,
+        "order_rule": "per block, which condition goes first is drawn with the seed from the 20 sequences in "
+                      "which each condition goes first in 2 or 3 of the 5 blocks",
         "order": run_order(),
         "execution": "one new Python process per run, sequential, in manifest order, "
                      "out-dir experiments/runs_rev/main",

@@ -122,6 +122,8 @@ def test_run_order_is_balanced_and_fixed():
     for blk in range(1, 6):
         assert sorted(e["condition"] for e in order if e["block"] == blk) == ["A", "B"]
     assert [e["seq"] for e in order] == list(range(1, 11))
+    firsts = [e["condition"] for e in order if e["seq"] % 2 == 1]
+    assert 2 <= firsts.count("A") <= 3
 
 
 def test_second_judge_sample_has_both_conditions():
