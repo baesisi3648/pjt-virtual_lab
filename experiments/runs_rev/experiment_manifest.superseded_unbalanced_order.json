@@ -1,0 +1,332 @@
+{
+  "manifest_version": 1,
+  "created": {
+    "utc": "2026-11-06T08:52:53.644567+00:00",
+    "kst": "2026-11-06T17:52:53.644567+09:00"
+  },
+  "purpose": "Inputs fixed before the main runs of the revision experiment (revision_plan 7.3). Not a formal preregistration.",
+  "code": {
+    "commit_at_freeze": "98de63703893a95e2d4fabd0c92117b8b9a191dd",
+    "branch": "revision/npj-r1",
+    "paths": [
+      "agents",
+      "utils",
+      "workflow",
+      "tools",
+      "data",
+      "search",
+      "rag",
+      "config.py",
+      "run_experiment.py",
+      "requirements.txt",
+      "experiments/reproducibility/analyze_revision.py"
+    ],
+    "file_hashes": {
+      "agents/FACTORY_USAGE.md": "c7d615b56611925984fc52115c6e222865534edc09f61a03ebbaa1862b36c70d",
+      "agents/__init__.py": "205dca16db8da397f402d236812096932562a2b0dc11576149e09e31b2a4347b",
+      "agents/critic.py": "341b2197a53787cfe348ccc7398a3159653302ecce5ac8909aa89c80b79c6c0b",
+      "agents/factory.py": "0abae9d1f3abcfc7a856768609eb043003220206a745caacf10728ae5affc638",
+      "agents/pi.py": "9bccc60f6de1d2bdecbd68a5849fe1e5bfd2152446e6488fdab4f2c7f79ebce4",
+      "agents/scientist.py": "618aa27b94af76000cdb310e3831bbfea6ee7375e2f47aebb189bc0a275defbe",
+      "agents/translator.py": "bc3868afcf4774f8f8a5d31ab7f47caa9252be456efd9fdaa66aa20529158069",
+      "config.py": "41dad23f33be8d3a28dbfcd9c31b1c7de9c28a457b34f463cbdb857a7dfa232b",
+      "data/__init__.py": "120411f98ddbf5c991b0f18618101a6180b545f69711c5660a1eacf73a080b98",
+      "data/guidelines.py": "4d0bb7d8c06f912fa7ab1e4e8ce0a0eb3dd4462968f822cf7d202729e9ed2017",
+      "data/regulatory/README.md": "0681edc4bb6597f86b8151bd88b2a4fd8d4d6c4192388f2253ed3eef695cc2fa",
+      "data/regulatory/sample.txt": "6ad7c078cb6a144ef33397f4d26a0e3c26699e32179247e5ede8e36ed7858712",
+      "experiments/reproducibility/analyze_revision.py": "10d1c179803d34ce63694513518222a52a01b301cd00fe48fbc88c5c668ebf3e",
+      "rag/__init__.py": "02660f65b4e6d1a6e3208c214a624a59d7ba7b0cdd618e3c0ebeca86a4ff2892",
+      "rag/chroma_client.py": "e16f24e2a70d80ca71f327f751aebd34d2bea38a13afd55c0b52689893aca966",
+      "rag/cli.py": "1daa0551eef749a98454067335a8738d84c08a74ab0ba7f31cb9c961f3ebd512",
+      "rag/config.py": "5af1ae55357a8fbaf2ca7a1fc60067e7920110064f1b0f2ee47d3ea93e70a932",
+      "rag/embeddings.py": "1bfee14dda4ad27be596871a99e01325b4e0bed942ed33024dbac111c3ffa156",
+      "rag/formatter.py": "537feea617fb9bb624d70e0714bdb5a05046b48df8324f158ee89e68eb145992",
+      "rag/pdf_processor.py": "a14d883f78e195264467fd7c57357da4d990c2b05af3dfd5e49dbe8f8ebeaa15",
+      "rag/pinecone_client.py": "031af0e9f015759eb7fa7263be6c0a78b7dafc7c2779df13a2b758d4e3741aaf",
+      "rag/reranker.py": "0ad1d0acefac77cab0c01d6440d2dbf6bc5eb5f6d5a648f34c8724338c8a5fbd",
+      "rag/retriever.py": "0caa6519ebd112b800064751fa9805f6a81d868109a5885876c199f2803c65f5",
+      "requirements.txt": "e853b166cd02da5340fee516c883eb8c2748088c47098d8332d43a4e0e0697fa",
+      "run_experiment.py": "f8dfa55ddf09a4136bae7b840142ac9dcfff82ee12674760d0682f163265520a",
+      "search/README.md": "fc546c284e6f0161a047f0374b45822ea2b1afb35ce3dd9dd265fd6329003810",
+      "search/__init__.py": "4a0a03bbe29f359a9fe186633b581635c567d9b48d59e1a05a3bef070c6fbd15",
+      "search/example.py": "a599e5a4ff81ce80b78ae26aa113f98a12e67138eece114047ec976e7823d3b3",
+      "search/tavily_client.py": "9a188aeb528ce05dae62bf1f777a3c4ad7f2ae518d44021bea66b97574cbada0",
+      "tools/__init__.py": "b4298c74d93d893c93270299151ffdbb777b2077527e1063e711804f4ee4e1ed",
+      "tools/rag_search.py": "365c28fcef57770c46286b3bc45a73996d157a6d59a46f74b4a9bf14e02be095",
+      "tools/web_search.py": "0671a1a8ebc9ff450eaf6c93672cc63efc8b84a0b5591e2237b2f5c57529b2a0",
+      "utils/__init__.py": "34ba3693270ea5406d078d09ec2e4a3054a00caa5b53657543856f1f0a343200",
+      "utils/call_log.py": "df4baa15270dcffc3316668f6b0058371f3f88aea193d64137eefd672daea62c",
+      "utils/errors.py": "48108b5535623cdb9df4a03d6f4b4e21a13d8b3d1b124f12bdf3e7c1c570ec29",
+      "utils/llm.py": "523df41c5cb70047218b12803f4383e94ad3b483e50464e76a352e8ea81c0474",
+      "utils/manifest.py": "6bfe69c31d2d368e6e437c415f3bc116523899b8175a33499eabb775a3aab167",
+      "utils/prompt_loader.py": "89d65fb7ff1c4e1c22f6f0d8e6f5e5deb0320611d99535a13844c83b7b5db3e6",
+      "utils/redact.py": "8d4b4a1a105ee781bddeb151c0df3cb7ad22da2895e6a219556666ec732e35c6",
+      "utils/retrieval_snapshot.py": "505f2474cfaf87f6b0e73aaa6e892ea2b1c402ce1e2cda14b9f13c73a2b4420d",
+      "utils/search_query.py": "b13087c684f052377e1bf7637b9bf490b890a2eca56a4f645cc4ed67a41ad57a",
+      "workflow/README_PARALLEL.md": "e087a508f5865a69720dbcd7a1cb039b20cfcb24142b6e43caa891859bc769b9",
+      "workflow/__init__.py": "3ebf25917ecbdb13534175bcc8b0eb4678b4caa0a4c52db513e6c89b5d4d66e7",
+      "workflow/graph.py": "4295f8e536e6c04a3b4fdd1395437b5b4d5875dc9ace671ce2dcdaf6f4fd85b5",
+      "workflow/state.py": "86c00f92e8d16797474afa39acfb15d170f0874e9c96c26d9470f357fcd82412"
+    },
+    "comparison": "by file content; run_experiment.py refuses to start if any tracked file differs"
+  },
+  "prompts": {
+    "A": {
+      "dir": "prompts_A",
+      "file_hashes": {
+        "data/academic_tone_guide.md": "971322399e90c5568485782eb83d60fbfbb9031a40631605f681e8e97eee7010",
+        "data/critique_rubric.md": "c4401322a8782f84a4ddf6a32245ef50bf8c76460f0ea9d4a5591c12f376f970",
+        "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
+        "system/critic.md": "4977317b24a5783ac0a9a3aaf97313301491af57a982cf6466bf143ff428c388",
+        "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
+        "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
+        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
+        "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
+        "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
+        "system/role_clustering.md": "d74d16743bb7340f9a5662528ff3e25dafd600a940b0fd2ed45319f518745530",
+        "system/specialist.md": "0c570875906017db8eae4e5140f1f2fc7bc1c6af795e1b515d2750f55cad94e5",
+        "system/specialist_query.md": "71939eef9d06e207e0f2a3c99248a7526b4c4299c3266458c66eaefffffb4452",
+        "system/specialist_revision_query.md": "2b5aead5ecc8a200b05f4af55d95fe791871424cbed68861cf7ebb2465cf0f9a",
+        "system/translator_en_to_ko.md": "e56f2d2753abdef4d43123c47fef7b08501ea16e74cfcc0060af237c621dc930"
+      }
+    },
+    "B": {
+      "dir": "prompts_B",
+      "file_hashes": {
+        "data/academic_tone_guide.md": "971322399e90c5568485782eb83d60fbfbb9031a40631605f681e8e97eee7010",
+        "data/critique_rubric.md": "c4401322a8782f84a4ddf6a32245ef50bf8c76460f0ea9d4a5591c12f376f970",
+        "data/research_agenda.md": "ff6d3a23ef28d9bd492aa492ceef94ad2cd767387d186411e038382fb395d580",
+        "system/critic.md": "4be4036de367ddb8de3f4f4935f3fcf00d5b54e9d568f94b4e1ad0cc744799c9",
+        "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
+        "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
+        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
+        "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
+        "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
+        "system/role_clustering.md": "d74d16743bb7340f9a5662528ff3e25dafd600a940b0fd2ed45319f518745530",
+        "system/specialist.md": "0c570875906017db8eae4e5140f1f2fc7bc1c6af795e1b515d2750f55cad94e5",
+        "system/specialist_query.md": "71939eef9d06e207e0f2a3c99248a7526b4c4299c3266458c66eaefffffb4452",
+        "system/specialist_revision_query.md": "2b5aead5ecc8a200b05f4af55d95fe791871424cbed68861cf7ebb2465cf0f9a",
+        "system/translator_en_to_ko.md": "e56f2d2753abdef4d43123c47fef7b08501ea16e74cfcc0060af237c621dc930"
+      }
+    }
+  },
+  "inputs": {
+    "topic": "Derivation of a standard safety assessment framework for genome-edited foods (NGT).",
+    "constraints": "Be proportionate and science-based. Require additional data only when there is a scientific basis, and justify any decision to omit an assessment. Avoid both disproportionate data requirements and unsupported waivers."
+  },
+  "conditions": {
+    "A": {
+      "prompts_dir": "prompts_A",
+      "critic_mode": "independent"
+    },
+    "B": {
+      "prompts_dir": "prompts_B",
+      "critic_mode": "cumulative"
+    }
+  },
+  "retrieval": {
+    "mode": "replay",
+    "snapshot_path": "experiments/runs_rev/retrieval_snapshot.json",
+    "snapshot_sha256": "f36ac68c7df9267291d14ad50d7c1ed37a82ef05c07cf3ee453fbd8ea87d5104"
+  },
+  "models": {
+    "generation_model_requested": "gpt-5",
+    "critic_provider": "anthropic",
+    "critic_model_requested": "claude-opus-5",
+    "critic_effort": "high",
+    "sampling": "GPT-5: no temperature and no reasoning_effort sent (provider defaults); Critic: output_config.effort only, no sampling parameters, no fallback model"
+  },
+  "limits": {
+    "MAX_ROUNDS": 7,
+    "CRITIC_MAX_TOKENS": 64000,
+    "INTRO_MAX_TOKENS": 8192
+  },
+  "termination": "early stop when every axis of every specialist scores 5; otherwise stop after MAX_ROUNDS",
+  "retry_policy": {
+    "max_attempts_per_run": 3,
+    "in_call": {
+      "MAX_HTTP_RETRIES": 5,
+      "MAX_INCOMPLETE_RETRIES": 1,
+      "CRITIC_VALIDATION_RETRIES": 1
+    },
+    "technical_failure": "infrastructure or API error, logging failure, response-format failure after the in-call retries, or a Critic refusal; the run exits non-zero and is retried as a new attempt immediately, before the next run",
+    "refusals": "Critic refusals (stop_reason refusal) are counted and reported separately, because they depend on content",
+    "scientific_result": "low scores, non-convergence, wrong or weak content; included as is, never replaced by another run",
+    "valid_run": "exactly one attempt with status ok; all attempts are kept and reported",
+    "if_exhausted": "after 3 failed attempts the run is reported as missing and the condition is analysed with fewer runs (flagged incomplete)"
+  },
+  "runs_per_condition": 5,
+  "order_seed": 20261106,
+  "order": [
+    {
+      "seq": 1,
+      "block": 1,
+      "condition": "B",
+      "run_id": "1"
+    },
+    {
+      "seq": 2,
+      "block": 1,
+      "condition": "A",
+      "run_id": "1"
+    },
+    {
+      "seq": 3,
+      "block": 2,
+      "condition": "B",
+      "run_id": "2"
+    },
+    {
+      "seq": 4,
+      "block": 2,
+      "condition": "A",
+      "run_id": "2"
+    },
+    {
+      "seq": 5,
+      "block": 3,
+      "condition": "B",
+      "run_id": "3"
+    },
+    {
+      "seq": 6,
+      "block": 3,
+      "condition": "A",
+      "run_id": "3"
+    },
+    {
+      "seq": 7,
+      "block": 4,
+      "condition": "B",
+      "run_id": "4"
+    },
+    {
+      "seq": 8,
+      "block": 4,
+      "condition": "A",
+      "run_id": "4"
+    },
+    {
+      "seq": 9,
+      "block": 5,
+      "condition": "B",
+      "run_id": "5"
+    },
+    {
+      "seq": 10,
+      "block": 5,
+      "condition": "A",
+      "run_id": "5"
+    }
+  ],
+  "execution": "one new Python process per run, sequential, in manifest order, out-dir experiments/runs_rev/main",
+  "analysis": {
+    "script": "experiments/reproducibility/analyze_revision.py (hash in code.file_hashes)",
+    "missing_sampled_report": "if a report drawn for the second judge is missing, the replacement is drawn with the same seed from the remaining runs of that condition",
+    "representative_run": "condition-A medoid: highest mean cosine similarity of the safety-content embedding to the other four A runs; ties go to the smaller run number",
+    "primary_similarity_input": "safety-content extraction (Core Questions 1-5 and decision trees; Methods, statistics, score charts, references and stubs removed)",
+    "second_judge_sample": {
+      "seed": 20261107,
+      "rule": "stratified: 3 reports, both conditions present; the A/B split (2+1 or 1+2) and the runs are drawn with the seed",
+      "reports": [
+        "A_4",
+        "B_1",
+        "B_2"
+      ]
+    },
+    "blinding_seed": 20261108,
+    "criteria_freeze": "Two stages (revision_plan 7.3). This manifest fixes the execution inputs and the analysis rules above before the first main run. The L3 codebook, judgement and cause categories, aggregation formulas and the L5 claim-selection rule are frozen in experiments/runs_rev/analysis_criteria.json before any main-run report or deliberation text is opened (only run status and call-log completeness are checked before that); its hash is logged in RUN_LOG.md. The authors have seen the submitted runs and the pilot outputs."
+  },
+  "environment": {
+    "python": "3.12.10",
+    "packages": {
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anthropic": "2.5.0",
+      "anyio": "4.16.0",
+      "certifi": "2026.10.23",
+      "charset-normalizer": "3.5.2",
+      "click": "8.5.0",
+      "colorama": "0.4.6",
+      "contourpy": "1.4.0",
+      "coverage": "7.17.2",
+      "cycler": "0.12.1",
+      "distro": "1.9.0",
+      "docstring-parser": "0.18.0",
+      "fastapi": "0.162.0",
+      "fonttools": "4.68.0",
+      "h11": "0.16.0",
+      "h2": "4.4.1",
+      "hpack": "4.2.0",
+      "httpcore": "1.0.9",
+      "httpcore2": "2.16.0",
+      "httptools": "0.9.0",
+      "httpx": "0.28.1",
+      "httpx2": "2.16.0",
+      "hyperframe": "6.1.0",
+      "idna": "3.20",
+      "iniconfig": "2.3.1",
+      "jiter": "0.18.0",
+      "jsonpatch": "1.42",
+      "jsonpointer": "3.8",
+      "kiwisolver": "1.5.1",
+      "langchain-core": "1.7.6",
+      "langchain-openai": "1.7.4",
+      "langchain-protocol": "0.0.20",
+      "langchain-text-splitters": "1.1.3",
+      "langgraph": "1.2.20",
+      "langgraph-checkpoint": "4.3.1",
+      "langgraph-prebuilt": "1.1.1",
+      "langgraph-sdk": "0.4.13",
+      "langsmith": "0.14.17",
+      "matplotlib": "3.11.2",
+      "msgspec": "0.22.0",
+      "numpy": "2.5.4",
+      "openai": "3.46.0",
+      "opentelemetry-api": "1.45.2",
+      "orjson": "3.13.0",
+      "ormsgpack": "1.13.0",
+      "packaging": "26.3",
+      "pillow": "13.0.0",
+      "pinecone": "10.3.0",
+      "pip": "26.3",
+      "pluggy": "1.7.0",
+      "pydantic": "2.14.2",
+      "pydantic-core": "2.50.2",
+      "pydantic-settings": "2.16.2",
+      "pygments": "2.21.0",
+      "pyparsing": "3.3.3",
+      "pypdf": "6.21.4",
+      "pytest": "9.2.0",
+      "pytest-asyncio": "1.4.1.post1",
+      "pytest-cov": "7.1.0",
+      "pytest-mock": "3.17.0",
+      "python-dateutil": "4.0.0",
+      "python-dotenv": "1.2.4",
+      "pyyaml": "6.0.3",
+      "regex": "2026.9.29",
+      "requests": "2.34.2",
+      "requests-toolbelt": "1.0.0",
+      "sniffio": "1.3.1",
+      "sse-starlette": "3.6.0",
+      "starlette": "1.10.0",
+      "tavily-python": "0.8.5",
+      "tenacity": "9.2.1",
+      "tiktoken": "0.14.0",
+      "truststore": "0.10.5",
+      "typing-extensions": "4.16.0",
+      "typing-inspection": "0.4.5",
+      "tzdata": "2026.6",
+      "urllib3": "2.8.0",
+      "uuid-utils": "0.19.0",
+      "uvicorn": "0.54.0",
+      "watchfiles": "1.3.0",
+      "websockets": "17.4",
+      "xxhash": "4.0.2",
+      "zstandard": "0.25.0"
+    },
+    "enforced": "run_experiment.py refuses to start if the Python version or any installed package version differs"
+  }
+}

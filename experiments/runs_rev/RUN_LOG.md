@@ -44,3 +44,16 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
   - Feedback: 0 score words across all A feedback; feedback still records "What improved" against earlier critique.
   - Termination: A stopped at the 7-round cap, B stopped early at all-5. Both as specified.
 - Observation (n = 1 per condition, not a result): with score-free feedback, A's scores plateaued near 4, whereas pilot 2 A (feedback that restated score levels) approached 5.
+
+## 2026-11-06 — Manifest frozen (step 9)
+
+- Code: commit `98de637` (manifest module, run-time check), `b18e0ef` (balanced order). 45 tracked code files hashed by content.
+- First build (sha256 `e675dcae…`) drew B first in all five blocks (seed 20261106, unrestricted shuffle). Because that aligns condition with time, the rule was changed before any main run to draw, with the same seed, from the 20 sequences where each condition goes first in 2 or 3 blocks. The first file is kept as `experiment_manifest.superseded_unbalanced_order.json`; it was never used.
+- Active manifest: `experiment_manifest.json`, sha256 `ae922a5db1a34e8c3eaa95b218d7a4d79989a56fe93fee0228cec20c5d1bb66c`.
+  - Order: A_1, B_1, A_2, B_2, B_3, A_3, A_4, B_4, B_5, A_5 (out-dir `runs_rev/main`).
+  - Models: generation `gpt-5` (requested), Critic `claude-opus-5`, effort high. MAX_ROUNDS 7. Up to 3 attempts per run, retried immediately.
+  - Retrieval snapshot sha256 `f36ac68c7df9267291d14ad50d7c1ed37a82ef05c07cf3ee453fbd8ea87d5104`, replay mode.
+  - Environment: Python 3.12.10, 84 installed distributions (all enforced).
+  - Second-judge sample (seed 20261107): A_4, B_1, B_2. Blinding seed 20261108.
+- Analysis criteria: two-stage freeze (revision_plan 7.3). `analysis_criteria.json` (L3 codebook etc.) is frozen before any main-run report or deliberation text is opened; until then only run status and call-log completeness are checked.
+- Decision before freezing: MAX_ROUNDS kept at 7, as in the submitted system (pilot 3 A gained about one 5-score cell per round; 10 rounds would not change the non-convergence outcome).
