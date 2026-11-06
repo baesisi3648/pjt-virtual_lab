@@ -18,6 +18,7 @@ from tools.web_search import web_search, efsa_search
 from agents.factory import create_specialist
 from utils.prompt_loader import load_system, render
 from utils.search_query import disambiguate
+from utils.errors import AgentFailureError
 
 logger = logging.getLogger(__name__)
 
@@ -69,31 +70,22 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
     print(f"  [SEARCH] Running parallel RAG + Web + EFSA searches...")
 
     def do_rag_search() -> str:
-        try:
-            result = rag_search_tool.invoke({"query": disambiguate(topic, "safety assessment")})
-            logger.info("RAG search completed")
-            return f"\n\n[Reference regulatory documents]\n{result}"
-        except Exception as e:
-            logger.warning(f"RAG search failed: {e}")
-            return ""
+        # C12 (revision): a failed search raises SearchError and aborts the run.
+        result = rag_search_tool.invoke({"query": disambiguate(topic, "safety assessment")})
+        logger.info("RAG search completed")
+        return f"\n\n[Reference regulatory documents]\n{result}" if result else ""
 
     def do_web_search() -> str:
-        try:
-            result = web_search.invoke({"query": disambiguate(topic, "regulation 2025")})
-            logger.info("Web search completed")
-            return f"\n\n[Recent web search results]\n{result}"
-        except Exception as e:
-            logger.warning(f"Web search failed: {e}")
-            return ""
+        # C12 (revision): a failed search raises SearchError and aborts the run.
+        result = web_search.invoke({"query": disambiguate(topic, "regulation 2025")})
+        logger.info("WEB search completed")
+        return f"\n\n[Recent web search results]\n{result}" if result else ""
 
     def do_efsa_search() -> str:
-        try:
-            result = efsa_search.invoke({"query": disambiguate(topic, "EFSA opinion")})
-            logger.info("EFSA search completed")
-            return f"\n\n[EFSA Journal search results]\n{result}"
-        except Exception as e:
-            logger.warning(f"EFSA search failed: {e}")
-            return ""
+        # C12 (revision): a failed search raises SearchError and aborts the run.
+        result = efsa_search.invoke({"query": disambiguate(topic, "EFSA opinion")})
+        logger.info("EFSA search completed")
+        return f"\n\n[EFSA Journal search results]\n{result}" if result else ""
 
     with ThreadPoolExecutor(max_workers=3) as executor:
         rag_future = executor.submit(do_rag_search)
@@ -158,15 +150,10 @@ def _run_single_specialist(
         }
 
     except Exception as e:
+        # C14 (revision): fail closed instead of passing "Analysis failed" text to the Critic.
         logger.error(f"Specialist {role} failed: {e}")
         print(f"  [{index+1}/{total}] FAILED {role}: {e}")
-
-        return {
-            "role": role,
-            "focus": focus,
-            "output": f"Analysis failed: {str(e)}",
-            "message": None,
-        }
+        raise AgentFailureError(f"Specialist {role} failed in Round 1: {e}") from e
 
 
 def run_specialists(state: AgentState) -> dict:
@@ -383,15 +370,12 @@ def run_round_revision(state: AgentState) -> dict:
             }
 
         except Exception as e:
+            # C14 (revision): fail closed instead of silently reusing the previous output.
             logger.error(f"Specialist {role} revision failed: {e}")
             print(f"  [{index+1}/{len(team)}] FAILED {role}: {e}")
-
-            return {
-                "role": role,
-                "focus": focus,
-                "output": prev_map.get(role, f"Revision failed: {str(e)}"),
-                "message": None,
-            }
+            raise AgentFailureError(
+                f"Specialist {role} failed in Round {current_round}: {e}"
+            ) from e
 
     print(f"\n  [PARALLEL EXECUTION] Launching {len(team)} revision threads...")
 

@@ -14,9 +14,9 @@ from utils.prompt_loader import load_data
 
 
 # Lazy loaders — module-level constants populated on first import.
-RESEARCH_OBJECTIVE: str = load_data("research_objective")
-CODEX_PRINCIPLES: str = load_data("codex_principles")
-REGULATORY_TRENDS: str = load_data("regulatory_trends")
+# research_objective / codex_principles / regulatory_trends were loaded here in the
+# submitted version but never passed to any agent; they were removed in the revision
+# (revision_plan F20, C18).
 RESEARCH_AGENDA: str = load_data("research_agenda")
 ACADEMIC_TONE_GUIDE: str = load_data("academic_tone_guide")
 CRITIQUE_RUBRIC: str = load_data("critique_rubric")

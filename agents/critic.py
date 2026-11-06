@@ -15,6 +15,7 @@ from utils.prompt_loader import load_system, render
 from utils.search_query import disambiguate
 from workflow.state import AgentState, CritiqueResult
 from tools.web_search import web_search
+from utils.errors import CritiqueValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +27,79 @@ SYSTEM_PROMPT: str = render(
 ).strip()
 
 
+SCORE_AXES = ("evidence", "universality", "proportionality", "readability")
+
+# Same-input retries allowed when the Critic response fails validation (C3).
+CRITIC_VALIDATION_RETRIES = 1
+
+
+def parse_and_validate_critique(response_content: str, expected_roles: list[str]) -> CritiqueResult:
+    """Parse the Critic JSON and require complete, in-range scores for every role.
+
+    Raises CritiqueValidationError if the JSON is malformed, if any team role is
+    missing or an unknown role appears, if any of the four axes is missing, if a
+    score is not an integer from 1 to 5, or if per-specialist feedback is missing.
+    No default scores are substituted.
+    """
+    content = response_content.strip()
+    if content.startswith("```"):
+        lines = content.split("\n")
+        content = "\n".join(lines[1:-1])
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError as e:
+        raise CritiqueValidationError(f"invalid JSON: {e}") from e
+    if not isinstance(data, dict):
+        raise CritiqueValidationError("top-level JSON is not an object")
+
+    raw_scores = data.get("scores")
+    if not isinstance(raw_scores, dict):
+        raise CritiqueValidationError("'scores' is missing or not an object")
+    expected = set(expected_roles)
+    got = set(raw_scores)
+    if got != expected:
+        raise CritiqueValidationError(
+            f"score keys do not match the team (missing={sorted(expected - got)}, "
+            f"unexpected={sorted(got - expected)})"
+        )
+
+    scores: dict[str, dict[str, int]] = {}
+    for role in expected_roles:
+        val = raw_scores[role]
+        if not isinstance(val, dict) or set(val) != set(SCORE_AXES):
+            raise CritiqueValidationError(f"{role}: axes must be exactly {SCORE_AXES}, got {val!r}")
+        axis_scores = {}
+        for axis in SCORE_AXES:
+            s = val[axis]
+            if isinstance(s, bool) or not isinstance(s, int) or not 1 <= s <= 5:
+                raise CritiqueValidationError(f"{role}.{axis}: score must be an integer 1-5, got {s!r}")
+            axis_scores[axis] = s
+        scores[role] = axis_scores
+
+    specialist_feedback = data.get("specialist_feedback")
+    if not isinstance(specialist_feedback, dict):
+        raise CritiqueValidationError("'specialist_feedback' is missing or not an object")
+    for role in expected_roles:
+        fb = specialist_feedback.get(role)
+        if not isinstance(fb, str) or not fb.strip():
+            raise CritiqueValidationError(f"{role}: per-specialist feedback is missing")
+
+    return CritiqueResult(
+        decision=str(data.get("decision", "continue")),
+        feedback=str(data.get("feedback", "")),
+        scores=scores,
+        specialist_feedback={r: specialist_feedback[r] for r in expected_roles},
+    )
+
+
 def run_critic(state: AgentState) -> dict:
     """Run the Critic agent — produces per-specialist scores and feedback."""
     current_round = state.get("current_round", 1)
     specialist_outputs = state.get("specialist_outputs", [])
+    expected_roles = [m["role"] for m in state.get("team", [])]
+    if not expected_roles or len(set(expected_roles)) != len(expected_roles):
+        raise CritiqueValidationError(f"team roles are empty or duplicated: {expected_roles}")
+    expected_keys = ", ".join(f'"{r}"' for r in expected_roles)
 
     print(f"\n{'#'*80}")
     print(f"[CRITIC] Starting Critic agent — Round {current_round}")
@@ -37,13 +107,12 @@ def run_critic(state: AgentState) -> dict:
     print(f"{'#'*80}\n")
 
     # Step 1: gather verification context via web search
+    # C12 (revision): a failed search raises SearchError instead of being skipped.
     web_context = ""
-    try:
-        web_result = web_search.invoke({"query": disambiguate(state["topic"], "regulatory verification")})
+    web_result = web_search.invoke({"query": disambiguate(state["topic"], "regulatory verification")})
+    if web_result:
         web_context = f"\n\n## [Web search results — verification context]\n{web_result}"
-        logger.info("Critic web search completed")
-    except Exception as e:
-        logger.warning(f"Critic web search failed: {e}")
+    logger.info("Critic web search completed")
 
     # Step 2: assemble specialist outputs
     specialist_context = ""
@@ -83,91 +152,38 @@ def run_critic(state: AgentState) -> dict:
 {f'[Prior-round critique records]{history_context}' if history_context else ''}
 
 Review each specialist's analysis individually and respond in JSON.
-Use each specialist's role name as the key.
+Use each specialist's role name as the key, exactly as written here: {expected_keys}.
 
 ★ Round {current_round} scoring rules:
 - If a weakness flagged in a previous round has been resolved, raise the score.
 - If previously credited strengths persist, do not lower the score.
 - Include in `specialist_feedback` the items "what improved", "remaining weaknesses", and "concrete actions to reach 5/5"."""
 
-    # Step 4: call OpenAI
-    print(f"[CRITIC] Calling OpenAI API via call_gpt")
-    logger.info("Critic: Calling OpenAI directly...")
-
-    try:
+    # Step 4: call the Critic model and validate the response (C3, revision).
+    # The submitted version filled missing or malformed scores with a default of 3
+    # and continued with empty scores when JSON parsing failed. The revision retries
+    # once with the same input and otherwise fails closed.
+    attempts: list[str] = []
+    critique = None
+    last_error: Exception | None = None
+    for attempt in range(1 + CRITIC_VALIDATION_RETRIES):
+        print(f"[CRITIC] Calling Critic model (attempt {attempt + 1})")
         response_content = call_gpt(SYSTEM_PROMPT, user_message)
-        print(f"[CRITIC] OpenAI call succeeded — Response: {len(response_content)} chars")
-    except Exception as e:
-        print(f"[CRITIC ERROR] {type(e).__name__}: {e}")
-        raise
-
-    # JSON parsing — per-axis scores (evidence, universality, proportionality, readability)
-    SCORE_AXES = ("evidence", "universality", "proportionality", "readability")
-    DEFAULT_AXIS_SCORES = {axis: 3 for axis in SCORE_AXES}
-
-    def _normalize_scores(raw: dict) -> dict:
-        """Normalise per-specialist scores to `{role: {axis: int}}`."""
-        normalized = {}
-        for role, val in raw.items():
-            if isinstance(val, dict):
-                axis_scores = {}
-                for axis in SCORE_AXES:
-                    try:
-                        axis_scores[axis] = int(val.get(axis, 3))
-                    except (ValueError, TypeError):
-                        axis_scores[axis] = 3
-                normalized[role] = axis_scores
-            elif isinstance(val, (int, float)):
-                int_val = int(val)
-                normalized[role] = {axis: int_val for axis in SCORE_AXES}
-            else:
-                m = re.search(r'(\d)', str(val))
-                int_val = int(m.group(1)) if m else 3
-                normalized[role] = {axis: int_val for axis in SCORE_AXES}
-        return normalized
-
-    try:
-        content = response_content.strip()
-        if content.startswith("```"):
-            lines = content.split("\n")
-            content = "\n".join(lines[1:-1])
-
-        data = json.loads(content)
-        raw_scores = data.get("scores", {})
-        scores = _normalize_scores(raw_scores)
-
-        decision = data.get("decision", "continue")
-        feedback = data.get("feedback", "")
-        specialist_feedback = data.get("specialist_feedback", {})
-
-        if not scores and specialist_feedback:
-            for role in specialist_feedback:
-                scores[role] = dict(DEFAULT_AXIS_SCORES)
-            logger.info(f"Critic scores empty, assigned defaults for {list(scores.keys())}")
-
-        for role in specialist_feedback:
-            if role not in scores:
-                scores[role] = dict(DEFAULT_AXIS_SCORES)
-
-        critique = CritiqueResult(
-            decision=decision,
-            feedback=feedback,
-            scores=scores,
-            specialist_feedback=specialist_feedback,
+        attempts.append(response_content)
+        try:
+            critique = parse_and_validate_critique(response_content, expected_roles)
+            break
+        except CritiqueValidationError as e:
+            last_error = e
+            logger.warning(f"Critic response invalid (attempt {attempt + 1}): {e}")
+    if critique is None:
+        raise CritiqueValidationError(
+            f"Critic response invalid after {len(attempts)} attempts: {last_error}"
         )
 
-        for role, axis_scores in scores.items():
-            axis_str = " ".join(f"{a[0].upper()}={s}" for a, s in axis_scores.items())
-            print(f"[CRITIC] {role}: {axis_str}")
-
-    except (json.JSONDecodeError, KeyError) as e:
-        logger.warning(f"Critic JSON parse failed: {e}, defaulting to continue")
-        critique = CritiqueResult(
-            decision="continue",
-            feedback=response_content[:500],
-            scores={},
-            specialist_feedback={},
-        )
+    for role, axis_scores in critique.scores.items():
+        axis_str = " ".join(f"{a[0].upper()}={s}" for a, s in axis_scores.items())
+        print(f"[CRITIC] {role}: {axis_str}")
 
     # message log
     messages = list(state.get("messages", []))

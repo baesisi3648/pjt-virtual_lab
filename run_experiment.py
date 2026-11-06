@@ -43,9 +43,13 @@ DEFAULT_TOPIC = (
     "Derivation of a standard safety assessment framework for "
     "genome-edited foods (NGT)."
 )
+# P1 (revision): neutral constraint. The submitted version used
+# "Avoid the GMO-style blanket strictness; require additional data only when there
+# is a clear scientific basis. Be proportionate and rational."
 DEFAULT_CONSTRAINTS = (
-    "Avoid the GMO-style blanket strictness; require additional data only "
-    "when there is a clear scientific basis. Be proportionate and rational."
+    "Be proportionate and science-based. Require additional data only when there "
+    "is a scientific basis, and justify any decision to omit an assessment. "
+    "Avoid both disproportionate data requirements and unsupported waivers."
 )
 
 

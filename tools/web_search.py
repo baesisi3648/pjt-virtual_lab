@@ -14,6 +14,8 @@ Features:
 
 import os
 import logging
+
+from utils.errors import SearchError
 from datetime import datetime
 from typing import Dict, Any, Optional
 from langchain_core.tools import tool
@@ -79,7 +81,8 @@ def format_search_results(results: Dict[str, Any]) -> str:
         "Title: ...\nContent: ...\n[출처: URL]\n\n"
     """
     if not results or 'results' not in results:
-        return "검색 결과가 없습니다."
+        # C12 (revision): an empty result is injected as nothing, not as a message.
+        return ""
 
     formatted = []
     for item in results['results']:
@@ -145,17 +148,17 @@ def web_search(query: str) -> str:
     except ValueError as e:
         # Configuration error (missing API key)
         logger.error(f"SEARCH_CONFIG_ERROR | query='{query}' | error='{str(e)}'")
-        return f"설정 오류: {str(e)}"
+        raise SearchError(f"search configuration error: {e}") from e
 
     except RuntimeError as e:
         # API error
         logger.error(f"SEARCH_API_ERROR | query='{query}' | error='{str(e)}'")
-        return f"검색 실패: {str(e)}"
+        raise SearchError(f"web_search API error: {e}") from e
 
     except Exception as e:
         # Unexpected error
         logger.error(f"SEARCH_UNEXPECTED_ERROR | query='{query}' | error='{str(e)}'")
-        return f"예상치 못한 오류: {str(e)}"
+        raise SearchError(f"search unexpected error: {e}") from e
 
 
 @tool
@@ -192,15 +195,15 @@ def efsa_search(query: str) -> str:
 
     except ValueError as e:
         logger.error(f"EFSA_SEARCH_CONFIG_ERROR | query='{query}' | error='{str(e)}'")
-        return f"설정 오류: {str(e)}"
+        raise SearchError(f"search configuration error: {e}") from e
 
     except RuntimeError as e:
         logger.error(f"EFSA_SEARCH_API_ERROR | query='{query}' | error='{str(e)}'")
-        return f"EFSA 검색 실패: {str(e)}"
+        raise SearchError(f"efsa_search API error: {e}") from e
 
     except Exception as e:
         logger.error(f"EFSA_SEARCH_UNEXPECTED_ERROR | query='{query}' | error='{str(e)}'")
-        return f"예상치 못한 오류: {str(e)}"
+        raise SearchError(f"search unexpected error: {e}") from e
 
 
 # TODO: Redis Caching

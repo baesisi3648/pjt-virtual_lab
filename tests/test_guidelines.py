@@ -15,54 +15,8 @@ def _any(text: str, *needles: str) -> bool:
     return any(n.lower() in lowered for n in needles)
 
 
-class TestResearchObjective:
-    """Research-objective asset tests."""
-
-    def test_exists(self):
-        from data.guidelines import RESEARCH_OBJECTIVE
-        assert RESEARCH_OBJECTIVE is not None
-
-    def test_is_string(self):
-        from data.guidelines import RESEARCH_OBJECTIVE
-        assert isinstance(RESEARCH_OBJECTIVE, str)
-
-    def test_contains_category_keyword(self):
-        from data.guidelines import RESEARCH_OBJECTIVE
-        assert _any(RESEARCH_OBJECTIVE, "category", "카테고리")
-
-    def test_not_product_specific(self):
-        from data.guidelines import RESEARCH_OBJECTIVE
-        assert _any(RESEARCH_OBJECTIVE, "universal", "category-level", "범용", "개별 제품")
-
-
-class TestCodexPrinciples:
-    """Codex principles asset tests."""
-
-    def test_exists(self):
-        from data.guidelines import CODEX_PRINCIPLES
-        assert CODEX_PRINCIPLES is not None
-
-    def test_contains_four_principles(self):
-        from data.guidelines import CODEX_PRINCIPLES
-        en_keywords = ["molecular", "toxic", "allerg", "nutrition"]
-        ko_keywords = ["분자", "독성", "알레르기", "영양"]
-        en_found = sum(1 for k in en_keywords if k.lower() in CODEX_PRINCIPLES.lower())
-        ko_found = sum(1 for k in ko_keywords if k in CODEX_PRINCIPLES)
-        assert max(en_found, ko_found) >= 3, (
-            f"Only {max(en_found, ko_found)} of the four principles found"
-        )
-
-
-class TestRegulatoryTrends:
-    """Regulatory-trends asset tests."""
-
-    def test_exists(self):
-        from data.guidelines import REGULATORY_TRENDS
-        assert REGULATORY_TRENDS is not None
-
-    def test_mentions_process_or_product_based(self):
-        from data.guidelines import REGULATORY_TRENDS
-        assert _any(REGULATORY_TRENDS, "process", "product")
+# Tests for research_objective / codex_principles / regulatory_trends were removed
+# together with those unused assets (revision_plan C18).
 
 
 class TestCritiqueRubric:
@@ -93,16 +47,14 @@ class TestCritiqueRubric:
 
 
 class TestAllGuidelines:
-    """Aggregate sanity checks."""
+    """Aggregate sanity checks for the assets actually injected into agents."""
 
-    def test_all_four_assets_exist(self):
-        from data.guidelines import (
-            RESEARCH_OBJECTIVE,
-            CODEX_PRINCIPLES,
-            REGULATORY_TRENDS,
-            CRITIQUE_RUBRIC,
-        )
-        assets = [RESEARCH_OBJECTIVE, CODEX_PRINCIPLES, REGULATORY_TRENDS, CRITIQUE_RUBRIC]
-        assert all(asset and len(asset) > 50 for asset in assets), (
-            "All assets must be at least 50 characters long"
-        )
+    def test_all_injected_assets_exist(self):
+        from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE, CRITIQUE_RUBRIC
+        assets = [RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE, CRITIQUE_RUBRIC]
+        assert all(asset and len(asset) > 50 for asset in assets)
+
+    def test_unused_assets_removed(self):
+        import data.guidelines as g
+        for name in ("RESEARCH_OBJECTIVE", "CODEX_PRINCIPLES", "REGULATORY_TRENDS"):
+            assert not hasattr(g, name)

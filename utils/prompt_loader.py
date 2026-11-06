@@ -30,6 +30,9 @@ def _resolve_prompts_dir() -> Path:
         p = Path(env_path).expanduser().resolve()
         if p.exists():
             return p
+        # Revision: an explicitly requested prompt set must exist. Silently falling
+        # back to `prompts/` would mix experimental conditions.
+        raise FileNotFoundError(f"VIRTUAL_LAB_PROMPTS_DIR does not exist: {p}")
 
     private = _REPO_ROOT / "prompts"
     if private.exists():

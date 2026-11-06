@@ -7,6 +7,7 @@ Pinecone 또는 ChromaDB 지원
 import logging
 from langchain_core.tools import tool
 from config import settings
+from utils.errors import SearchError
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,8 @@ def rag_search_tool(query: str) -> str:
 
         if not docs:
             logger.warning("RAG Hit: 0 documents")
-            return "관련 규제 문서를 찾을 수 없습니다."
+            # C12 (revision): an empty result is injected as nothing, not as a message.
+            return ""
 
         logger.info(f"RAG Hit: {len(docs)} documents")
 
@@ -60,4 +62,4 @@ def rag_search_tool(query: str) -> str:
 
     except Exception as e:
         logger.error(f"RAG 검색 오류: {str(e)}")
-        return f"RAG 검색 오류: {str(e)}"
+        raise SearchError(f"rag_search error: {e}") from e

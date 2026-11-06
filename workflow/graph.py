@@ -16,7 +16,8 @@ from langgraph.graph import StateGraph, END
 
 from workflow.state import AgentState
 from agents.scientist import run_specialists, run_round_revision
-from agents.critic import run_critic
+from agents.critic import run_critic, SCORE_AXES
+from utils.errors import CritiqueValidationError
 from agents.pi import run_pi_planning, run_pi_summary, run_final_synthesis
 from agents.translator import run_translation
 
@@ -32,24 +33,30 @@ def check_round(state: AgentState) -> Literal["increment_round", "final_synthesi
     print(f"[CHECK_ROUND] current_round={current_round}, MAX_ROUNDS={MAX_ROUNDS}")
 
     # 조기 종료: 모든 전문가의 모든 축이 5점
-    if critique and critique.scores:
-        all_perfect = True
-        for role, axis_scores in critique.scores.items():
-            if isinstance(axis_scores, dict):
-                for axis, score in axis_scores.items():
-                    if score < 5:
-                        all_perfect = False
-                        break
-            else:
-                # 기존 형식 호환 (통합 점수)
-                if axis_scores < 5:
-                    all_perfect = False
-            if not all_perfect:
-                break
-        if all_perfect and critique.scores:
-            print(f"  -> EARLY STOP: All axes 5/5 at round {current_round}")
-            print(f"{'='*60}\n")
-            return "final_synthesis"
+    # C3 (revision): evaluate early stopping only on a complete score set
+    # (every team role, all four axes, integers 1-5). An incomplete set is a
+    # technical failure, never a silent "continue" or an early stop.
+    team_roles = [m["role"] for m in state.get("team", [])]
+    if critique is None or not critique.scores:
+        raise CritiqueValidationError(f"Round {current_round}: no Critic scores available")
+    if set(critique.scores) != set(team_roles):
+        raise CritiqueValidationError(
+            f"Round {current_round}: Critic scores do not cover the team "
+            f"(scores={sorted(critique.scores)}, team={sorted(team_roles)})"
+        )
+    for role, axis_scores in critique.scores.items():
+        if (
+            not isinstance(axis_scores, dict)
+            or set(axis_scores) != set(SCORE_AXES)
+            or any(isinstance(s, bool) or not isinstance(s, int) or not 1 <= s <= 5
+                   for s in axis_scores.values())
+        ):
+            raise CritiqueValidationError(f"Round {current_round}: invalid scores for {role}: {axis_scores!r}")
+    all_perfect = all(s == 5 for axis_scores in critique.scores.values() for s in axis_scores.values())
+    if all_perfect:
+        print(f"  -> EARLY STOP: All axes 5/5 at round {current_round}")
+        print(f"{'='*60}\n")
+        return "final_synthesis"
 
     if current_round < MAX_ROUNDS:
         print(f"  -> INCREMENT_ROUND (round {current_round} < {MAX_ROUNDS})")

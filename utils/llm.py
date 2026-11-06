@@ -14,12 +14,17 @@ import traceback
 from dotenv import load_dotenv
 import httpx
 
+from utils.errors import LLMIncompleteError
+
 load_dotenv()
 
 # __pycache__ 사용 방지
 sys.dont_write_bytecode = True
 
 logger = logging.getLogger(__name__)
+
+# Retries allowed for an empty or truncated response before failing closed (C13).
+MAX_INCOMPLETE_RETRIES = 1
 
 # OpenAI API 엔드포인트
 OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
@@ -113,115 +118,138 @@ def call_llm(
 
     client = _get_http_client()
     max_retries = 5
-
-    for attempt in range(max_retries):
-        try:
-            response = client.post(
-                OPENAI_API_URL,
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-            )
-
-            # 상세 로깅: 응답 받음
-            print(f"\n{'='*80}")
-            print(f"[LLM RESPONSE] Received response from OpenAI")
-            print(f"  Status code: {response.status_code}")
-            print(f"{'='*80}\n")
-
-            # Rate Limit (429) 자동 재시도
-            if response.status_code == 429:
-                retry_after = 10  # 기본 대기 시간
-                try:
-                    err = response.json().get("error", {})
-                    msg = err.get("message", "")
-                    # "Please try again in 3.396s" 에서 대기 시간 추출
-                    if "try again in" in msg:
-                        wait_str = msg.split("try again in ")[1].split("s")[0]
-                        retry_after = float(wait_str) + 1  # 여유 1초 추가
-                except Exception:
-                    pass
-                retry_after = min(retry_after, 60)  # 최대 60초
-
-                if attempt < max_retries - 1:
-                    print(f"[LLM RATE LIMIT] 429 - waiting {retry_after:.1f}s before retry ({attempt+1}/{max_retries})")
-                    logger.warning(f"[LLM] Rate limit hit, retrying in {retry_after:.1f}s (attempt {attempt+1})")
-                    time.sleep(retry_after)
-                    continue
-                else:
-                    error_body = response.text
-                    raise RuntimeError(f"OpenAI API rate limit exceeded after {max_retries} retries: {error_body}")
-
-            # 서버 에러 (502, 503, 500 등) — 재시도 가능
-            if response.status_code in (500, 502, 503, 504):
-                if attempt < max_retries - 1:
-                    wait = min(5 * (attempt + 1), 30)
-                    print(f"[LLM SERVER ERROR] HTTP {response.status_code} - waiting {wait}s before retry ({attempt+1}/{max_retries})")
-                    logger.warning(f"[LLM] Server error {response.status_code}, retrying in {wait}s (attempt {attempt+1})")
-                    time.sleep(wait)
-                    continue
-                else:
-                    raise RuntimeError(f"OpenAI API server error (HTTP {response.status_code}) after {max_retries} retries")
-
-            # 기타 HTTP 에러 체크
-            if response.status_code != 200:
-                error_body = response.text
-                print(f"\n{'!'*80}")
-                print(f"[LLM ERROR] OpenAI API returned error!")
-                print(f"  Status: {response.status_code}")
-                print(f"  Error body: {error_body}")
-                print(f"{'!'*80}\n")
-                logger.error(f"[LLM] OpenAI API HTTP {response.status_code}: {error_body}")
-                raise RuntimeError(
-                    f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+    # Separate budgets (C13): HTTP/transport retries inside, incomplete-response
+    # retries outside, so exhausting one never consumes the other.
+    incomplete_info = None
+    for incomplete_attempt in range(1 + MAX_INCOMPLETE_RETRIES):
+        incomplete_info = None
+        for attempt in range(max_retries):
+            try:
+                response = client.post(
+                    OPENAI_API_URL,
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json=payload,
                 )
 
-            data = response.json()
+                # 상세 로깅: 응답 받음
+                print(f"\n{'='*80}")
+                print(f"[LLM RESPONSE] Received response from OpenAI")
+                print(f"  Status code: {response.status_code}")
+                print(f"{'='*80}\n")
 
-            # API 레벨 에러 체크
-            if "error" in data:
-                error_msg = data["error"].get("message", str(data["error"]))
-                logger.error(f"[LLM] OpenAI API Error: {error_msg}")
-                raise RuntimeError(f"OpenAI API error: {error_msg}")
+                # Rate Limit (429) 자동 재시도
+                if response.status_code == 429:
+                    retry_after = 10  # 기본 대기 시간
+                    try:
+                        err = response.json().get("error", {})
+                        msg = err.get("message", "")
+                        # "Please try again in 3.396s" 에서 대기 시간 추출
+                        if "try again in" in msg:
+                            wait_str = msg.split("try again in ")[1].split("s")[0]
+                            retry_after = float(wait_str) + 1  # 여유 1초 추가
+                    except Exception:
+                        pass
+                    retry_after = min(retry_after, 60)  # 최대 60초
 
-            # 응답 파싱
-            choice = data["choices"][0]
-            content = choice["message"].get("content") or ""
+                    if attempt < max_retries - 1:
+                        print(f"[LLM RATE LIMIT] 429 - waiting {retry_after:.1f}s before retry ({attempt+1}/{max_retries})")
+                        logger.warning(f"[LLM] Rate limit hit, retrying in {retry_after:.1f}s (attempt {attempt+1})")
+                        time.sleep(retry_after)
+                        continue
+                    else:
+                        error_body = response.text
+                        raise RuntimeError(f"OpenAI API rate limit exceeded after {max_retries} retries: {error_body}")
 
-            print(f"\n{'='*80}")
-            print(f"[LLM SUCCESS] API call completed successfully")
-            print(f"  Content length: {len(content)} chars")
-            print(f"  Model used: {data.get('model', 'unknown')}")
-            print(f"  Usage: {data.get('usage', {})}")
-            print(f"{'='*80}\n")
+                # 서버 에러 (502, 503, 500 등) — 재시도 가능
+                if response.status_code in (500, 502, 503, 504):
+                    if attempt < max_retries - 1:
+                        wait = min(5 * (attempt + 1), 30)
+                        print(f"[LLM SERVER ERROR] HTTP {response.status_code} - waiting {wait}s before retry ({attempt+1}/{max_retries})")
+                        logger.warning(f"[LLM] Server error {response.status_code}, retrying in {wait}s (attempt {attempt+1})")
+                        time.sleep(wait)
+                        continue
+                    else:
+                        raise RuntimeError(f"OpenAI API server error (HTTP {response.status_code}) after {max_retries} retries")
 
-            logger.info(
-                f"[LLM] Response: {len(content)} chars, "
-                f"model={data.get('model', 'unknown')}, "
-                f"usage={data.get('usage', {})}"
-            )
-            return content
+                # 기타 HTTP 에러 체크
+                if response.status_code != 200:
+                    error_body = response.text
+                    print(f"\n{'!'*80}")
+                    print(f"[LLM ERROR] OpenAI API returned error!")
+                    print(f"  Status: {response.status_code}")
+                    print(f"  Error body: {error_body}")
+                    print(f"{'!'*80}\n")
+                    logger.error(f"[LLM] OpenAI API HTTP {response.status_code}: {error_body}")
+                    raise RuntimeError(
+                        f"OpenAI API error (HTTP {response.status_code}): {error_body}"
+                    )
 
-        except httpx.TimeoutException as e:
-            print(f"[LLM TIMEOUT] Request timed out after 600 seconds")
-            logger.error("[LLM] OpenAI API request timed out (600s)")
-            if attempt < max_retries - 1:
-                time.sleep(5)
-                continue
-            raise RuntimeError("OpenAI API request timed out")
+                data = response.json()
 
-        except RuntimeError:
-            raise
+                # API 레벨 에러 체크
+                if "error" in data:
+                    error_msg = data["error"].get("message", str(data["error"]))
+                    logger.error(f"[LLM] OpenAI API Error: {error_msg}")
+                    raise RuntimeError(f"OpenAI API error: {error_msg}")
 
-        except Exception as e:
-            print(f"[LLM EXCEPTION] {type(e).__name__}: {e}")
-            logger.error(f"[LLM] Unexpected error: {type(e).__name__}: {e}")
-            raise
+                # 응답 파싱
+                choice = data["choices"][0]
+                content = choice["message"].get("content") or ""
 
-    # for 루프가 정상 종료된 경우 (모든 재시도 소진)
-    raise RuntimeError("OpenAI API call failed after all retries")
+                # C13 (revision): never pass a truncated or empty response downstream.
+                # GPT-5 reasoning tokens share max_completion_tokens, so "length" can
+                # occur with little or no visible content. Leave the HTTP-retry loop and
+                # let the outer loop spend its own, separate incomplete-response budget.
+                finish_reason = choice.get("finish_reason")
+                if finish_reason != "stop" or not content.strip():
+                    incomplete_info = (finish_reason, len(content), data.get("model"))
+                    break
+
+                print(f"\n{'='*80}")
+                print(f"[LLM SUCCESS] API call completed successfully")
+                print(f"  Content length: {len(content)} chars")
+                print(f"  Model used: {data.get('model', 'unknown')}")
+                print(f"  Usage: {data.get('usage', {})}")
+                print(f"{'='*80}\n")
+
+                logger.info(
+                    f"[LLM] Response: {len(content)} chars, "
+                    f"model={data.get('model', 'unknown')}, "
+                    f"usage={data.get('usage', {})}"
+                )
+                return content
+
+            except httpx.TimeoutException as e:
+                print(f"[LLM TIMEOUT] Request timed out after 600 seconds")
+                logger.error("[LLM] OpenAI API request timed out (600s)")
+                if attempt < max_retries - 1:
+                    time.sleep(5)
+                    continue
+                raise RuntimeError("OpenAI API request timed out")
+
+            except RuntimeError:
+                # Includes PipelineError subclasses such as LLMIncompleteError.
+                raise
+
+            except Exception as e:
+                print(f"[LLM EXCEPTION] {type(e).__name__}: {e}")
+                logger.error(f"[LLM] Unexpected error: {type(e).__name__}: {e}")
+                raise
+        else:
+            # HTTP-retry loop exhausted without a usable response.
+            raise RuntimeError("OpenAI API call failed after all retries")
+        logger.warning(
+            f"[LLM] Incomplete response (finish_reason={incomplete_info[0]}, "
+            f"chars={incomplete_info[1]}), attempt {incomplete_attempt + 1}"
+        )
+
+    raise LLMIncompleteError(
+        f"Incomplete LLM response after {1 + MAX_INCOMPLETE_RETRIES} attempts "
+        f"(finish_reason={incomplete_info[0]}, chars={incomplete_info[1]}, model={incomplete_info[2]})"
+    )
 
 
 def call_gpt(system_prompt: str, user_message: str, **kwargs) -> str:

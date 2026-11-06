@@ -21,6 +21,7 @@ from utils.search_query import disambiguate
 from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE
 from workflow.state import AgentState
 from tools.web_search import web_search
+from utils.errors import AgentFailureError
 
 
 def _sanitize_mermaid(report: str) -> str:
@@ -144,18 +145,32 @@ def _cluster_similar_roles(unique_roles: list[str]) -> dict[str, str]:
             content = "\n".join(lines[1:-1])
         data = json.loads(content)
 
-        mapping = {}
-        for cluster in data.get("clusters", []):
-            canonical = cluster["canonical"]
-            for member in cluster["members"]:
-                mapping[member] = canonical
+        clusters = data["clusters"]
+    except (json.JSONDecodeError, KeyError, TypeError) as e:
+        # C15 (revision): no silent identity mapping; role-frequency statistics
+        # would otherwise be computed on unclustered names without notice.
+        raise AgentFailureError(f"Role clustering response could not be parsed: {e}") from e
 
-        for r in unique_roles:
-            if r not in mapping:
-                mapping[r] = r
-        return mapping
-    except (json.JSONDecodeError, KeyError):
-        return {r: r for r in unique_roles}
+    # C15 (revision): every input role must be assigned to exactly one cluster.
+    # The submitted version silently mapped unassigned roles to themselves.
+    mapping: dict[str, str] = {}
+    if not isinstance(clusters, list) or not clusters:
+        raise AgentFailureError("Role clustering returned no clusters")
+    for cluster in clusters:
+        canonical = cluster.get("canonical") if isinstance(cluster, dict) else None
+        members = cluster.get("members") if isinstance(cluster, dict) else None
+        if not isinstance(canonical, str) or not canonical.strip() or not isinstance(members, list) or not members:
+            raise AgentFailureError(f"Role clustering returned a malformed cluster: {cluster!r}")
+        for member in members:
+            if member not in unique_roles:
+                raise AgentFailureError(f"Role clustering returned an unknown role: {member!r}")
+            if member in mapping:
+                raise AgentFailureError(f"Role clustering assigned a role twice: {member!r}")
+            mapping[member] = canonical
+    missing = [r for r in unique_roles if r not in mapping]
+    if missing:
+        raise AgentFailureError(f"Role clustering left roles unassigned: {missing}")
+    return mapping
 
 
 def _shorten_role_name(role: str) -> str:
@@ -194,25 +209,35 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
     all_teams = []
     max_retries = n_trials * 3
     attempt = 0
+    # Technical retry policy (revision_plan 7.3): a trial whose call fails or whose
+    # response is not a valid team (1-5 members with role and focus) is regenerated,
+    # up to max_retries attempts in total. Every failed attempt is recorded and
+    # reported; the protocol is "n_trials valid compositions", not "n_trials calls".
+    failed_trials: list[dict] = []
 
     def _single_trial(trial_idx: int) -> list[dict] | None:
         try:
             team = decide_team(user_query)
+            if not 1 <= len(team) <= 5:
+                raise ValueError(f"team size {len(team)} outside 1-5")
             print(f"  Trial {trial_idx+1}: {len(team)} specialists - {[m['role'] for m in team]}")
             return team
         except Exception as e:
             logger.warning(f"Trial {trial_idx+1} failed: {e}")
+            failed_trials.append({"attempt_index": trial_idx, "error_type": type(e).__name__,
+                                  "error": str(e)[:500]})
             return None
 
     while len(all_teams) < n_trials and attempt < max_retries:
-        remaining = n_trials - len(all_teams)
+        # Never exceed the total attempt budget (max_retries calls in all).
+        batch = min(n_trials - len(all_teams), max_retries - attempt)
         with ThreadPoolExecutor(max_workers=5) as executor:
-            futures = [executor.submit(_single_trial, attempt + i) for i in range(remaining)]
+            futures = [executor.submit(_single_trial, attempt + i) for i in range(batch)]
             for future in as_completed(futures):
                 result = future.result()
                 if result and len(all_teams) < n_trials:
                     all_teams.append(result)
-        attempt += remaining
+        attempt += batch
         if len(all_teams) < n_trials:
             print(f"  [RETRY] {len(all_teams)}/{n_trials} succeeded, retrying {n_trials - len(all_teams)} more...")
 
@@ -291,14 +316,11 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
         data = json.loads(content)
         final_team = data.get("team", [])
         rationale = data.get("rationale", "")
-    except (json.JSONDecodeError, KeyError):
-        final_team = []
-        for ft in frequency_table[:most_common_size]:
-            final_team.append({
-                "role": ft["role"],
-                "focus": ft["focus_variants"][0] if ft["focus_variants"] else "",
-            })
-        rationale = "Frequency-based fallback selection (LLM response parse failed)."
+    except (json.JSONDecodeError, KeyError) as e:
+        # C15 (revision): no silent frequency-table fallback; fail closed.
+        raise AgentFailureError(f"PI final team selection could not be parsed: {e}") from e
+    if not final_team or not all(m.get("role") and m.get("focus") for m in final_team):
+        raise AgentFailureError("PI final team selection returned an empty or incomplete team")
 
     # Apply deterministic short-name post-processing
     for member in final_team:
@@ -316,7 +338,11 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
         "frequency_table": freq_summary,
         "team_sizes": size_summary,
         "n_trials": n_trials,
+        "failed_trial_attempts": failed_trials,
     }
+
+
+INTRO_MAX_TOKENS = 8192
 
 
 def generate_self_introductions(team: List[dict]) -> list[dict]:
@@ -331,17 +357,17 @@ def generate_self_introductions(team: List[dict]) -> list[dict]:
         role = profile.get("role", "")
         focus = profile.get("focus", "")
         prompt = render(intro_user_template, ROLE=role, FOCUS=focus)
+        # Revision: the submitted runs used max_tokens=500, which GPT-5 reasoning
+        # tokens exhausted, leaving empty introductions in the saved metadata.
+        # The limit is raised, and a failure aborts the run instead of inserting a
+        # synthetic sentence (C15).
         try:
-            intro = call_gpt(intro_system, prompt, max_tokens=500)
-            print(f"  [{idx+1}/{len(team)}] {role}: intro generated ({len(intro)} chars)")
-            return {"role": role, "focus": focus, "introduction": intro.strip()}
+            intro = call_gpt(intro_system, prompt, max_tokens=INTRO_MAX_TOKENS)
         except Exception as e:
-            logger.warning(f"Introduction generation failed for {role}: {e}")
-            return {
-                "role": role,
-                "focus": focus,
-                "introduction": f"As the {role}, I am responsible for {focus} in this study.",
-            }
+            logger.error(f"Introduction generation failed for {role}: {e}")
+            raise AgentFailureError(f"Self-introduction failed for {role}: {e}") from e
+        print(f"  [{idx+1}/{len(team)}] {role}: intro generated ({len(intro)} chars)")
+        return {"role": role, "focus": focus, "introduction": intro.strip()}
 
     with ThreadPoolExecutor(max_workers=len(team)) as executor:
         futures = [executor.submit(_generate_one, p, i) for i, p in enumerate(team)]
@@ -362,24 +388,14 @@ def run_pi_planning(state: AgentState) -> dict:
     constraints = state.get("constraints", "")
     query = f"{topic}\nConstraints: {constraints}"
 
-    team_selection_data = None
-    try:
-        team_selection_data = decide_team_statistically(query)
-        team = team_selection_data["final_team"]
-        logger.info(
-            f"PI decided team statistically: {len(team)} specialists "
-            f"from {team_selection_data['n_trials']} trials"
-        )
-    except Exception as e:
-        logger.warning(f"decide_team_statistically failed: {e}, using default team")
-        team = [
-            {"role": "Molecular Genetics Specialist",
-             "focus": "off-target effects and molecular characterisation of genome editing"},
-            {"role": "Toxicology Specialist",
-             "focus": "toxicological, allergenicity, and nutritional assessment methodology"},
-            {"role": "Regulatory Science Specialist",
-             "focus": "comparison of international regulatory frameworks and applicability of guidelines"},
-        ]
+    # C15 (revision): the submitted version fell back to a hard-coded three-member
+    # team when statistical selection failed. The revision fails closed instead.
+    team_selection_data = decide_team_statistically(query)
+    team = team_selection_data["final_team"]
+    logger.info(
+        f"PI decided team statistically: {len(team)} specialists "
+        f"from {team_selection_data['n_trials']} trials"
+    )
 
     introductions = generate_self_introductions(team)
 
@@ -523,24 +539,21 @@ def run_final_synthesis(state: AgentState) -> dict:
 
     web_context = ""
     pi_sources = []
-    try:
-        web_result = web_search.invoke({"query": disambiguate(state["topic"], "safety framework 2025")})
+    # C12 (revision): a failed search raises SearchError instead of being skipped.
+    web_result = web_search.invoke({"query": disambiguate(state["topic"], "safety framework 2025")})
+    if web_result:
         web_context = f"\n\n## [Web search — recent context]\n{web_result}"
         pi_sources.extend(_extract_sources(web_context))
-        logger.info("PI final synthesis web search completed")
-    except Exception as e:
-        logger.warning(f"PI final synthesis web search failed: {e}")
+    logger.info("PI final synthesis web search completed")
 
     efsa_context = state.get("cached_efsa_context", "")
     if not efsa_context:
-        try:
-            from tools.web_search import efsa_search
-            efsa_result = efsa_search.invoke({"query": disambiguate(state["topic"], "EFSA opinion")})
+        from tools.web_search import efsa_search
+        efsa_result = efsa_search.invoke({"query": disambiguate(state["topic"], "EFSA opinion")})
+        if efsa_result:
             efsa_context = f"\n\n## [EFSA Journal search results]\n{efsa_result}"
             pi_sources.extend(_extract_sources(efsa_context))
-            logger.info("PI final synthesis EFSA search completed")
-        except Exception as e:
-            logger.warning(f"PI final synthesis EFSA search failed: {e}")
+        logger.info("PI final synthesis EFSA search completed")
 
     pi_summaries_text = ""
     for record in meeting_history:
@@ -619,7 +632,8 @@ def run_final_synthesis(state: AgentState) -> dict:
 
         team_composition_text = (
             f"\n\n[Team-composition process — include in the 'Methods' section of the report]\n"
-            f"Performed {n_trials} independent team-composition trials (all {n_trials} succeeded)\n\n"
+            f"Obtained {n_trials} valid independent team compositions "
+            f"({len(tsd.get('failed_trial_attempts', []))} failed attempts were regenerated)\n\n"
             f"{trials_detail}\n"
             f"{freq_detail}\n"
             f"Team-size distribution: {tsd.get('team_sizes', '')}\n\n"
@@ -744,7 +758,12 @@ def run_final_synthesis(state: AgentState) -> dict:
         f"frequency table, selection rationale), the specialist self-introductions, and the per-agent contribution statistics.\n\n"
         f"★ Rule 3: Include the decision tree (Mermaid `graph TD`).\n"
         f"(1) one integrated decision tree + (2) one detailed per-category tree each for SDN-1, SDN-2, SDN-3, ODM = 5 in total.\n"
-        f"All paths must converge on an 'Assessment complete' terminal node (no dangling nodes).\n"
+        f"All paths must end at a single 'Assessment complete' terminal node (no dangling nodes). "
+        f"This node marks the end of the assessment pathway and does not by itself indicate that "
+        f"safety has been established. Where evidence is insufficient or uncertainty remains, route "
+        f"the path through a node such as 'Additional data required' or 'Decision deferred pending "
+        f"further data' before the terminal node. The prohibition on normative phrasing does not "
+        f"apply to wording that flags uncertainty, requests additional data, or defers a decision.\n"
         f"Use only concrete assessment keywords that a non-specialist can understand at a glance.\n"
         f"Forbidden: abstract phrasings such as 'Omics signal band', 'Minimal molecular-characterisation set', "
         f"'Target-flanking integrity supplementation'.\n\n"
