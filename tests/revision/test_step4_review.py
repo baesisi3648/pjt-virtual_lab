@@ -187,10 +187,11 @@ class _Workflow:
 
 def _run(monkeypatch, tmp_path, workflow, argv=("--condition", "A", "--run-id", "9")):
     import run_experiment
-    for k in ("VIRTUAL_LAB_PROMPTS_DIR", "VIRTUAL_LAB_CRITIC_MODE", "VIRTUAL_LAB_CRITIC_PROVIDER"):
+    for k in ("VIRTUAL_LAB_PROMPTS_DIR", "VIRTUAL_LAB_CRITIC_MODE", "VIRTUAL_LAB_CRITIC_PROVIDER",
+              "VIRTUAL_LAB_RETRIEVAL_MODE", "VIRTUAL_LAB_RETRIEVAL_SNAPSHOT"):
         monkeypatch.setenv(k, "placeholder")
         monkeypatch.delenv(k)
-    monkeypatch.setattr(sys, "argv", ["run_experiment.py", *argv, "--out-dir", str(tmp_path)])
+    monkeypatch.setattr(sys, "argv", ["run_experiment.py", *argv, "--out-dir", str(tmp_path), "--retrieval-mode", "live"])
     with patch("workflow.graph.create_workflow", return_value=workflow):
         return run_experiment.main()
 

@@ -19,6 +19,7 @@ from agents.factory import create_specialist
 from utils.prompt_loader import load_system, render
 from utils.search_query import disambiguate
 from utils.errors import AgentFailureError
+from utils.retrieval_snapshot import retrieve
 
 logger = logging.getLogger(__name__)
 
@@ -71,19 +72,19 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
 
     def do_rag_search() -> str:
         # C12 (revision): a failed search raises SearchError and aborts the run.
-        result = rag_search_tool.invoke({"query": disambiguate(topic, "safety assessment")})
+        result = retrieve("specialist_rag", rag_search_tool, disambiguate(topic, "safety assessment"))
         logger.info("RAG search completed")
         return f"\n\n[Reference regulatory documents]\n{result}" if result else ""
 
     def do_web_search() -> str:
         # C12 (revision): a failed search raises SearchError and aborts the run.
-        result = web_search.invoke({"query": disambiguate(topic, "regulation 2025")})
+        result = retrieve("specialist_web", web_search, disambiguate(topic, "regulation 2025"))
         logger.info("WEB search completed")
         return f"\n\n[Recent web search results]\n{result}" if result else ""
 
     def do_efsa_search() -> str:
         # C12 (revision): a failed search raises SearchError and aborts the run.
-        result = efsa_search.invoke({"query": disambiguate(topic, "EFSA opinion")})
+        result = retrieve("specialist_efsa", efsa_search, disambiguate(topic, "EFSA opinion"))
         logger.info("EFSA search completed")
         return f"\n\n[EFSA Journal search results]\n{result}" if result else ""
 

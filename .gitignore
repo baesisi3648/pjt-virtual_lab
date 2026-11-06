@@ -71,3 +71,6 @@ experiments/reproducibility/results/
 experiments/runs_rev/baseline/original_archive.zip
 experiments/runs_rev/prompt_sets/*.patch
 .prompts_*.building/
+
+# Revision: retrieval snapshot holds third-party web excerpts; publish only after redistribution check (revision_plan section 13)
+experiments/runs_rev/retrieval_snapshot.json

@@ -22,6 +22,7 @@ from data.guidelines import RESEARCH_AGENDA, ACADEMIC_TONE_GUIDE
 from workflow.state import AgentState
 from tools.web_search import web_search
 from utils.errors import AgentFailureError, PipelineError
+from utils.retrieval_snapshot import retrieve
 
 
 def _sanitize_mermaid(report: str) -> str:
@@ -576,7 +577,7 @@ def run_final_synthesis(state: AgentState) -> dict:
     web_context = ""
     pi_sources = []
     # C12 (revision): a failed search raises SearchError instead of being skipped.
-    web_result = web_search.invoke({"query": disambiguate(state["topic"], "safety framework 2025")})
+    web_result = retrieve("pi_final_web", web_search, disambiguate(state["topic"], "safety framework 2025"))
     if web_result:
         web_context = f"\n\n## [Web search — recent context]\n{web_result}"
         pi_sources.extend(_extract_sources(web_context))
@@ -585,7 +586,7 @@ def run_final_synthesis(state: AgentState) -> dict:
     efsa_context = state.get("cached_efsa_context", "")
     if not efsa_context:
         from tools.web_search import efsa_search
-        efsa_result = efsa_search.invoke({"query": disambiguate(state["topic"], "EFSA opinion")})
+        efsa_result = retrieve("pi_final_efsa", efsa_search, disambiguate(state["topic"], "EFSA opinion"))
         if efsa_result:
             efsa_context = f"\n\n## [EFSA Journal search results]\n{efsa_result}"
             pi_sources.extend(_extract_sources(efsa_context))

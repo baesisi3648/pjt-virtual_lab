@@ -221,10 +221,11 @@ class _FakeWorkflow:
 
 def _run_main(monkeypatch, tmp_path, argv, fail=False):
     import run_experiment
-    for k in ("VIRTUAL_LAB_PROMPTS_DIR", "VIRTUAL_LAB_CRITIC_MODE", "VIRTUAL_LAB_CRITIC_PROVIDER"):
+    for k in ("VIRTUAL_LAB_PROMPTS_DIR", "VIRTUAL_LAB_CRITIC_MODE", "VIRTUAL_LAB_CRITIC_PROVIDER",
+              "VIRTUAL_LAB_RETRIEVAL_MODE", "VIRTUAL_LAB_RETRIEVAL_SNAPSHOT"):
         monkeypatch.setenv(k, "placeholder")  # registers the original value for restore
         monkeypatch.delenv(k)
-    monkeypatch.setattr(sys, "argv", ["run_experiment.py", *argv, "--out-dir", str(tmp_path)])
+    monkeypatch.setattr(sys, "argv", ["run_experiment.py", *argv, "--out-dir", str(tmp_path), "--retrieval-mode", "live"])
     with patch("workflow.graph.create_workflow", return_value=_FakeWorkflow(fail)):
         return run_experiment.main()
 
@@ -254,7 +255,7 @@ def test_run_rejects_conflicting_env(monkeypatch, tmp_path):
     import run_experiment
     monkeypatch.setenv("VIRTUAL_LAB_CRITIC_MODE", "cumulative")
     monkeypatch.setattr(sys, "argv", ["run_experiment.py", "--condition", "A", "--run-id", "1",
-                                      "--out-dir", str(tmp_path)])
+                                      "--out-dir", str(tmp_path), "--retrieval-mode", "live"])
     with pytest.raises(SystemExit):
         run_experiment.main()
 

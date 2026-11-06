@@ -17,6 +17,7 @@ from utils.search_query import disambiguate
 from workflow.state import AgentState, CritiqueResult
 from tools.web_search import web_search
 from utils.errors import CritiqueValidationError
+from utils.retrieval_snapshot import retrieve
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +158,8 @@ def run_critic(state: AgentState) -> dict:
     # Step 1: gather verification context via web search
     # C12 (revision): a failed search raises SearchError instead of being skipped.
     web_context = ""
-    web_result = web_search.invoke({"query": disambiguate(state["topic"], "regulatory verification")})
+    # C4: in replay mode the same fixed verification context is used in every round.
+    web_result = retrieve("critic_web", web_search, disambiguate(state["topic"], "regulatory verification"))
     if web_result:
         web_context = f"\n\n## [Web search results — verification context]\n{web_result}"
     logger.info("Critic web search completed")

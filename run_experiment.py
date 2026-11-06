@@ -80,6 +80,9 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--topic", default=DEFAULT_TOPIC)
     p.add_argument("--constraints", default=DEFAULT_CONSTRAINTS)
     p.add_argument("--out-dir", default="experiments/runs_rev/main")
+    p.add_argument("--retrieval-mode", default="replay", choices=["replay", "live"],
+                   help="replay: fixed snapshot (pilot and main runs); live: debugging only")
+    p.add_argument("--retrieval-snapshot", default="experiments/runs_rev/retrieval_snapshot.json")
     return p.parse_args()
 
 
@@ -101,6 +104,21 @@ def _configure_condition(condition: str) -> dict:
     if not Path(expected["VIRTUAL_LAB_PROMPTS_DIR"]).is_dir():
         raise SystemExit(f"prompt set not found: {expected['VIRTUAL_LAB_PROMPTS_DIR']}")
     return {**cfg, **expected}
+
+
+def _configure_retrieval(args) -> dict:
+    """Fix the retrieval mode before any agent module is imported (C4)."""
+    snapshot = (ROOT / args.retrieval_snapshot).resolve()
+    for key, value in (("VIRTUAL_LAB_RETRIEVAL_MODE", args.retrieval_mode),
+                       ("VIRTUAL_LAB_RETRIEVAL_SNAPSHOT", str(snapshot))):
+        current = os.environ.get(key)
+        if current is not None and current != value:
+            raise SystemExit(f"{key}={current!r} conflicts with the requested retrieval setting {value!r}")
+        os.environ[key] = value
+    if args.retrieval_mode == "replay" and not snapshot.is_file():
+        raise SystemExit(f"retrieval snapshot not found: {snapshot} "
+                         f"(build it with scripts/revision/build_retrieval_snapshot.py)")
+    return {"mode": args.retrieval_mode, "snapshot": str(snapshot)}
 
 
 def _sha256(path: Path) -> str:
@@ -199,6 +217,7 @@ def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
     args = _parse_args()
     cond = _configure_condition(args.condition)
+    _configure_retrieval(args)
 
     out_dir = ROOT / args.out_dir / f"{args.condition}_{args.run_id}" / f"attempt_{args.attempt:02d}"
     if out_dir.exists():
@@ -215,6 +234,7 @@ def main() -> int:
     # prompts load at import time). A failure here still leaves a meta.json.
     try:
         from utils import call_log
+        from utils import retrieval_snapshot
         from utils.llm import DEFAULT_CRITIC_EFFORT, DEFAULT_CRITIC_MODEL
         from utils.prompt_loader import active_prompts_dir
         from workflow.graph import MAX_ROUNDS, create_workflow
@@ -227,6 +247,8 @@ def main() -> int:
                          for p in sorted(prompts_dir.rglob("*.md"))}
         run_meta = {"condition": args.condition, "run_id": str(args.run_id), "attempt": args.attempt}
         call_log.configure(out_dir / "calls.jsonl", run_meta)
+        retrieval_snapshot.reset()
+        retrieval_at_start = retrieval_snapshot.info()
     except BaseException as e:
         _write_json(out_dir / "meta.json", {
             "status": "failed_init", "error": _error(e), "condition": args.condition,
@@ -320,6 +342,7 @@ def main() -> int:
             "effort": os.environ.get("CRITIC_EFFORT", DEFAULT_CRITIC_EFFORT),
         },
         "call_log": call_log.summary(),
+        "retrieval": {**retrieval_snapshot.info(), "sha256_at_start": retrieval_at_start.get("sha256")},
         "code": _git_info(),
         "environment": {"python": sys.version, "platform": platform.platform(), "packages": _package_versions()},
         "team": final_state.get("team", []),
