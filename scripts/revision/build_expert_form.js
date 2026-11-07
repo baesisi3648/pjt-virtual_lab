@@ -31,6 +31,13 @@ const DOMAIN_KO = {
   "Marker genes": "표지 유전자", "Conclusion and review": "결론·재검토",
 };
 const DOC_KO = { EFSA2022: "EFSA 2022", CXG45: "CXG 45" };
+// Item notes carry frozen judging rules; external judges get the same rules without internal cause tags.
+const NEUTRAL_NOTES = {
+  CB19: "The 35%/80 amino-acid and 6-8 contiguous amino-acid thresholds are numeric criteria and are not judged; " +
+        "if the assessment itself is present, judge match or partial. Conditional serum testing is judged under CB20 " +
+        "and enteropathy under CB21, not here.",
+};
+const itemNote = (it) => NEUTRAL_NOTES[it.id] || it.note || "";
 
 const t = (text, o = {}) => new TextRun({ text, font: FONT, size: o.size || 20, bold: o.bold, italics: o.italics, color: o.color });
 const p = (runs, o = {}) => new Paragraph({
@@ -136,7 +143,8 @@ for (const it of cb.items) {
       p([t(it.item_ko, { size: 17, bold: true })], { after: 30 }),
       p([t(it.item_en, { size: 15, italics: true, color: "444444" })], { after: 30 }),
       p([t("적용 대상: ", { size: 15, bold: true }), t(it.applies_to || "", { size: 15 })], { after: 20 }),
-      p([t("근거: ", { size: 15, bold: true }), t(refs, { size: 15 })]),
+      p([t("근거: ", { size: 15, bold: true }), t(refs, { size: 15 })], { after: itemNote(it) ? 20 : 0 }),
+      ...(itemNote(it) ? [p([t("판정 규칙: ", { size: 15, bold: true }), t(itemNote(it), { size: 15 })])] : []),
     ], W.item),
     cell(it.core_elements.map(c => p([t("· " + c, { size: 15 })], { after: 10 })), W.core),
     cell(statusBoxes(), W.status),
@@ -168,7 +176,7 @@ const DIMS = [
   ["B4", "평가 생략·면제의 적절성", "평가를 생략하거나 면제하는 판단에 충분한 과학적 근거가 있고, 불확실성이 남을 때 추가 자료를 요구하는가", "근거 없는 면제나 불확실한 상태의 종료가 있다", "대체로 적절하나 근거가 약한 생략이 있다", "모든 생략·면제에 근거가 있다"],
   ["B5", "초안으로서의 활용 가능성", "규제 과학 전문가가 평가체계 초안이나 검토 출발점으로 쓸 수 있는 수준인가", "활용하기 어렵다", "상당한 수정 후 활용할 수 있다", "약간의 수정으로 활용할 수 있다"],
 ];
-const BW = [700, 2600, 1800, 1800, 1800, 1938];
+const BW = [600, 1900, 1700, 1700, 1700, 2038]; // sums to the portrait content width (9638)
 const partB = [h1("Part B. 구조화 평가 (1–5점)"),
   p("각 측면에 대해 1–5점 중 하나를 골라 주십시오. 1점, 3점, 5점의 기준을 참고하시고, 2점과 4점은 그 사이로 판단해 주십시오. 점수의 근거를 한두 문장으로 적어 주십시오.")];
 for (const [id, name, q, a1, a3, a5] of DIMS) {
@@ -177,7 +185,7 @@ for (const [id, name, q, a1, a3, a5] of DIMS) {
     p([t(q, { size: 19 })], { after: 60, keepNext: true }),
     table(BW, [
       ["", "기준", "1점", "3점", "5점", "선택"],
-      [id, name, a1, a3, a5, cell(p([t(`${BOX}1  ${BOX}2  ${BOX}3  ${BOX}4  ${BOX}5`, { size: 17 })]), 1938)],
+      [id, name, a1, a3, a5, cell(p([t(`${BOX}1  ${BOX}2  ${BOX}3  ${BOX}4  ${BOX}5`, { size: 17 })]), 2038)],
     ], { header: true }),
     p([t("점수 근거:", { size: 18, bold: true })], { before: 60, after: 20 }),
     blankLines(2, PORTRAIT_W),
