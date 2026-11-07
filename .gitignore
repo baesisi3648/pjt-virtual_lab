@@ -81,3 +81,4 @@ experiments/runs_rev/pilot_logs/
 experiments/runs_rev/pilot_analysis_*/
 experiments/runs_rev/main/
 experiments/runs_rev/main_logs/
+experiments/runs_rev/results/extracted/

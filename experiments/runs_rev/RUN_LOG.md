@@ -87,3 +87,11 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
 - `analysis_criteria.json` v1.0, sha256 `ab7381138d61647983205e7c83e2e46ed91215bfb1179c45cc93c71a14412df9`, frozen from draft v0.3 (30 items, 13 critical, 17 decision points) before any main-run report or deliberation text was opened.
 - Frozen at the corresponding author's request without the primary judge's prior review; the primary judge's comments are recorded at judging time as notes.
 - Next: automated analyses (L1 similarity, L2 scores, L8 statistics, representative run).
+
+## 2026-11-07 — Automated analyses (L1, L2, L8, representative run)
+
+`analyze_revision.py --runs-dir runs_rev/main --out-dir runs_rev/results`; 10 runs, no issues; embeddings text-embedding-3-large.
+- L2 termination: A 0/5 reached all-5 (all stopped at the 7-round cap); B 5/5 reached all-5 (rounds 3, 4, 4, 4, 6). Fisher exact two-sided p = 0.008 (0/5 vs 5/5). Score decreases: A 51, B 4 (per specialist-axis, between consecutive rounds).
+- L1 content similarity (primary; pairs not independent, descriptive): within A 0.904 (range 0.823–0.968), within B 0.892 (0.771–0.971), A vs B 0.903 (0.791–0.976). Full-text similarity: within A 0.924, within B 0.954, A vs B 0.942.
+- Representative run (condition-A medoid, pre-specified rule): A_5 (mean 0.930). A_3 has the lowest mean similarity (0.839).
+- Leakage audit (condition A Critic inputs): 12 candidates, all in specialist outputs; draft judgement: all 12 are SDN category numbers (SDN-1/2/3), not score mentions (`results/leakage_judgement.draft.json`, author confirmation pending). Prior-feedback channel 0; masking fired 0 times, so no scientific text was altered.

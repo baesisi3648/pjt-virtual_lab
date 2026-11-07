@@ -1,0 +1,20 @@
+{
+  "A": {
+    "runs": 5,
+    "termination_round_distribution": {
+      "7": 5
+    },
+    "all_five_reached_runs": 0,
+    "score_decreases_total": 51
+  },
+  "B": {
+    "runs": 5,
+    "termination_round_distribution": {
+      "3": 1,
+      "4": 3,
+      "6": 1
+    },
+    "all_five_reached_runs": 5,
+    "score_decreases_total": 4
+  }
+}

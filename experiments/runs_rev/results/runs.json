@@ -1,0 +1,256 @@
+{
+  "complete_main_set": true,
+  "runs_per_condition": {
+    "A": 5,
+    "B": 5
+  },
+  "excluded_runs": [],
+  "runs": [
+    {
+      "name": "A_1",
+      "attempt": "attempt_01",
+      "failed_attempts": [],
+      "rounds": 7
+    },
+    {
+      "name": "A_2",
+      "attempt": "attempt_01",
+      "failed_attempts": [],
+      "rounds": 7
+    },
+    {
+      "name": "A_3",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 7
+    },
+    {
+      "name": "A_4",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 7
+    },
+    {
+      "name": "A_5",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 7
+    },
+    {
+      "name": "B_1",
+      "attempt": "attempt_01",
+      "failed_attempts": [],
+      "rounds": 4
+    },
+    {
+      "name": "B_2",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "RuntimeError",
+          "error": "OpenAI API rate limit exceeded after 5 retries"
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 6
+    },
+    {
+      "name": "B_3",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 4
+    },
+    {
+      "name": "B_4",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 4
+    },
+    {
+      "name": "B_5",
+      "attempt": "attempt_04",
+      "failed_attempts": [
+        {
+          "attempt": "attempt_01",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_02",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        },
+        {
+          "attempt": "attempt_03",
+          "status": "failed",
+          "error_type": "AgentFailureError",
+          "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded)."
+        }
+      ],
+      "rounds": 3
+    }
+  ],
+  "issues": [],
+  "extracted": {
+    "A_1": {
+      "chars": 25664,
+      "sha256": "675970e59bbc9ee966cb497f18dd5ea866a177ddcbe17c941a41265677d1e2d5",
+      "report_sha256": "87f53d6294ed24982fc0aac41142d5ec33663b58bd3950bdbdb22ee0a0adf6f1"
+    },
+    "A_2": {
+      "chars": 24234,
+      "sha256": "aa6bb79f12d732baf310f2f7460dd4752674c478537d94ecc0560baf584f35c9",
+      "report_sha256": "a349592e7554556ecbb4dfd6c27244675f701fa6552047d2baa2d142d8a45c55"
+    },
+    "A_3": {
+      "chars": 28537,
+      "sha256": "ab4984b08154f621f83ddfc870a4678d71636e496aaceaf56f135d1e56be55d2",
+      "report_sha256": "36f7921300455bd5b9546e769c9e2a2d11ae3411c73943da0a9fa06782d81fe4"
+    },
+    "A_4": {
+      "chars": 26284,
+      "sha256": "a5c8ea44504a047c8a0d175d2d4b8d4c6fff3ea7be4c9dd746164932dd5dc70c",
+      "report_sha256": "9487b538102ade65a411f4c4e16aeabb58c9e65cbc5d4e3398f1e0861d9d658d"
+    },
+    "A_5": {
+      "chars": 21291,
+      "sha256": "81b9d274ebe16a8b7c1c5983194218e1879996bf2a480b5fe3f271e39b373f2c",
+      "report_sha256": "08645b45e0eb4a5d6b0e014ca565b5c1ea94dcaca9ac69498bf564f68435f440"
+    },
+    "B_1": {
+      "chars": 24794,
+      "sha256": "41c3406c1f0b6fe65a8fc5a6df1b3c6ecc95b0121109a9b936c1a0c87f02155e",
+      "report_sha256": "c1731be87d54303d7431f8c4ece4f4e72477e60d424a349afcc8734812464597"
+    },
+    "B_2": {
+      "chars": 28110,
+      "sha256": "65097c36a39e6d173e534bc6947fef58d66cfa0b31137dbef7e9614231456fa4",
+      "report_sha256": "b374f407d81d12876e6053c96e8799ca6e2d9860181d443795608b6644d7150e"
+    },
+    "B_3": {
+      "chars": 22273,
+      "sha256": "c8c049f2c776973330e077009311fcc69c0a58395994651e22f49a81e49d5366",
+      "report_sha256": "09fe58eea5ca652c6f12ce23727be4351050f11f5cc63aa7aea3db42cb041b35"
+    },
+    "B_4": {
+      "chars": 19409,
+      "sha256": "e762b4dda37d62df26d2cf124b568faec9cdb035ad1aa2ea221b3bb21edead23",
+      "report_sha256": "be550bdeafd9ac5825bc4d88d150120bf55e2fe9d3e852ba49a7f3966665e110"
+    },
+    "B_5": {
+      "chars": 21680,
+      "sha256": "24f0be2e9a112bb67d4812f20f1486d655dc8a4108702906b4ec4e340dfac673",
+      "report_sha256": "4a845e8405716d3166c110f6db9ef3305f1fb2820e5b5da183fe9a2c2c6dca18"
+    }
+  }
+}

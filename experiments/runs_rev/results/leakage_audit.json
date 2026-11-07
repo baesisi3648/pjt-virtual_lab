@@ -1,0 +1,174 @@
+{
+  "runs": {
+    "A_1": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 4,
+      "candidates_by_channel": {
+        "specialist_outputs": 4,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_2": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 0,
+      "candidates_by_channel": {
+        "specialist_outputs": 0,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_3": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 5,
+      "candidates_by_channel": {
+        "specialist_outputs": 5,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_4": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 2,
+      "candidates_by_channel": {
+        "specialist_outputs": 2,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_5": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 1,
+      "candidates_by_channel": {
+        "specialist_outputs": 1,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "run": "A_1",
+      "round": 1,
+      "call_id": "c9711bf9f92341978d69d3eca3328cc0",
+      "channel": "specialist_outputs",
+      "context": "isk hypotheses that can be refuted or supported by targeted evidence. For example, if SDN‑1 introduces a silent change in a gene that does not alter pr",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_1",
+      "round": 1,
+      "call_id": "c9711bf9f92341978d69d3eca3328cc0",
+      "channel": "specialist_outputs",
+      "context": "ivered without DNA integration, so outcome-focused lines of evidence often dominate. SDN‑2 shares much of that profile when changes mirror naturally o",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_1",
+      "round": 1,
+      "call_id": "c9711bf9f92341978d69d3eca3328cc0",
+      "channel": "specialist_outputs",
+      "context": "hat such studies would test more directly than the targeted evidence already in hand. For SDN‑2, the same logic holds when the edit recapitulates a known a",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_1",
+      "round": 4,
+      "call_id": "c622a5170595411c8ff93622716c73ee",
+      "channel": "specialist_outputs",
+      "context": "ed to exposure:  - Classify the outcome and set the minimal evidence set. SDN‑1, SDN‑2 that recreate known variants, and ODM without novel ",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_3",
+      "round": 1,
+      "call_id": "f56080e418834cc596baa146b351580b",
+      "channel": "specialist_outputs",
+      "context": ", EGT, and conventional breeding then emerges from the same evidence base. SDN‑3 insertions share the core uncertainties of EGT (new gene in",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_3",
+      "round": 2,
+      "call_id": "092c38497c5046a0a421c2928f6ee9a5",
+      "channel": "specialist_outputs",
+      "context": "ure context, not to the editing tool itself. This maintains proportionality for SDN‑1/SDN‑2/ODM while retaining the familiar depth for SDN‑3 trai",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_3",
+      "round": 2,
+      "call_id": "092c38497c5046a0a421c2928f6ee9a5",
+      "channel": "specialist_outputs",
+      "context": "wider concern [Source: EFSA Journal 2021.6314]. Comparative evidence indicates that SDN‑1 and many SDN‑2/ODM edits tend to be more focused than broad",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_3",
+      "round": 3,
+      "call_id": "f7ecb32a80bb4d4dbb742f8b600dccfa",
+      "channel": "specialist_outputs",
+      "context": "Guidance on Novel Foods.pdf].  Two short illustrations show proportionality at work. A single‑guide SDN‑1 knockout that reduces an enzyme’s activity in a seed oil pa",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_3",
+      "round": 3,
+      "call_id": "f7ecb32a80bb4d4dbb742f8b600dccfa",
+      "channel": "specialist_outputs",
+      "context": " propagation—not to the editing tool itself. This preserves proportionality for SDN‑1/SDN‑2/ODM and base/prime edits while retaining the familiar",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_4",
+      "round": 5,
+      "call_id": "6a3653ffcfb946c49c15aea087d6dec0",
+      "channel": "specialist_outputs",
+      "context": " In sum, a narrative, exposure‑led workflow operationalises proportionality for NGT foods across SDN‑1, SDN‑2, SDN‑3, and outcome‑aligned ODM. Delivery mode clari",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_4",
+      "round": 6,
+      "call_id": "411c68ff8bfa44c482279685d4d11c43",
+      "channel": "specialist_outputs",
+      "context": " In sum, a narrative, exposure‑led workflow operationalises proportionality for NGT foods across SDN‑1, SDN‑2, SDN‑3, and outcome‑aligned ODM. Delivery biology cl",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_5",
+      "round": 1,
+      "call_id": "5712cef0a8514dd48f50e23ecfeed0af",
+      "channel": "specialist_outputs",
+      "context": " the genome editor’s signature determines the proportionate evidence. SDN-1 and ODM typically support a focused molecular characterisat",
+      "manual_judgement": null
+    }
+  ],
+  "note": "    The detector is deliberately broad (it also flags phrases such as\n    \"Evidence from 3 studies\"), so every hit must be reviewed by hand; the\n    examples carry the call ID and an empty \"manual_judgement\" field for that.\n    Hit counts are candidate mentions, not confirmed leaks. A run whose call log\n    is missing, or whose logged Critic rounds do not cover every scored round,\n    is reported as not auditable rather than as zero hits.",
+  "pass_criteria": "Every candidate is judged by hand. Pass: 0 confirmed prior-score leaks, 0 unjudged candidates, 0 scientific-content damage from masking (revision_plan 7.6). Candidate counts need not be 0."
+}

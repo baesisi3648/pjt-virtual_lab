@@ -1,0 +1,52 @@
+{
+  "content": {
+    "within_A": {
+      "pairs": 10,
+      "mean": 0.9042477905983426,
+      "sd_population": 0.05450422479857392,
+      "min": 0.8233594434808861,
+      "max": 0.968207810943098
+    },
+    "within_B": {
+      "pairs": 10,
+      "mean": 0.8919464773540318,
+      "sd_population": 0.0863850705232032,
+      "min": 0.7714271787026106,
+      "max": 0.9705285501558287
+    },
+    "A_vs_B": {
+      "pairs": 25,
+      "mean": 0.9034465142528817,
+      "sd_population": 0.06977981547521495,
+      "min": 0.7906147339669689,
+      "max": 0.975702541645961
+    },
+    "note": "Pairs share runs and are not independent observations; values are descriptive only."
+  },
+  "full": {
+    "within_A": {
+      "pairs": 10,
+      "mean": 0.9242816389644652,
+      "sd_population": 0.04374399647862911,
+      "min": 0.8562303974659928,
+      "max": 0.9644985046899635
+    },
+    "within_B": {
+      "pairs": 10,
+      "mean": 0.9543425680321951,
+      "sd_population": 0.010553418290243305,
+      "min": 0.9339132461643206,
+      "max": 0.9679713500002881
+    },
+    "A_vs_B": {
+      "pairs": 25,
+      "mean": 0.9419539091969019,
+      "sd_population": 0.03301243797132497,
+      "min": 0.8637366514196779,
+      "max": 0.9714020412888722
+    },
+    "note": "Pairs share runs and are not independent observations; values are descriptive only."
+  },
+  "primary": "content",
+  "embedding_model": "text-embedding-3-large"
+}

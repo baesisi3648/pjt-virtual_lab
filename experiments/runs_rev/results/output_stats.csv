@@ -1,0 +1,71 @@
+run,condition,agent,turns,chars
+A_1,A,Toxicology Specialist,7,100205
+A_1,A,Regulatory Specialist,7,94734
+A_1,A,Bioinformatics Specialist,7,96109
+A_1,A,Risk Specialist,7,98282
+A_1,A,Genetics Specialist,7,97514
+A_1,A,Critic,7,110978
+A_1,A,PI,8,124750
+A_2,A,Toxicology Specialist,7,96604
+A_2,A,Risk Specialist,7,105186
+A_2,A,Genomics Specialist,7,96251
+A_2,A,Regulatory Specialist,7,100237
+A_2,A,Bioinformatics Specialist,7,108878
+A_2,A,Critic,7,105949
+A_2,A,PI,8,125660
+A_3,A,Genomics Specialist,7,100560
+A_3,A,Toxicology Specialist,7,84587
+A_3,A,Bioinformatics Specialist,7,105779
+A_3,A,Risk Specialist,7,101859
+A_3,A,Regulatory Specialist,7,107613
+A_3,A,Critic,7,101130
+A_3,A,PI,8,124112
+A_4,A,Genetics Specialist,7,104672
+A_4,A,Risk Specialist,7,98060
+A_4,A,Bioinformatics Specialist,7,89948
+A_4,A,Toxicology Specialist,7,100841
+A_4,A,Regulatory Specialist,7,94960
+A_4,A,Critic,7,106521
+A_4,A,PI,8,125853
+A_5,A,Breeding Specialist,7,107760
+A_5,A,Genomics Specialist,7,118146
+A_5,A,Regulatory Specialist,7,105316
+A_5,A,Toxicology Specialist,7,97475
+A_5,A,Risk Specialist,7,102328
+A_5,A,Critic,7,103969
+A_5,A,PI,8,124859
+B_1,B,Risk Specialist,4,42482
+B_1,B,Regulatory Specialist,4,58778
+B_1,B,Toxicology Specialist,4,47642
+B_1,B,Genomics Specialist,4,48101
+B_1,B,Bioinformatics Specialist,4,48159
+B_1,B,Critic,4,52702
+B_1,B,PI,5,79820
+B_2,B,Regulatory Specialist,6,80428
+B_2,B,Nutrition Specialist,6,75552
+B_2,B,Risk Specialist,6,83361
+B_2,B,Toxicology Specialist,6,85969
+B_2,B,Genomics Specialist,6,71457
+B_2,B,Critic,6,81565
+B_2,B,PI,7,100490
+B_3,B,Toxicology Specialist,4,57263
+B_3,B,Risk Specialist,4,60138
+B_3,B,Regulatory Specialist,4,64197
+B_3,B,Nutrition Specialist,4,53436
+B_3,B,Genetics Specialist,4,59598
+B_3,B,Critic,4,52492
+B_3,B,PI,5,76827
+B_4,B,Genomics Specialist,4,52747
+B_4,B,Toxicology Specialist,4,52785
+B_4,B,Bioinformatics Specialist,4,49285
+B_4,B,Risk Specialist,4,64785
+B_4,B,Regulatory Specialist,4,62151
+B_4,B,Critic,4,56927
+B_4,B,PI,5,75551
+B_5,B,Bioinformatics Specialist,3,38832
+B_5,B,Risk Specialist,3,47374
+B_5,B,Genetics Specialist,3,38583
+B_5,B,Toxicology Specialist,3,38936
+B_5,B,Regulatory Specialist,3,49698
+B_5,B,Critic,3,44295
+B_5,B,PI,4,73242

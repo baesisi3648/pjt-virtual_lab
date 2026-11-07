@@ -1,0 +1,105 @@
+{
+  "status": "draft judgements by Claude; an author confirms each entry (confirmed_by)",
+  "summary": {
+    "candidates": 12,
+    "draft_false_positive": 12
+  },
+  "entries": [
+    {
+      "run": "A_1",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": "isk hypotheses that can be refuted or supported by targeted evidence. For example, if SDN‑1 introduces a silent change in a gene that does not alter pr",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_1",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": "ivered without DNA integration, so outcome-focused lines of evidence often dominate. SDN‑2 shares much of that profile when changes mirror naturally o",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_1",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": "hat such studies would test more directly than the targeted evidence already in hand. For SDN‑2, the same logic holds when the edit recapitulates a known a",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_1",
+      "round": 4,
+      "channel": "specialist_outputs",
+      "context": "ed to exposure:  - Classify the outcome and set the minimal evidence set. SDN‑1, SDN‑2 that recreate known variants, and ODM without novel ",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_3",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": ", EGT, and conventional breeding then emerges from the same evidence base. SDN‑3 insertions share the core uncertainties of EGT (new gene in",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_3",
+      "round": 2,
+      "channel": "specialist_outputs",
+      "context": "ure context, not to the editing tool itself. This maintains proportionality for SDN‑1/SDN‑2/ODM while retaining the familiar depth for SDN‑3 trai",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_3",
+      "round": 2,
+      "channel": "specialist_outputs",
+      "context": "wider concern [Source: EFSA Journal 2021.6314]. Comparative evidence indicates that SDN‑1 and many SDN‑2/ODM edits tend to be more focused than broad",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_3",
+      "round": 3,
+      "channel": "specialist_outputs",
+      "context": "Guidance on Novel Foods.pdf].  Two short illustrations show proportionality at work. A single‑guide SDN‑1 knockout that reduces an enzyme’s activity in a seed oil pa",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_3",
+      "round": 3,
+      "channel": "specialist_outputs",
+      "context": " propagation—not to the editing tool itself. This preserves proportionality for SDN‑1/SDN‑2/ODM and base/prime edits while retaining the familiar",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_4",
+      "round": 5,
+      "channel": "specialist_outputs",
+      "context": " In sum, a narrative, exposure‑led workflow operationalises proportionality for NGT foods across SDN‑1, SDN‑2, SDN‑3, and outcome‑aligned ODM. Delivery mode clari",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_4",
+      "round": 6,
+      "channel": "specialist_outputs",
+      "context": " In sum, a narrative, exposure‑led workflow operationalises proportionality for NGT foods across SDN‑1, SDN‑2, SDN‑3, and outcome‑aligned ODM. Delivery biology cl",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    },
+    {
+      "run": "A_5",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": " the genome editor’s signature determines the proportionate evidence. SDN-1 and ODM typically support a focused molecular characterisat",
+      "draft_judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": null
+    }
+  ]
+}
