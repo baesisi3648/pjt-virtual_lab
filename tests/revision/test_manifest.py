@@ -246,3 +246,27 @@ def test_duplicate_and_editable_installs_are_rejected(monkeypatch):
         assert any(needle in p for p in mf.environment_problems())
         monkeypatch.setattr(mf.metadata, "distributions", lambda d=dists: list(reversed(d)))
         assert any(needle in p for p in mf.environment_problems())
+
+
+def test_amendment_excludes_attempts_from_counting(tmp_path):
+    m = {"order": [{"seq": 1, "condition": "A", "run_id": "1"}, {"seq": 2, "condition": "B", "run_id": "1"},
+                   {"seq": 3, "condition": "A", "run_id": "2"}],
+         "retry_policy": {"max_attempts_per_run": 3}}
+    runs = tmp_path / "main"
+    _attempt(runs, "A_1", 1, "ok")
+    for n in (1, 2, 3):
+        _attempt(runs, "B_1", n, "failed")
+    _attempt(runs, "A_2", 1, "failed")                        # later run already has a (lost) attempt
+    assert mf.next_attempt(m, "B", "1", runs) == "exhausted"
+    assert any("later run A_2" in p for p in mf.check_order(m, "B", "1", 4, runs))
+    m["amendment"] = {"excluded_attempts": [{"attempt": a} for a in
+                      ("B_1/attempt_01", "B_1/attempt_02", "B_1/attempt_03", "A_2/attempt_01")]}
+    assert mf.next_attempt(m, "B", "1", runs) == "4"           # numbering continues
+    assert mf.check_order(m, "B", "1", 4, runs) == []
+    assert any("attempt must be 4" in p for p in mf.check_order(m, "B", "1", 1, runs))
+    assert any("earlier run B_1" in p for p in mf.check_order(m, "A", "2", 2, runs))  # B_1 not finished yet
+    _attempt(runs, "B_1", 4, "ok")
+    assert mf.next_attempt(m, "B", "1", runs) == "done"
+    assert mf.check_order(m, "A", "2", 2, runs) == []
+    assert mf.next_attempt(m, "A", "2", runs) == "2"
+    assert mf.next_attempt(m, "A", "1", runs) == "done"

@@ -170,10 +170,24 @@ def load(path: Path) -> tuple[dict, str]:
     return json.loads(data.decode("utf-8")), sha256_bytes(data)
 
 
-def attempt_statuses(run_dir: Path) -> list[str]:
-    """Status of each attempt folder in order; a folder without meta.json counts as 'incomplete'."""
+def excluded_attempts(manifest: dict) -> set[str]:
+    """Attempt folders ("A_1/attempt_02") that a manifest amendment excludes from attempt counting."""
+    return {x["attempt"] for x in manifest.get("amendment", {}).get("excluded_attempts", [])}
+
+
+def attempt_folders(run_dir: Path) -> list[Path]:
+    return sorted(d for d in run_dir.glob("attempt_*") if d.is_dir())
+
+
+def attempt_statuses(run_dir: Path, excluded: set[str] | None = None) -> list[str]:
+    """Status of each counted attempt folder in order; a folder without meta.json counts as 'incomplete'.
+
+    Folders listed in `excluded` (as "<run>/<attempt>") are skipped.
+    """
     out = []
-    for a in sorted(d for d in run_dir.glob("attempt_*") if d.is_dir()):
+    for a in attempt_folders(run_dir):
+        if excluded and f"{run_dir.name}/{a.name}" in excluded:
+            continue
         try:
             out.append(json.loads((a / "meta.json").read_text(encoding="utf-8")).get("status", "unknown"))
         except (OSError, json.JSONDecodeError):
@@ -182,28 +196,46 @@ def attempt_statuses(run_dir: Path) -> list[str]:
 
 
 def check_order(manifest: dict, condition: str, run_id: str, attempt: int, runs_dir: Path) -> list[str]:
-    """Runs go in manifest order; a failed attempt is retried before the next run starts."""
+    """Runs go in manifest order; a failed attempt is retried before the next run starts.
+
+    Attempts excluded by a manifest amendment are ignored for every check except folder numbering:
+    a new attempt always takes the next folder number.
+    """
     problems = []
+    excl = excluded_attempts(manifest)
     order = sorted(manifest.get("order", []), key=lambda e: e["seq"])
     idx = next((i for i, e in enumerate(order) if e["condition"] == condition and str(e["run_id"]) == str(run_id)), None)
     max_attempts = manifest.get("retry_policy", {}).get("max_attempts_per_run")
     if idx is None:
         return [f"{condition}_{run_id} is not in the manifest run order"]
     for e in order[:idx]:
-        st = attempt_statuses(runs_dir / f"{e['condition']}_{e['run_id']}")
+        st = attempt_statuses(runs_dir / f"{e['condition']}_{e['run_id']}", excl)
         if "ok" not in st and len(st) < (max_attempts or 0):
             problems.append(f"earlier run {e['condition']}_{e['run_id']} (seq {e['seq']}) is not finished")
     for e in order[idx + 1:]:
-        if attempt_statuses(runs_dir / f"{e['condition']}_{e['run_id']}"):
+        if attempt_statuses(runs_dir / f"{e['condition']}_{e['run_id']}", excl):
             problems.append(f"later run {e['condition']}_{e['run_id']} (seq {e['seq']}) has already started")
-    own = attempt_statuses(runs_dir / f"{condition}_{run_id}")
-    if "ok" in own:
+    run_dir = runs_dir / f"{condition}_{run_id}"
+    counted = attempt_statuses(run_dir, excl)
+    folders = len(attempt_folders(run_dir))
+    if "ok" in counted:
         problems.append(f"{condition}_{run_id} already has a successful attempt")
-    if attempt != len(own) + 1:
-        problems.append(f"attempt must be {len(own) + 1} (existing attempts: {len(own)}), got {attempt}")
-    if not isinstance(max_attempts, int) or not 1 <= attempt <= max_attempts:
-        problems.append(f"attempt {attempt} is outside 1..{max_attempts}")
+    if attempt != folders + 1:
+        problems.append(f"attempt must be {folders + 1} (existing attempt folders: {folders}), got {attempt}")
+    if not isinstance(max_attempts, int) or not 1 <= len(counted) + 1 <= max_attempts:
+        problems.append(f"counted attempts would be {len(counted) + 1}, outside 1..{max_attempts}")
     return problems
+
+
+def next_attempt(manifest: dict, condition: str, run_id: str, runs_dir: Path) -> str:
+    """'done' (has an ok attempt), 'exhausted' (no counted attempts left) or the next attempt number."""
+    run_dir = runs_dir / f"{condition}_{run_id}"
+    counted = attempt_statuses(run_dir, excluded_attempts(manifest))
+    if "ok" in counted:
+        return "done"
+    if len(counted) >= manifest.get("retry_policy", {}).get("max_attempts_per_run", 0):
+        return "exhausted"
+    return str(len(attempt_folders(run_dir)) + 1)
 
 
 def verify(manifest: dict, *, condition: str, run_id: str, attempt: int, retrieval_mode: str,
