@@ -1,0 +1,25 @@
+{
+  "status": "judgements drafted by Claude; confirmed by the corresponding author on 2026-11-08",
+  "summary": {
+    "candidates": 2,
+    "confirmed_leaks": 0
+  },
+  "entries": [
+    {
+      "run": "A_2",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": " in silico/in vitro protein assessment as a primary line of evidence for SDN-3 traits expressing new proteins, with additional testing tri",
+      "judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": "corresponding author (Bae Seongu), 2026-11-08"
+    },
+    {
+      "run": "A_2",
+      "round": 1,
+      "channel": "specialist_outputs",
+      "context": "isation and comparative analysis. Two clarifications favour proportionality. First, for SDN-1, SDN-2, and ODM edits that do not introduce a new coding se",
+      "judgement": "not a score mention: the digit is the SDN category number (SDN-1/2/3)",
+      "confirmed_by": "corresponding author (Bae Seongu), 2026-11-08"
+    }
+  ]
+}

@@ -176,3 +176,8 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
   - 3_외부판정자_1_재실험v1.zip f4bfcd0c31c51f72
   - 4_외부판정자_2_재실험v1.zip 5b9f93b8bbe808f1
 - To record when sent: date, recipients, reply deadlines; the v0 packages are superseded.
+
+## 2026-11-08 — v1 leakage judgements confirmed; sending plan
+
+- The corresponding author confirmed both v1 candidates (A_2, SDN category numbers): confirmed prior-score leaks 0 (`results_v1/leakage_judgement.json`).
+- Packages v1 to be sent on 2026-11-09 to the primary judge, the second judge and the two external judges; replies due within three days (by 2026-11-12). The v0 packages are superseded and must not be used.
