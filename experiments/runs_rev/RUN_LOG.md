@@ -114,3 +114,13 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
   - 3_외부판정자_1.zip dc93ebb55a935ab9
   - 4_외부판정자_2.zip 5a5bd8ff2690e25b
 - Second judge and external judges' names, and reply deadlines, to be recorded when confirmed.
+
+## 2026-11-07 — L7 corpus inventory: placeholder documents in the RAG index
+
+`scripts/revision/corpus_inventory.py` (read-only Pinecone listing; outputs in `results/corpus/`).
+- The index holds 316 vectors (chunks), not documents: 271 chunks of EFSA Journal 2024;22:e8961 (novel-food guidance), 40 chunks of Codex CXS 1-1985 (General Standard for the Labelling of Pre-packaged Foods) stored as "Codex Guideline Section 4.2.pdf", and 5 hand-written sample chunks from `scripts/load_sample_to_pinecone.py` with document-like names and page numbers (EU NGT Regulation 2025.pdf p.15, EFSA Guidance on Novel Foods.pdf p.24, FDA Guidance for Industry.pdf p.45, Codex Guideline Section 3.1.pdf p.8, Codex Guideline Section 4.2.pdf p.12).
+- No Codex GL 44/45, EU NGT regulation or EFSA GMO/NGT guidance text is in the index.
+- The fixed snapshot's specialist RAG result (5 chunks) contains two sample chunks, ranked 1st ("EU NGT Regulation 2025.pdf" p.15: "SDN-1: No foreign DNA introduced, may not require extensive safety assessment … may support a streamlined regulatory approach") and 4th ("EFSA Guidance on Novel Foods.pdf" p.24). All ten main-run reports and all five submitted runs list both names as sources.
+- Both conditions received the same input, so the A/B comparison is unaffected; the content conclusions and the manuscript's corpus description are affected. The index state at the time of the submitted runs is not established.
+- Codex review (11/7): findings confirmed; recommended keeping the main runs and disclosing precisely, treating the two citations as sources without real counterparts in L5, and correcting the corpus description; a rebuilt corpus with ten new runs is needed only to claim a framework grounded in the intended documents. Decision pending (corresponding author).
+- Frozen codebook note corrected in `analysis_criteria.errata.md` (the frozen file is unchanged).

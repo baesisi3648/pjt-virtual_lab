@@ -1,0 +1,41 @@
+{
+  "extracted_utc": "2026-11-07T10:39:59.750414+00:00",
+  "note": "Current index state at extraction time; not asserted to equal the index at the time of the submitted runs (revision_plan L7).",
+  "pinecone_stats": {
+    "namespaces": {
+      "__default__": {
+        "vector_count": 316
+      }
+    },
+    "dimension": 1536,
+    "index_fullness": 0.0,
+    "total_vector_count": 316,
+    "metric": "cosine",
+    "vector_type": "dense",
+    "memory_fullness": 0.0,
+    "storage_fullness": 0.0,
+    "response_info": null
+  },
+  "index": {
+    "vectors": 316,
+    "distinct_source_files": 6
+  },
+  "retrieval_snapshot": {
+    "sha256_prefix": "f36ac68c",
+    "keys": [
+      "critic_web",
+      "pi_final_efsa",
+      "pi_final_web",
+      "specialist_efsa",
+      "specialist_rag",
+      "specialist_web"
+    ],
+    "rag_source_files": [
+      "EFSA Guidance on Novel Foods.pdf",
+      "EU NGT Regulation 2025.pdf",
+      "Guidance on the scientific requirements for an application for authorisation of a novel food in.pdf"
+    ],
+    "rag_chunks_retrieved": 5,
+    "distinct_urls": 14
+  }
+}
