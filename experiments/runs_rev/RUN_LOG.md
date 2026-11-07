@@ -74,3 +74,10 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
 - v1 kept as `experiment_manifest.v1.json` (sha256 ae922a5d…). Amended manifest `experiment_manifest.json`, sha256 `b24eefac8a45b30a1b15d6323f005403f12ba78e636fcf9625d93f055659b780`.
 - A_1, B_1, A_2 remain valid (run under v1; v1 and the amendment differ only in attempt counting). Resumption starts at B_2 attempt_04.
 - Driver: OpenAI preflight before each attempt (logged to `main_logs/preflight.jsonl`), stop on any non-200.
+
+## 2026-11-07 — Main runs complete
+
+- Resumed 14:25 KST after the credit top-up; every preflight ok. B_2, B_3, A_3, A_4, B_4, B_5, A_5 each succeeded at attempt_04 (amended manifest b24eefac). Finished 16:48 KST.
+- All ten runs: status ok, call logs complete, 0 failed calls, Critic stop_reason end_turn throughout, response models `gpt-5-2025-08-07` and `claude-opus-5` in every run (same as before the outage).
+- Termination (L2 input; no report text opened): condition A ran to the 7-round cap in all five runs; condition B stopped early at all-5 after 4, 6, 4, 4 and 3 rounds (B_1–B_5).
+- Next: freeze the L3 codebook (analysis_criteria.json) before any report or deliberation text is opened.
