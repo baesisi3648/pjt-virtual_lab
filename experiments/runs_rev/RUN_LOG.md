@@ -105,3 +105,12 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
 - One Korean translation (one B run) is partly untranslated; Korean versions are reference only and judging uses the English original.
 - Primary sheet: L3 (status, multi-tag causes, location, item notes), critical cases, AI additions, L4 per branch (location, applicability, presence, condition and target in original and normalised form, outcome type) and a normalisation table. Second sheet: L3 status only with the same frozen item notes (neutral wording). External form (R05) regenerated from the frozen codebook with the same item notes.
 - (later on 11/7, before any judging) At the corresponding author's request, the blinded reports again include the team-composition subsection of Methods as an "Expert Panel" section (ten composition trials, role frequencies, PI selection rationale, specialist self-introductions). Team composition precedes Critic scoring and uses identical prompts in A and B, so it carries no condition information; rounds, per-agent statistics, timings and score charts stay withheld. Applied identically to all judges' copies; the anonymous IDs and the key are unchanged.
+
+## 2026-11-07 — Judging packages sent
+
+- The corresponding author sent the four packages (primary judge, second judge, external judges 1 and 2) on 2026-11-07. Package sha256 (first 16 hex):
+  - 1_주판정자_함준혁.zip c61d6eb88ae0a41a
+  - 2_2차판정자.zip c7409e6a8e8bcc9c
+  - 3_외부판정자_1.zip dc93ebb55a935ab9
+  - 4_외부판정자_2.zip 5a5bd8ff2690e25b
+- Second judge and external judges' names, and reply deadlines, to be recorded when confirmed.
