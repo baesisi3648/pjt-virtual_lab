@@ -81,3 +81,9 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
 - All ten runs: status ok, call logs complete, 0 failed calls, Critic stop_reason end_turn throughout, response models `gpt-5-2025-08-07` and `claude-opus-5` in every run (same as before the outage).
 - Termination (L2 input; no report text opened): condition A ran to the 7-round cap in all five runs; condition B stopped early at all-5 after 4, 6, 4, 4 and 3 rounds (B_1–B_5).
 - Next: freeze the L3 codebook (analysis_criteria.json) before any report or deliberation text is opened.
+
+## 2026-11-07 — L3 codebook frozen
+
+- `analysis_criteria.json` v1.0, sha256 `ab7381138d61647983205e7c83e2e46ed91215bfb1179c45cc93c71a14412df9`, frozen from draft v0.3 (30 items, 13 critical, 17 decision points) before any main-run report or deliberation text was opened.
+- Frozen at the corresponding author's request without the primary judge's prior review; the primary judge's comments are recorded at judging time as notes.
+- Next: automated analyses (L1 similarity, L2 scores, L8 statistics, representative run).

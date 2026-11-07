@@ -1,0 +1,1013 @@
+{
+  "status": "FROZEN. Frozen before any main-run report or deliberation text was opened; only run status, call-log completeness and Critic score files had been checked.",
+  "version": "1.0",
+  "drafted": "2026-11-06",
+  "scope": "Food safety assessment of foods derived from plants (revision_plan 11, L3 item 1). Environmental risk assessment, feed, and low-level presence in trade are out of scope.",
+  "sources": {
+    "EFSA2022": {
+      "citation": "EFSA (European Food Safety Authority) et al. Criteria for risk assessment of plants produced by targeted mutagenesis, cisgenesis and intragenesis. EFSA Journal 2022;20(10):7618. doi:10.2903/j.efsa.2022.7618",
+      "obtained": "Europe PMC full text XML, PMC9583736 (2026-11-06); the Wiley PDF was not downloadable, so locations are given by section, not page",
+      "local_copy": "reference/revision/sources/EFSA_2022_7618.xml (not committed)"
+    },
+    "CXG45": {
+      "citation": "Codex Alimentarius Commission. Guideline for the conduct of food safety assessment of foods derived from recombinant-DNA plants. CAC/GL 45-2003 (adopted 2003; Annexes II and III adopted 2008). Now numbered CXG 45-2003.",
+      "obtained": "FAO Codex standards download, CXG_045e.pdf, 18 pages (2026-11-06)",
+      "local_copy": "reference/revision/sources/Codex_CXG_45-2003.pdf (not committed)",
+      "locations": "paragraph numbers (para) and PDF page"
+    }
+  },
+  "retrieval_coverage_note": "Neither source text is directly contained in the fixed retrieval snapshot (sha256 f36ac68c...), which holds six retrieval-response bundles per run (EU NGT Regulation text, EFSA novel-food guidance, EFSA Journal 2021.6314, 2025.9566, 2025.9619, 2026.e240901, and web pages). Indirect transmission through other retrieved material, the prompts or the report template, and the models' prior knowledge cannot be separated. The analysis measures conformity with the two authoritative texts; it is not independent expert validation or validation for a real product. Whether a specific element is absent from the retrieved material is judged per element (cause not_in_retrieval), separately from the fact that the documents themselves were not retrieved.",
+  "items": [
+    {
+      "id": "CB01",
+      "domain": "Classification",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "편집 결과 유형(SDN-1·2·3, ODM, cisgenesis·intragenesis)으로 산물을 분류하고 변형의 종류와 목적을 기술한다",
+      "item_en": "Classify the product by the outcome of the modification (SDN-1/2/3, ODM, cisgenesis/intragenesis) and describe the type and purpose of the modification",
+      "core_elements": [
+        "outcome-based category assigned",
+        "type and purpose of the modification described"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "2.3 Definitions",
+          "quote": "SDN-1: site-directed nuclease type 1 introduces random mutations ... SDN-2 ... makes use of template DNA ... SDN-3 ... introduces large stretch of donor DNA"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 22",
+          "page": 3,
+          "quote": "This description should identify the crop, the transformation event(s) to be reviewed and the type and purpose of the modification."
+        }
+      ],
+      "template_overlap": "Integrated tree example: 'Edit technique classification' node with SDN-1/SDN-2/SDN-3/ODM branches",
+      "applies_to": "all categories",
+      "branch": "condition: outcome category of the edit; targets: category-specific assessment paths"
+    },
+    {
+      "id": "CB02",
+      "domain": "Host plant",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "숙주 식물과 식품으로서의 이용 이력을 기술한다 (알려진 독성·알레르기성, 안전 섭취에 필요한 가공, 식이 내 역할)",
+      "item_en": "Describe the host plant and its use as food, including known toxicity or allergenicity, processing needed for safe consumption and its role in the diet",
+      "core_elements": [
+        "known toxicity/allergenicity of the host",
+        "processing needed to make it safe or typical preparation",
+        "role in the diet / edible part"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 23-25",
+          "page": 4,
+          "quote": "information on the host plant's genotype and phenotype relevant to its safety, including any known toxicity or allergenicity; and D) history of safe use for consumption as food."
+        }
+      ],
+      "merged": [
+        "CXG45 para 23 (host description)",
+        "para 24 (related species)",
+        "para 25 (history of use, processing, role in diet)"
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories"
+    },
+    {
+      "id": "CB03",
+      "domain": "Molecular characterisation",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "최종 식물에 외래 DNA(전달 과정에서 쓰인 벡터·헬퍼 플라스미드 포함)가 남아 있는지 판단하고, 그 결과로 평가 경로를 정한다",
+      "item_en": "Determine whether any exogenous DNA (including delivery vectors or helper plasmids) is present in the final plant, and route the assessment on that basis",
+      "core_elements": [
+        "presence/absence of exogenous DNA is established, not assumed",
+        "the answer determines the subsequent route",
+        "all genetic material potentially delivered is identified"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.1 Criterion 1",
+          "quote": "Criterion 1 aims to evaluate whether the GM plant contains any exogenous DNA sequence"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 27-28",
+          "page": 4,
+          "quote": "allow for the identification of all genetic material potentially delivered to the host plant"
+        }
+      ],
+      "merged": [
+        "EFSA 3.1",
+        "CXG45 para 27",
+        "CXG45 para 28 (transformation method, helper plasmids, intermediate hosts)"
+      ],
+      "template_overlap": "Node examples 'Residual exogenous DNA detected?', 'Exogenous DNA inserted?'",
+      "applies_to": "all categories",
+      "branch": "condition: exogenous DNA present?; targets: no -> HoSU (CB13); yes -> gene-pool source (CB04)"
+    },
+    {
+      "id": "CB04",
+      "domain": "Molecular characterisation",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "삽입된 DNA가 육종가 유전자풀(breeders' gene pool)에서 왔는지 판단한다. 유전자풀 밖이면 형질전환(GMO) 평가로 보낸다",
+      "item_en": "Determine whether inserted DNA comes from the breeders' gene pool; DNA from outside it routes the product to the transgenic (GM) assessment",
+      "core_elements": [
+        "origin of inserted sequence relative to the gene pool (cis/intra vs trans)",
+        "outside the gene pool -> full GM assessment"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.2 Criterion 2",
+          "quote": "The GM plant, which contains any exogenous DNA sequence(s) outside the breeders' gene pool, is considered a transgenic plant."
+        },
+        {
+          "doc": "EFSA2022",
+          "loc": "2.3 Definitions",
+          "quote": "Breeders' gene pool: the sources of genes/alleles available for conventional plant breeding"
+        }
+      ],
+      "template_overlap": null,
+      "note": "Treating every SDN-3 product as transgenic regardless of gene-pool origin is an explicit misclassification and is judged 'conflict' (global rule). Recognising the distinction without stating the route for gene-pool sequences is 'partial'.",
+      "applies_to": "products with inserted DNA (SDN-3, cisgenesis, intragenesis, or any residual vector DNA)",
+      "branch": "condition: inserted DNA from the breeders' gene pool?; targets: no -> transgenic assessment; yes -> integration type (CB05)"
+    },
+    {
+      "id": "CB05",
+      "domain": "Molecular characterisation",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "삽입 방식이 표적 삽입(유전체 안전 부위 포함)인지 무작위 삽입인지 판단하고, 그에 따라 자료 요구를 조정한다",
+      "item_en": "Determine whether integration is targeted (including proven genomic safe harbours) or random, and adjust data requirements accordingly",
+      "core_elements": [
+        "targeted vs random integration distinguished",
+        "proven safe harbour -> flexible data requirements and continue to HoSU (CB13)",
+        "random or unproven -> endogenous-gene interruption check (CB06)"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.3 Criterion 3",
+          "quote": "there is a need for flexibility in the data requirements for risk assessments of GM plants produced by proven Genomic Safe Harbors (GSH) SDN-3 approaches"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "cisgenic/intragenic insertions (EFSA Criterion 3), including SDN-3 used to insert gene-pool sequences",
+      "branch": "condition: targeted (proven safe harbour) or random integration?; targets: CB13 or CB06"
+    },
+    {
+      "id": "CB06",
+      "domain": "Molecular characterisation",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "삽입이 내재 유전자를 의도치 않게 끊었는지 평가하고, 위해가 확인되면 그 위해를 평가한다",
+      "item_en": "Assess whether the insertion unintentionally interrupted an endogenous gene; if a risk is identified, assess that risk",
+      "core_elements": [
+        "insertion-site effect on endogenous genes assessed",
+        "identified risk leads to assessment, not closure"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.4 Criterion 4",
+          "quote": "in case an endogenous gene has been disrupted and following the risk assessment, a risk is identified, the assessment of such risk shall be performed."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 15; para 33E",
+          "page": "2; 5",
+          "quote": "random insertion of DNA sequences into the plant genome which may cause disruption or silencing of existing genes"
+        }
+      ],
+      "merged": [
+        "EFSA 3.4",
+        "CXG45 para 15 (random insertion effects)",
+        "CXG45 para 33E (host genes affected)"
+      ],
+      "template_overlap": null,
+      "applies_to": "random insertions, or SDN-3 insertions where a genomic safe harbour has not been demonstrated (EFSA Criterion 4)",
+      "branch": "condition: endogenous gene interrupted and risk identified?; targets: risk assessment, or continue to CB13"
+    },
+    {
+      "id": "CB07",
+      "domain": "Molecular characterisation",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "삽입·편집 부위를 분자 수준에서 특성 분석한다 (삽입 물질, 삽입 부위 수, 복제 수, 주변 서열, 재배열 여부)",
+      "item_en": "Characterise the insert or edit at the molecular level (inserted material, number of sites, copy number, flanking sequence, rearrangements)",
+      "core_elements": [
+        "all categories: sequence confirmation of the intended edit at the target site",
+        "insertions only: number of sites, copy number, organisation and flanking sequence",
+        "rearrangements checked"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 31A-C; 33A",
+          "page": 5,
+          "quote": "the organisation of the inserted genetic material at each insertion site including copy number and sequence data of the inserted material and of the surrounding region"
+        }
+      ],
+      "merged": [
+        "CXG45 para 29-30 (p.4)",
+        "para 31A-C (p.5)",
+        "para 33A (p.5)"
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories: confirmation of the edit (sequence of the target site); insertion-specific elements (number of sites, copy number, junctions) only for products with inserted DNA"
+    },
+    {
+      "id": "CB08",
+      "domain": "Molecular characterisation",
+      "decision_point": false,
+      "critical": true,
+      "item_ko": "삽입 DNA 안이나 삽입 경계에서 생긴 열린 해독틀(ORF)과 융합 단백질 가능성을 확인한다",
+      "item_en": "Identify open reading frames within the inserted DNA or created at junctions with plant DNA, including possible fusion proteins",
+      "core_elements": [
+        "ORFs within the insert",
+        "ORFs at junctions / fusion proteins"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 31D; 33F",
+          "page": 5,
+          "quote": "identification of any open reading frames within the inserted DNA or created by the insertions with contiguous plant genomic DNA including those that could result in fusion proteins"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "products with inserted DNA (SDN-3, cisgenesis, intragenesis, or any residual vector DNA)"
+    },
+    {
+      "id": "CB09",
+      "domain": "Expressed substances",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "발현 산물(단백질·RNA)의 정체와 기능, 새 형질, 식용 부위에서의 발현 수준과 위치를 기술한다",
+      "item_en": "Describe expressed products (protein or RNA), their function, the new trait, and expression level and site, particularly in edible portions",
+      "core_elements": [
+        "identity and function of the product",
+        "expression level/site in edible portions"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 32",
+          "page": 5,
+          "quote": "the level and site of expression in the plant of the expressed gene product(s), and the levels of its metabolites in the plant, particularly in the edible portions"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories"
+    },
+    {
+      "id": "CB10",
+      "domain": "Molecular characterisation",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "의도한 효과가 나타났는지, 형질이 여러 세대에 걸쳐 안정적으로 유전·발현되는지 확인한다",
+      "item_en": "Confirm that the intended effect is achieved and that the trait is stably inherited and expressed over generations in the expected tissues",
+      "core_elements": [
+        "intended effect confirmed",
+        "stability over generations"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 33C-D",
+          "page": 5,
+          "quote": "all expressed traits are expressed and inherited in a manner that is stable through several generations consistent with laws of inheritance"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories"
+    },
+    {
+      "id": "CB11",
+      "domain": "Unintended effects",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "오프타깃 변이를 포함한 의도하지 않은 효과를 확인하고, 그 생물학적 의미와 식품안전 영향을 평가한다",
+      "item_en": "Identify unintended effects, including off-target modifications, and evaluate their biological relevance and impact on food safety",
+      "core_elements": [
+        "off-target / unintended changes addressed",
+        "relevance to food safety evaluated, not only detected"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "4 Additional considerations",
+          "quote": "EFSA refers to the consideration already included in previous Opinions regarding the analysis of the potential off-targets induced by the application of targeted mutagenesis techniques"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 14-17",
+          "page": "2-3",
+          "quote": "methods to identify and detect such unintended effects and procedures to evaluate their biological relevance and potential impact on food safety"
+        }
+      ],
+      "merged": [
+        "EFSA 4 (off-targets)",
+        "CXG45 para 14 (unintended effects also in conventional breeding)",
+        "para 16 (predictable vs unexpected)",
+        "para 17 (agronomic screen + assessment)"
+      ],
+      "template_overlap": "Node example 'Unintended-variant verification'",
+      "applies_to": "all categories",
+      "branch": "condition: unintended/off-target changes relevant to food safety?; targets: further assessment or continue"
+    },
+    {
+      "id": "CB12",
+      "domain": "Allele function",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "단백질 아미노산 변경이 번역 후 변형이나 구조·기능 핵심 부위에 영향을 주는지 확인한다",
+      "item_en": "Check whether amino-acid changes affect post-translational modification or sites critical for protein structure or function",
+      "core_elements": [
+        "effect of sequence change on PTM or critical sites"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 33B",
+          "page": 5,
+          "quote": "whether deliberate modifications made to the amino acid sequence of the expressed protein result in changes in its post-translational modification or affect sites critical for its structure or function"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "edits that change a protein sequence"
+    },
+    {
+      "id": "CB13",
+      "domain": "History of safe use",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "새 대립유전자와 형질의 안전 사용 이력(HoSU)을 평가한다: 이미 섭취되는 품종에 있는지, 섭취 부위·가공·영양소·알레르겐·독소 섭취량이 과거 이용 범위 안인지",
+      "item_en": "Assess the history of safe use of the allele and trait: presence in a consumed variety, and whether tissues, processing and intake of nutrients, allergens and toxins stay within historic use",
+      "core_elements": [
+        "allele/trait presence in consumed varieties",
+        "new exposure within the range of historic use (tissue, processing, intake)",
+        "HoSU used to scale data requirements"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.5 Criterion 5",
+          "quote": "Demonstration of a HoSU is based on evidence that some or all of a plant has been consumed in the diet ... for a considerable time with no evidence of adverse effects being produced, and that exposures from a new use will be within the range of those from the 'historic' use."
+        },
+        {
+          "doc": "EFSA2022",
+          "loc": "5 Conclusions",
+          "quote": "the HoSU is a key point in the proportionate risk assessment"
+        }
+      ],
+      "merged": [
+        "EFSA 3.5 (definition, three aspects, two scenarios)",
+        "EFSA 5 (HoSU key point; definition to be developed)"
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories",
+      "note": "CB13 covers the HoSU judgement and the resulting data adjustment; the follow-up when HoSU is not shown is CB14 only.",
+      "branch": "condition: history of safe use demonstrated?; targets: reduced data / CB14"
+    },
+    {
+      "id": "CB14",
+      "domain": "Allele function",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "안전 사용 이력을 입증하지 못하면 새 대립유전자의 기능과 구조를 평가한다: 기능 유지·획득, 독성·알레르기성 산물 가능성, 발현 수준·세포 내 위치 변화, 관행 육종으로 얻을 수 있는 확률",
+      "item_en": "Where history of safe use is not demonstrated, assess the function and structure of the new allele: conserved or gained function, potential toxic or allergenic product, altered expression or localisation, and likelihood of arising by conventional breeding",
+      "core_elements": [
+        "triggered when HoSU is not demonstrated",
+        "gained function / toxic or allergenic product potential",
+        "altered expression level or localisation",
+        "probability of obtaining the allele by conventional breeding"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "3.6 Criterion 6",
+          "quote": "When the HoSU and/or familiarity cannot be sufficiently demonstrated, the risk assessment should focus on the function and the structure associated to the new allele."
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "where history of safe use is not demonstrated",
+      "note": "Judged only for the branch where HoSU is not demonstrated; absence of that branch is an omission here, not under CB13.",
+      "branch": "condition: function, structure or expression of the new allele raises concern?; targets: toxicity/allergenicity assessment or continue"
+    },
+    {
+      "id": "CB15",
+      "domain": "Toxicity",
+      "decision_point": false,
+      "critical": true,
+      "item_ko": "새로 발현되거나 변화한 단백질의 독성을 평가한다: 식용 부위 농도와 식이 노출(하위 집단 포함), 알려진 독소·항영양소와의 서열 유사성, 열·가공 안정성, 위장 모델에서의 분해. 이전에 안전하게 섭취된 단백질과 유사하지 않으면 생물학적 기능을 고려해 경구 독성시험이 필요할 수 있다",
+      "item_en": "Assess the potential toxicity of newly expressed or altered proteins: concentration in edible parts and dietary exposure (including sub-groups), sequence similarity to known toxins and anti-nutrients, stability to heat and processing, and degradation in gastric and intestinal models; oral toxicity studies may need to be carried out where the protein is not similar to proteins previously consumed safely, taking its biological function into account",
+      "core_elements": [
+        "concentration in edible parts and dietary exposure, incl. sub-groups (para 35)",
+        "similarity to known toxins/anti-nutrients (para 38)",
+        "heat/processing stability and digestibility (para 38)",
+        "test material equivalent to the plant-produced protein when produced elsewhere (para 40)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 38",
+          "page": 6,
+          "quote": "the assessment of potential toxicity should focus on amino acid sequence similarity between the protein and known protein toxins and anti-nutrients ... as well as stability to heat or processing and to degradation in appropriate representative gastric and intestinal model systems"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 35",
+          "page": 5,
+          "quote": "identify the concentration of the substance in the edible parts ... Current dietary exposure and possible effects on population sub-groups should also be considered."
+        }
+      ],
+      "merged": [
+        "CXG45 para 34-35 (p.5)",
+        "para 38 (p.6)",
+        "para 40 (p.6)"
+      ],
+      "template_overlap": "Node example 'Toxicity assessment'",
+      "applies_to": "newly expressed or materially altered proteins present in the food",
+      "note": "The decision on whether studies are needed is judged under CB16 only, so a missing study decision is not counted twice."
+    },
+    {
+      "id": "CB16",
+      "domain": "Toxicity",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "독성시험의 필요성을 판단한다: 물질(또는 근연 물질)이 기능과 노출을 고려할 때 안전하게 섭취된 근거가 있으면 시험이 필요하지 않을 수 있고, 그렇지 않으면 적절한 독성시험이나 다른 연구가 필요할 수 있다",
+      "item_en": "Decide whether toxicity studies are needed: conventional studies may not be necessary where the substance, or a closely related one, has been consumed safely considering function and exposure; otherwise appropriate toxicology or other studies may be necessary",
+      "core_elements": [
+        "the decision cites safe consumption of the substance considering function and exposure",
+        "without that basis, studies (toxicology or other) are considered rather than waived"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 37",
+          "page": 6,
+          "quote": "conventional toxicology studies may not be considered necessary where the substance or a closely related substance has, taking into account its function and exposure, been consumed safely in food. In other cases, the use of appropriate conventional toxicology or other studies on the new substance may be necessary."
+        }
+      ],
+      "template_overlap": null,
+      "note": "A waiver stated without this basis is judged 'conflict'. A report that keeps the decision case-by-case with the basis stated is 'match' even if it does not name specific study designs.",
+      "applies_to": "new or altered substances present in the food",
+      "branch": "condition: substance (or a closely related one) consumed safely considering function and exposure?; targets: studies may not be necessary / appropriate toxicology or other studies may be necessary (case by case)"
+    },
+    {
+      "id": "CB17",
+      "domain": "Metabolites",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "새 물질이나 변화한 대사산물·잔류물이 식품에 축적되는지 확인하고, 단백질이 아닌 물질은 정체·기능·노출에 따라 사례별로 독성을 평가한다",
+      "item_en": "Consider new or altered metabolites and residues accumulating in the food, and assess non-protein substances case by case according to identity, function and exposure",
+      "core_elements": [
+        "new/altered metabolite levels investigated (para 46)",
+        "case-by-case toxicity of non-protein substances by identity, function and exposure (para 39)",
+        "trait-related indirect accumulation of residues, metabolites or contaminants (para 54)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 46",
+          "page": 7,
+          "quote": "Consideration should be given to the potential for the accumulation of metabolites in the food that would adversely affect human health."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 39",
+          "page": 6,
+          "quote": "Potential toxicity of non-protein substances that have not been safely consumed in food should be assessed on a case-by-case basis"
+        }
+      ],
+      "merged": [
+        "CXG45 para 15 (p.2)",
+        "para 39 (p.6)",
+        "para 46 (p.7)",
+        "para 54 (p.8)"
+      ],
+      "template_overlap": null,
+      "applies_to": "traits that may alter metabolites or lead to accumulation of residues or contaminants"
+    },
+    {
+      "id": "CB18",
+      "domain": "Donor",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "공여 생물을 식별하고 식품안전 관련 정보(독소·항영양소·알레르겐, 미생물이면 병원성, 식품 이용 이력과 노출 경로)를 기술한다. 알려진 독소·항영양소 유전자가 이를 통상 발현하지 않는 수용 식물로 옮겨지지 않았음을 보이고, 알레르기성 식품의 유전자는 알레르겐을 암호화하지 않음이 입증되지 않으면 옮기지 않는다",
+      "item_en": "Identify the donor organism and its food-safety-relevant traits (toxins, anti-nutrients, allergens; pathogenicity for microorganisms; history of food use and exposure routes). Show that genes for known toxins or anti-nutrients are not transferred to a plant that does not normally express them, and avoid transfer from commonly allergenic foods unless it is documented that the gene does not code for an allergen",
+      "core_elements": [
+        "donor identified with food-safety-relevant traits (para 26)",
+        "known toxin/anti-nutrient genes not transferred to a recipient that does not express them; processing differences (para 36)",
+        "transfer from allergenic foods only with documentation that no allergen is encoded (para 43)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 26; 36",
+          "page": "4-5",
+          "quote": "Information should be provided to ensure that genes coding for known toxins or anti-nutrients present in the donor organisms are not transferred"
+        }
+      ],
+      "template_overlap": null,
+      "note": "Applies where donor DNA is introduced (SDN-3, cisgenesis, intragenesis).",
+      "applies_to": "products with donor genetic material (SDN-3, cisgenesis, intragenesis)",
+      "merged": [
+        "CXG45 para 26 (p.4)",
+        "para 36 (p.5)",
+        "para 43, allergen part (p.6)"
+      ]
+    },
+    {
+      "id": "CB19",
+      "domain": "Allergenicity",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "식품에 존재하는 새로 발현된 단백질은 모두 알레르기성을 평가한다: 출처의 알레르기성, 알려진 알레르겐과의 서열 상동성, 펩신 저항성 등을 함께 보는 단계적·증거 가중 접근",
+      "item_en": "Assess every newly expressed protein present in the food for allergenicity using an integrated, stepwise, weight-of-evidence approach: allergenicity of the source, sequence homology to known allergens, pepsin resistance",
+      "core_elements": [
+        "applies to all newly expressed proteins present in the food",
+        "source of the protein",
+        "sequence homology to known allergens",
+        "resistance to digestion (pepsin)",
+        "no single criterion decisive (combined)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 41",
+          "page": 6,
+          "quote": "When the protein(s) resulting from the inserted gene is present in the food, it should be assessed for potential allergenicity in all cases."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "Annex 1, para 4; 8-13",
+          "page": "9-10",
+          "quote": "the determination of: the source of the introduced protein; any significant similarity between the amino acid sequence of the protein and that of known allergens; and its structural properties"
+        }
+      ],
+      "merged": [
+        "CXG45 para 41",
+        "Annex 1 para 1-6 (strategy)",
+        "para 7 (source)",
+        "para 8-11 (homology)",
+        "para 12-13 (pepsin)",
+        "para 16 (exposure and processing)",
+        "para 17 (new methods)"
+      ],
+      "template_overlap": "Node example 'Allergenicity screening'; template SDN-3 path 'Allergenicity assessment'",
+      "note": "The 35%/80 amino-acid and 6-8 contiguous amino-acid thresholds are numeric criteria: not separate items (revision_plan L3 item 2); their absence is recorded with cause 'design exclusion' if the assessment itself is present. Conditional serum testing is judged under CB20 and enteropathy under CB21, not here.",
+      "applies_to": "newly expressed proteins present in the food",
+      "branch": "condition: newly expressed protein present in the food?; targets: allergenicity assessment / skip"
+    },
+    {
+      "id": "CB20",
+      "domain": "Allergenicity",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "출처가 알레르기성이거나 서열 상동성이 있는 단백질은 혈청을 이용할 수 있으면 환자 혈청으로 특이 IgE 결합을 시험하고, 알레르기성 출처에서 음성이면 추가 시험을 고려한다",
+      "item_en": "For proteins from an allergenic source or with sequence homology to an allergen, test specific IgE binding with patient sera where sera are available; a negative result for a known allergenic source should prompt additional testing",
+      "core_elements": [
+        "serum testing triggered by allergenic source or homology, where sera are available (Annex 1 para 14)",
+        "for a known allergenic source, a negative in vitro result is not sufficient on its own (Annex 1 para 15)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "Annex 1, para 14-15",
+          "page": "10-11",
+          "quote": "For those proteins that originate from a source known to be allergenic, or have sequence homology with a known allergen, testing in immunological assays should be performed where sera are available."
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "proteins from an allergenic source or with sequence homology to an allergen",
+      "branch": "condition: allergenic source or sequence homology, and sera available?; targets: specific IgE serum testing; for a known allergenic source, a negative result prompts additional testing (skin test, ex vivo); otherwise continue"
+    },
+    {
+      "id": "CB21",
+      "domain": "Allergenicity",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "곡류(밀·호밀·보리·귀리 등) 유래 유전물질이면 새 단백질의 글루텐 민감성 장질환 유발 가능성을 평가하고, 장질환 유발 식품의 유전자는 관련 단백질을 암호화하지 않음이 입증되지 않으면 옮기지 않는다",
+      "item_en": "For genetic material from wheat, rye, barley, oats or related cereals, evaluate newly expressed proteins for a role in gluten-sensitive enteropathy, and avoid transfer of genes from foods known to elicit it unless it is documented that the gene does not code for a protein involved in gluten-sensitive enteropathy",
+      "core_elements": [
+        "gluten-sensitive enteropathy evaluated where cereal genetic material is used (para 42)",
+        "no transfer from enteropathy-eliciting foods without documentation (para 43)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 42",
+          "page": 6,
+          "quote": "evaluated for any possible role in the elicitation of gluten-sensitive enteropathy, if the introduced genetic material is obtained from wheat, rye, barley, oats, or related cereal grains"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 43",
+          "page": 6,
+          "quote": "unless it is documented that the transferred gene does not code for an allergen or for a protein involved in gluten-sensitive enteropathy"
+        }
+      ],
+      "merged": [
+        "CXG45 para 42 (p.6)",
+        "para 43, enteropathy part (p.6)"
+      ],
+      "template_overlap": null,
+      "applies_to": "genetic material obtained from wheat, rye, barley, oats or related cereal grains"
+    },
+    {
+      "id": "CB22",
+      "domain": "Comparative analysis",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "핵심 영양소·항영양소·독성물질을 같은 조건에서 재배한 비교 대상(이상적으로 근동질 모계통, 어려우면 가장 가까운 계통)과 비교하고, 차이를 자연 변이 범위에서 해석한다",
+      "item_en": "Compare key nutrients, anti-nutrients and toxicants with a conventional counterpart grown under the same conditions (ideally the near-isogenic parental line, otherwise the closest line) and interpret differences against natural variation",
+      "core_elements": [
+        "key components: nutrients, anti-nutrients, toxicants and endogenous allergens (footnote 5)",
+        "comparator: near-isogenic or closest line, same conditions",
+        "differences interpreted against natural variation (biological relevance)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 44; footnote 5",
+          "page": 6,
+          "quote": "The comparator(s) used in this assessment should ideally be the near isogenic parental line. In practice, this may not be feasible at all times, in which case a line as close as possible should be chosen."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 13",
+          "page": 2,
+          "quote": "The concept of substantial equivalence is a key step in the safety assessment process. However, it is not a safety assessment in itself"
+        }
+      ],
+      "merged": [
+        "CXG45 para 12-13 (p.2)",
+        "para 44 and footnote 5 (p.6)",
+        "para 48 (p.7)",
+        "EFSA 3.5 (intake of nutrients, allergens and toxins within historic use)"
+      ],
+      "template_overlap": "Node examples 'Nutritional composition assessment'; template 'Compositional comparison with conventional variety'",
+      "applies_to": "all categories",
+      "branch": "condition: suitable comparator available and differences within natural variation?; targets: continue / further assessment / CB24"
+    },
+    {
+      "id": "CB23",
+      "domain": "Comparative analysis",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "성분 비교 시험을 대표적인 여러 재배지·여러 세대·반복으로 설계하고, 분석법은 핵심 성분 변이를 검출할 만큼 민감·특이하게 한다",
+      "item_en": "Design compositional trials over representative sites and generations with replication, using methods sensitive and specific enough to detect variation in key components",
+      "core_elements": [
+        "representative sites/seasons",
+        "replication and method sensitivity"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 45",
+          "page": 6,
+          "quote": "The location of trial sites should be representative of the range of environmental conditions under which the plant varieties would be expected to be grown."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 20",
+          "page": 3,
+          "quote": "Data should be obtained using sound scientific methods and analysed using appropriate statistical techniques."
+        }
+      ],
+      "merged": [
+        "CXG45 para 45",
+        "para 20 (sound methods, statistics, method sensitivity)"
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories"
+    },
+    {
+      "id": "CB24",
+      "domain": "Comparative analysis",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "적절한 비교 대상이 없거나 성분이 크게 달라지는 경우, 여러 비교 대상이나 더 가까운 다른 식품을 비교 대상으로 쓰거나 독립(stand-alone) 평가를 한다",
+      "item_en": "Where no suitable comparator exists or composition differs markedly, use multiple comparators or closer conventional foods as comparators, or a stand-alone assessment",
+      "core_elements": [
+        "comparator problem recognised",
+        "alternative: multiple comparators / other foods / stand-alone assessment"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "4 Additional considerations",
+          "quote": "the comparative analysis may not always be applicable to some genome-edited plants with complex traits for which a comparator cannot be identified ... either using the comparative analysis against multiple comparators or by a stand-alone assessment"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 51; Annex 2 para 7",
+          "page": "7; 12",
+          "quote": "it may be appropriate to use additional conventional foods or food components ... as appropriate comparators"
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "where a suitable comparator cannot be identified or composition differs markedly",
+      "note": "EFSA 2022 section 4 describes this as an area where guidance should be revised; a report is judged on recognising the comparator problem and proposing an alternative, not on a specific procedure. A report that handles the no-comparator case under this item is not marked down under CB22 for the same products.",
+      "branch": "condition: no suitable comparator?; targets: multiple comparators or stand-alone assessment"
+    },
+    {
+      "id": "CB25",
+      "domain": "Processing",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "가정 조리를 포함한 식품 가공의 영향(내재 독성물질의 열 안정성, 영양소 생체이용률, 단백질 잔존)을 평가한다",
+      "item_en": "Assess effects of food processing, including home preparation (heat stability of endogenous toxicants, nutrient bioavailability, presence of the protein in the final food)",
+      "core_elements": [
+        "processing/home preparation considered",
+        "effect on toxicants, nutrients or protein presence"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 47",
+          "page": 7,
+          "quote": "The potential effects of food processing, including home preparation, on foods derived from recombinant-DNA plants should also be considered."
+        },
+        {
+          "doc": "EFSA2022",
+          "loc": "3.5 Criterion 5",
+          "quote": "Whether any specific processing steps are required before the currently consumed plant is consumed safely"
+        }
+      ],
+      "merged": [
+        "CXG45 para 47",
+        "Annex 1 para 16 (processing and exposure for allergens)",
+        "EFSA 3.5 (processing steps)"
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories"
+    },
+    {
+      "id": "CB26",
+      "domain": "Nutrition and exposure",
+      "decision_point": false,
+      "critical": false,
+      "item_ko": "영양 특성을 의도적으로 바꾼 경우 추가 영양 평가를 한다: 일상·최대 섭취 수준의 섭취량 추정, 취약 집단, 생체이용률, 전체 영양 프로필, 대체되는 식품 대비 영향",
+      "item_en": "Where nutritional quality is intentionally altered, perform additional nutritional assessment: intake at customary and maximal consumption, vulnerable groups, bioavailability, overall nutrient profile, and effect versus the food displaced",
+      "core_elements": [
+        "intake at customary and maximal consumption, incl. high consumers (para 49)",
+        "vulnerable population groups and populations relying on the food (para 49, 52)",
+        "bioavailability, chemical forms and overall nutrient profile (para 49-50; Annex 2 para 11-13)",
+        "exposure in the total diet versus the food displaced, compared with reference values or historical safe levels (Annex 2 para 8-10, 14-17)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 48-53",
+          "page": 7,
+          "quote": "The expected intake of the food should be used to assess the nutritional implications of the altered nutrient profile both at customary and maximal levels of consumption."
+        },
+        {
+          "doc": "CXG45",
+          "loc": "Annex 2 para 8-17",
+          "page": "13-14",
+          "quote": "the estimated intake of the nutrient or related substance in the population(s) is compared with the nutritional or toxicological reference values"
+        }
+      ],
+      "merged": [
+        "CXG45 para 48-53 (p.7)",
+        "Annex 2 para 1-7 (p.12)",
+        "Annex 2 para 8-17 (p.13-14)"
+      ],
+      "template_overlap": null,
+      "applies_to": "products with intentionally altered nutritional quality or functionality"
+    },
+    {
+      "id": "CB27",
+      "domain": "Multiple modifications",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "여러 유전자를 동시에 편집하거나 서로 연관되지 않은 변형이 여러 개인 경우의 평가 방법을 다룬다 (개별 평가의 한계, 다수 새 단백질)",
+      "item_en": "Address the assessment of multiple simultaneous or genetically unlinked modifications, including the limits of assessing each modification first and of assessing many novel proteins",
+      "core_elements": [
+        "multiplex / stacked modifications addressed",
+        "how interactions or many products are handled"
+      ],
+      "sources": [
+        {
+          "doc": "EFSA2022",
+          "loc": "4 Additional considerations",
+          "quote": "the assessment of the single modification first ... may be challenging or even unfeasible for plants with a high number of inserted/modified sequences"
+        }
+      ],
+      "template_overlap": "Node example 'Multiplex-edit effects?'",
+      "applies_to": "products with multiple simultaneous or unlinked modifications",
+      "note": "EFSA 2022 section 4 raises this as a challenge, not as an established procedure; a report is judged on addressing it, not on a particular method.",
+      "branch": "condition: multiple simultaneous or unlinked modifications?; targets: the report states how they are assessed (no particular method is required, see note)"
+    },
+    {
+      "id": "CB28",
+      "domain": "Whole food studies",
+      "decision_point": true,
+      "critical": true,
+      "item_ko": "전체 식품 동물실험은 특성 분석에서 자료가 불충분할 때 요청될 수 있는 선택지로 다루고, 의미 있는 정보를 주지 못할 시험인지도 고려한다",
+      "item_en": "Treat whole-food animal studies as an option that could be requested when characterisation shows the available data are insufficient, considering whether such a study is likely to give meaningful information",
+      "core_elements": [
+        "trigger: insufficient data from characterisation",
+        "not a default requirement",
+        "meaningfulness of the study considered"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 11; 53",
+          "page": "2; 7",
+          "quote": "If the characterization of the food indicates that the available data are insufficient for a thorough safety assessment, properly designed animal studies could be requested on the whole foods."
+        }
+      ],
+      "template_overlap": null,
+      "applies_to": "all categories",
+      "branch": "condition: data insufficient after characterisation?; targets: whole-food animal study could be requested if likely to be informative / not requested"
+    },
+    {
+      "id": "CB29",
+      "domain": "Marker genes",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "항생제 내성 표지 유전자는 가능하면 쓰지 않고, 있으면 임상적 중요성·경구 항생제 효능 저해·유전자 산물 안전성을 평가한다",
+      "item_en": "Avoid antibiotic resistance marker genes where alternatives exist; if present, assess clinical importance, effect on oral antibiotic efficacy and safety of the gene product",
+      "core_elements": [
+        "marker genes avoided where alternatives exist (para 55)",
+        "clinical importance of the antibiotic (para 57A)",
+        "effect of the gene product on oral antibiotic efficacy and its safety (para 57B-C)",
+        "markers for clinically used antibiotics not present in food (para 58)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 55-58",
+          "page": 8,
+          "quote": "Antibiotic resistance genes used in food production that encode resistance to clinically used antibiotics should not be present in foods."
+        }
+      ],
+      "merged": [
+        "CXG45 para 55-58 (p.8)"
+      ],
+      "template_overlap": null,
+      "applies_to": "products developed with antibiotic resistance marker genes",
+      "branch": "condition: antibiotic resistance marker present?; targets: marker assessment or removal / continue"
+    },
+    {
+      "id": "CB30",
+      "domain": "Conclusion and review",
+      "decision_point": true,
+      "critical": false,
+      "item_ko": "평가의 결론을 '기존 대응 식품만큼 안전한가'로, 영양 변화의 식이 영향을 고려해 내리고, 이후 결론에 의문을 제기하는 새 과학 정보가 나오면 재검토한다",
+      "item_en": "Conclude whether the new food is as safe as its conventional counterpart, taking into account the dietary impact of nutritional changes, and review the assessment when new scientific information questions its conclusions",
+      "core_elements": [
+        "conclusion framed relative to the conventional counterpart (para 21, 59)",
+        "dietary impact of nutritional changes considered in the conclusion",
+        "re-evaluation when new information arises (para 59)"
+      ],
+      "sources": [
+        {
+          "doc": "CXG45",
+          "loc": "para 21",
+          "page": 3,
+          "quote": "The expected endpoint of such an assessment will be a conclusion regarding whether the new food is as safe as the conventional counterpart"
+        },
+        {
+          "doc": "CXG45",
+          "loc": "para 59",
+          "page": 8,
+          "quote": "the safety assessment should be reviewed in the light of new scientific information that calls into question the conclusions of the original safety assessment."
+        }
+      ],
+      "template_overlap": null,
+      "note": "Post-market monitoring in a report counts toward this item only where it includes re-opening the assessment on new information.",
+      "applies_to": "all categories",
+      "merged": [
+        "CXG45 para 21 (p.3)",
+        "para 59 (p.8)"
+      ],
+      "branch": "condition: new information questions the conclusion?; targets: re-evaluation / conclusion stands"
+    }
+  ],
+  "excluded_source_elements": [
+    {
+      "element": "CXG45 para 1-8 (scope, definitions, principles)",
+      "reason": "framing, not an assessment step"
+    },
+    {
+      "element": "CXG45 para 2; EFSA familiarity for the environment (3.5) and ERA aspects (3, 4)",
+      "reason": "environment and feed are out of scope (scope)"
+    },
+    {
+      "element": "CXG45 para 9-11 (why whole foods are not tested like chemicals)",
+      "reason": "rationale; the operative rule is CB28"
+    },
+    {
+      "element": "CXG45 para 18-19 (framework list A-G, product-specific data)",
+      "reason": "covered item by item (CB01-CB30)"
+    },
+    {
+      "element": "CXG45 para 20 (GLP, primary data available to regulators)",
+      "reason": "data-quality procedure (GLP, primary data available to regulators) is excluded from the items; sound methods, statistics and method sensitivity are kept under CB23"
+    },
+    {
+      "element": "CXG45 Annex 3 (low-level presence in trade)",
+      "reason": "out of scope: trade situation, not product assessment"
+    },
+    {
+      "element": "EFSA 1, 2 (mandate, data, methodology)",
+      "reason": "procedural"
+    },
+    {
+      "element": "EFSA 5 recommendation to define HoSU in future",
+      "reason": "recommendation to regulators; HoSU content is CB13"
+    },
+    {
+      "element": "Numeric thresholds (35%/80 aa, 6-8 aa segments, 8/24 sera, 25 years HoSU)",
+      "reason": "numbers are not items (revision_plan L3 item 2); recorded as notes"
+    }
+  ],
+  "judgement": {
+    "status": {
+      "match": "All core elements present and consistent with the source",
+      "partial": "The assessment is present but at least one core element is missing, or it is applied to a narrower scope than the source",
+      "omission": "The assessment or data requirement itself is absent",
+      "conflict": "The report says something contrary to the source (e.g. a waiver without the source's condition, or closure while the source requires assessment)",
+      "out_of_scope": "The item's applies_to condition is explicitly outside the framework the report sets out (e.g. the report excludes intentionally nutrition-modified products); a written reason is required. A framework that covers the category but lacks the branch is judged omission or partial, not out_of_scope"
+    },
+    "cause": {
+      "template": "The element appears in the report template (template_overlap) and the report reproduces it",
+      "model": "The element was generated by the system beyond the template",
+      "design_exclusion": "Missing only because of the numbers ban or the normative-phrasing ban; the assessment itself is present",
+      "not_in_retrieval": "Absent and the element is not in the run's retrieved material (snapshot); see retrieval_coverage_note",
+      "undetermined": "Cause cannot be determined",
+      "note": "Causes are multi-tag: record every applicable tag; not_in_retrieval or design_exclusion alone does not establish the cause"
+    },
+    "rules": [
+      "A judge records status and cause for each item, plus the location (section, step or node) supporting the judgement",
+      "If the assessment is present but a numeric criterion is missing, the status is match or partial and the cause is design_exclusion",
+      "If an assessment or a data requirement is missing, the status is omission even when the cause is design_exclusion",
+      "Conflict takes precedence: if an item is partly reflected but the report also states something contrary to the source, the status is conflict",
+      "An explicit misclassification (e.g. treating every SDN-3 product as transgenic regardless of gene-pool origin) is conflict; an incomplete distinction is partial",
+      "Numeric criteria whose absence may be judged design_exclusion are listed per item in the item notes (e.g. CB19 thresholds); for other items the numbers ban does not excuse a missing element",
+      "Each judgement is made for the categories in applies_to; if the report covers several categories and the item is met for some only, the status is partial"
+    ]
+  },
+  "aggregation": {
+    "conformity_rate": "Primary: (match + 0.5 x partial) / (items - out_of_scope). Always reported with the strict rate (match only) and the count of each status",
+    "denominator": "All items except out_of_scope. Design exclusion does not remove an item from the denominator",
+    "out_of_scope": "Number, list and reasons reported separately",
+    "critical_omissions": "Counted and listed separately, not averaged: (1) items with critical=true judged omission or conflict; (2) any report statement, in any item, that skips a required assessment, waives without the source's basis, or closes the assessment while an uncertainty material to the safety conclusion remains. Each case in (2) is judged and recorded with its reason; the critical flag does not limit (2)",
+    "ai_additions": "Assessments in the report not covered by any item are listed separately and classified as supported extension (with a cited or verifiable basis) or insufficiently supported proposal",
+    "per_condition": "Reported per condition (A, B) as median and range over five reports; no statistical test"
+  },
+  "judges": {
+    "primary": "Dr Ham Jun-Hyeok: all ten main-run reports",
+    "second": "Bae Seongu or Prof. Kim Hae-Yeong (a co-author): three reports drawn in the manifest (A_4, B_1, B_2), independently, without LLM aids or the primary judgements",
+    "blinding": "Reports are relabelled with anonymous IDs drawn with the manifest blinding seed; condition and run number are hidden; original judgements are kept before consensus",
+    "agreement": "Percent agreement, confusion table and Cohen's kappa where computable, stated as values for a three-report sample between authors (not external validation)",
+    "llm_use": "Judgements are made by people. Models used in the pipeline (GPT-5, Claude) are not judges. An LLM may only locate candidate passages for each item without giving a judgement; the primary judge confirms against the report text. Model and scope are reported in Methods."
+  },
+  "L4_structure": {
+    "decision_points": "Items with decision_point=true: CB01, CB03, CB04, CB05, CB06, CB11, CB13, CB14, CB16, CB19, CB20, CB22, CB24, CB27, CB28, CB29, CB30; see each item's branch field",
+    "fields": [
+      "present (yes/no)",
+      "condition (what the branch tests)",
+      "target (next assessment)",
+      "outcome type (further assessment / end / additional data or deferral)"
+    ],
+    "normalisation": "Node IDs and synonyms normalised with a recorded conversion table; a decision repeated in the integrated and per-category trees counts once",
+    "metrics": [
+      "item agreement: share of the five runs in a condition with the modal coding",
+      "pairwise agreement: share of decision points coded the same by two runs (mean and range over the ten pairs per condition)"
+    ],
+    "match_rule": "Two runs agree on a decision point when all four fields agree after normalisation (present, condition, target, outcome type). Same direction with a different condition is disagreement. Where a decision point has several branches, each branch is coded and all must agree",
+    "template_nodes": "Decision points with template_overlap are reported separately from model-generated ones",
+    "joint_absence": "A decision point absent in both runs is counted as 'jointly absent', reported separately, and agreement is reported both with and without jointly absent points",
+    "out_of_scope": "Decision points whose applies_to condition is outside a run's framework are excluded for that run pair and listed"
+  },
+  "L5_citation_audit": {
+    "existence": "All references in the five condition-A reports: exists / does not exist / cannot be verified",
+    "claim_selection": "From the representative run: (a) each Core Question 1 sentence that assigns a category to an assessment route; (b) the first hazard sentence for each technique category in Core Question 2; (c) the decision or condition sentence of each Core Question 5 step; (d) every waiver, stop or closure statement in Core Questions 4-5. Uncited claims are included. Sentences with several claims are split into single claims; duplicates (same claim in another section) are kept once at the first occurrence. If more than 30 remain, draw 30 stratified by (a)-(d) in proportion with at least 5 per stratum where available (seed 20261109); if fewer, take all. The limitation of taking the first hazard sentence per category is reported",
+    "judgement": "supported / partly supported / not supported / cannot be verified; key claims without any citation are a separate category",
+    "reporting": "As a proportion within the representative-run sample only; not generalised to a hallucination rate",
+    "stratum_assignment": "After splitting and de-duplication each claim belongs to one stratum, assigned by priority (d) waiver/stop/closure > (c) Core Question 5 step decision > (a) classification > (b) hazard"
+  },
+  "frozen": {
+    "utc": "2026-11-07T07:56:06.296528+00:00",
+    "kst": "2026-11-07T16:56:06.296528+09:00",
+    "from_draft": {
+      "file": "analysis_criteria.draft.json",
+      "version": "0.3-draft",
+      "sha256": "0c0af45a88af4f1246bb99fb0afd5433a786c3099522a25786e1365f2628d8b9"
+    },
+    "decision": "Frozen from draft v0.3 at the corresponding author's request without the primary judge's prior review; the primary judge's comments are recorded at judging time as notes and do not change items, categories or aggregation rules.",
+    "changes_from_draft": "status, version and this block only"
+  }
+}
