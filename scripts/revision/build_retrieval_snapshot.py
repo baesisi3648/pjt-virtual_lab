@@ -75,7 +75,7 @@ class _Fixed:
 
 
 def build(out: Path, topic: str, tools: dict | None = None, index: str | None = None,
-          base: str | None = None) -> str:
+          base: str | None = None, per_document: str | None = None) -> str:
     """Build and publish the snapshot; return its sha256. `tools` may be injected for tests."""
     out = out.resolve()
     if out.exists():
@@ -126,7 +126,16 @@ def build(out: Path, topic: str, tools: dict | None = None, index: str | None = 
                 from config import settings
                 from rag.pinecone_client import get_pinecone_client
                 from tools.rag_search import format_docs
-                docs = get_pinecone_client().search(query, top_k=settings.TOP_K)
+                if per_document:
+                    cm = json.loads((ROOT / per_document).read_text(encoding="utf-8"))
+                    doc_ids = [d["id"] for d in cm["documents"]]
+                    candidates = get_pinecone_client().search_one_per_document(query, doc_ids, top_k=len(doc_ids))
+                    raw_rag[key + "_all_documents"] = [
+                        {"rank": i + 1, "doc_id": d["doc_id"], "id": d["id"], "score": d["score"],
+                         "page": d["page"]} for i, d in enumerate(candidates)]
+                    docs = candidates[:settings.TOP_K]
+                else:
+                    docs = get_pinecone_client().search(query, top_k=settings.TOP_K)
                 if not docs:
                     raise SystemExit("RAG search returned no documents")
                 raw_rag[key] = [{"rank": i + 1, "id": d.get("id"), "score": d.get("score"),
@@ -143,6 +152,9 @@ def build(out: Path, topic: str, tools: dict | None = None, index: str | None = 
                          "git_commit": _git_commit(), "python": sys.version, "packages": _versions(),
                          "script": "scripts/revision/build_retrieval_snapshot.py",
                          "rag_index": rag_index, "rag_raw_matches": raw_rag,
+                         "rag_selection": ("top-1 chunk per document by a filtered Pinecone query per doc_id (approximate "
+                                           "nearest neighbour), top TOP_K documents by score, ties by doc_id; documents from "
+                                           + str(per_document)) if per_document else "top TOP_K chunks",
                          "base_snapshot": ({"path": str(base), "sha256": rs.file_sha256(Path(base)),
                                             "copied_keys": [k for k, kind, _ in PLAN if kind != "rag"]}
                                            if base else None)}
@@ -168,9 +180,12 @@ def main() -> int:
     p.add_argument("--index", default=DEFAULT_INDEX, help="Pinecone index of the RAG corpus")
     p.add_argument("--base", default=None,
                    help="earlier snapshot whose web/EFSA entries are copied unchanged (only the RAG entry is new)")
+    p.add_argument("--per-document", default=None,
+                   help="corpus manifest; RAG takes the best chunk of each listed document, then the top TOP_K")
     args = p.parse_args()
     out = (ROOT / args.out)
-    digest = build(out, args.topic, index=args.index, base=(str(ROOT / args.base) if args.base else None))
+    digest = build(out, args.topic, index=args.index, base=(str(ROOT / args.base) if args.base else None),
+                   per_document=args.per_document)
     print(f"snapshot: {out.resolve()}\nsha256:   {digest}")
     return 0
 

@@ -59,6 +59,26 @@ class PineconeRAGClient:
 
         logger.info(f"✅ {len(documents)}개 문서 추가 완료")
 
+    def search_one_per_document(self, query: str, doc_ids: List[str], top_k: int = 5) -> List[Dict]:
+        """Top-1 chunk of each document by a filtered query (doc_id) per document - Pinecone's approximate
+        nearest-neighbour result, not an exhaustive comparison - then the top_k documents by score; ties broken
+        by doc_id.
+        Revision, corpus v1 (2026-11-07): set after the first v1 snapshot returned five chunks of one document.
+        """
+        vec = self.embed_text(query)
+        best = []
+        for doc_id in doc_ids:
+            res = self.index.query(vector=vec, top_k=1, include_metadata=True, filter={"doc_id": {"$eq": doc_id}})
+            matches = res["matches"]
+            if not matches:
+                raise RuntimeError(f"no chunk returned for document {doc_id}")
+            m = matches[0]
+            best.append({"id": m.get("id") if hasattr(m, "get") else getattr(m, "id", None),
+                         "doc_id": doc_id, "text": m["metadata"]["text"], "source": m["metadata"]["source"],
+                         "page": m["metadata"].get("page", 0), "score": m["score"]})
+        best.sort(key=lambda d: (-d["score"], d["doc_id"]))
+        return best[:top_k]
+
     def search(self, query: str, top_k: int = 5) -> List[Dict]:
         """쿼리 검색
 

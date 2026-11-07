@@ -19,6 +19,8 @@ def format_docs(docs: list) -> str:
         score = doc.get('score', 0)
         source = doc.get('source', 'unknown')
         page = doc.get('page', 0)
+        if isinstance(page, float) and page.is_integer():
+            page = int(page)  # Pinecone returns numeric metadata as float ("p.12.0")
         text = doc.get('text', '')
         # Revision (corpus v1): XML documents carry a section label, not a page number.
         loc = f"p.{page}" if isinstance(page, (int, float)) or str(page).replace(".", "", 1).isdigit() else str(page)
