@@ -16,8 +16,14 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-J = ROOT / "reference" / "revision" / "judging"
-OUT = ROOT / "reference" / "revision" / "packages"
+import argparse as _argparse  # noqa: E402
+_ap = _argparse.ArgumentParser()
+_ap.add_argument("mermaid")
+_ap.add_argument("--judging", default="reference/revision/judging")
+_ap.add_argument("--out", default="reference/revision/packages")
+_A, _ = _ap.parse_known_args()
+J = ROOT / _A.judging
+OUT = ROOT / _A.out
 CODEBOOK_PAGE = ROOT / "reference" / "revision" / "codebook_review" / "codebook-review.html"
 CODEX_PDF = ROOT / "reference" / "revision" / "sources" / "Codex_CXG_45-2003.pdf"
 MANIFEST = ROOT / "experiments" / "runs_rev" / "experiment_manifest.json"
@@ -193,7 +199,7 @@ def zip_dir(src: Path):
 
 
 def main() -> int:
-    mermaid = Path(sys.argv[1])
+    mermaid = Path(_A.mermaid)
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)

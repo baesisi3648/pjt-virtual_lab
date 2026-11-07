@@ -29,11 +29,20 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 ROOT = Path(__file__).resolve().parents[2]
 RUNS = ROOT / "experiments" / "runs_rev"
-MAIN = RUNS / "main"
-OUT = ROOT / "reference" / "revision" / "judging"
 CODEBOOK = RUNS / "analysis_criteria.json"
-MANIFEST = RUNS / "experiment_manifest.json"
-REPRESENTATIVE = RUNS / "results" / "representative.json"
+# Paths from the command line so the same script serves each main set:
+#   v0 (manifest v1): defaults;  v1 (manifest v2): --manifest experiments/runs_rev/experiment_manifest_v2.json
+#   --results experiments/runs_rev/results_v1 --out reference/revision/judging_v1
+import argparse as _argparse  # noqa: E402
+_ap = _argparse.ArgumentParser()
+_ap.add_argument("--manifest", default="experiments/runs_rev/experiment_manifest.json")
+_ap.add_argument("--results", default="experiments/runs_rev/results")
+_ap.add_argument("--out", default="reference/revision/judging")
+_A, _ = _ap.parse_known_args()
+MANIFEST = ROOT / _A.manifest
+MAIN = ROOT / json.loads(MANIFEST.read_text(encoding="utf-8")).get("out_dir", "experiments/runs_rev/main")
+OUT = ROOT / _A.out
+REPRESENTATIVE = ROOT / _A.results / "representative.json"
 
 STATUS = ["일치", "부분", "누락", "상충", "범위 밖"]
 CAUSES = [("template", "양식"), ("model", "모델"), ("design_exclusion", "설계상 배제"),
