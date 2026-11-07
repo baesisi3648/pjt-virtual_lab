@@ -284,6 +284,15 @@ def verify(manifest: dict, *, condition: str, run_id: str, attempt: int, retriev
     if extra:
         problems.append("untracked Python files in code paths: " + ", ".join(extra[:10]))
 
+    for f, h in (manifest.get("preparation") or {}).get("file_hashes", {}).items():
+        if not (root / f).is_file() or sha256_file(root / f) != h:
+            problems.append(f"preparation file differs from the manifest: {f}")
+    corpus = manifest.get("corpus")
+    if corpus:
+        cpath = root / corpus["manifest_path"]
+        if not cpath.is_file() or sha256_file(cpath) != corpus["manifest_sha256"]:
+            problems.append("corpus manifest differs from the manifest")
+
     models = manifest["models"]
     gen = os.environ.get("GPT_MODEL", "gpt-4o")
     if gen != models["generation_model_requested"]:

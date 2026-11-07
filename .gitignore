@@ -83,3 +83,7 @@ experiments/runs_rev/main/
 experiments/runs_rev/main_logs/
 experiments/runs_rev/results/extracted/
 experiments/runs_rev/retrieval_snapshot_v1*.json
+experiments/runs_rev/pilot_v1/
+experiments/runs_rev/pilot_v1_logs/
+experiments/runs_rev/main_v1/
+experiments/runs_rev/main_v1_logs/

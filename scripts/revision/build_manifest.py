@@ -27,8 +27,21 @@ from dotenv import load_dotenv  # noqa: E402
 
 from utils import manifest as mf  # noqa: E402
 
-OUT = ROOT / "experiments" / "runs_rev" / "experiment_manifest.json"
-SNAPSHOT = ROOT / "experiments" / "runs_rev" / "retrieval_snapshot.json"
+import argparse  # noqa: E402
+
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--out", default="experiments/runs_rev/experiment_manifest.json")
+_ap.add_argument("--out-dir", default="experiments/runs_rev/main", help="run root written to the manifest")
+_ap.add_argument("--snapshot", default="experiments/runs_rev/retrieval_snapshot.json")
+_ap.add_argument("--corpus-manifest", default=None, help="corpus manifest (v2 onward)")
+_ap.add_argument("--rag-selection", default="top TOP_K chunks", help="RAG selection rule recorded in the manifest")
+_ARGS, _ = _ap.parse_known_args()
+OUT = ROOT / _ARGS.out
+SNAPSHOT = ROOT / _ARGS.snapshot
+# Scripts that prepared the inputs (not imported by a run, so outside CODE_PATHS); hashed and verified.
+PREPARATION_FILES = ("scripts/revision/build_corpus_v1.py", "scripts/revision/build_retrieval_snapshot.py",
+                     "scripts/revision/build_prompt_sets.py", "scripts/revision/build_manifest.py",
+                     "scripts/revision/run_main.sh")
 SEED_ORDER = 20261106          # A/B order within each block
 SEED_SECOND_JUDGE = 20261107   # L3 second-judge sample
 SEED_BLINDING = 20261108       # anonymous report IDs for judging (applied after the runs)
@@ -66,13 +79,23 @@ def second_judge_sample() -> dict:
             "the A/B split (2+1 or 1+2) and the runs are drawn with the seed", "reports": picks}
 
 
+def _corpus_block():
+    if not _ARGS.corpus_manifest:
+        return None
+    path = ROOT / _ARGS.corpus_manifest
+    cm = json.loads(path.read_text(encoding="utf-8"))
+    return {"manifest_path": _ARGS.corpus_manifest, "manifest_sha256": mf.sha256_file(path),
+            "index": cm["index"]["name"], "namespace": cm["index"]["namespace"], "vectors": cm["index"]["vectors"],
+            "documents": len(cm["documents"]), "chunks_sha256": cm["chunks_sha256"], "cutoff": cm.get("cutoff")}
+
+
 def main() -> int:
     if OUT.exists():
         raise SystemExit(f"{OUT} already exists; the manifest is never overwritten")
     load_dotenv(ROOT / ".env")
 
     paths = list(mf.CODE_PATHS) + list(mf.PROMPT_DIRS.values())
-    dirty = mf.uncommitted(paths)
+    dirty = mf.uncommitted(paths + list(PREPARATION_FILES) + ([_ARGS.corpus_manifest] if _ARGS.corpus_manifest else []))
     if dirty:
         raise SystemExit("commit these files first:\n  " + "\n  ".join(dirty))
     extra = mf.untracked_code(paths)
@@ -116,8 +139,8 @@ def main() -> int:
             "A": {"prompts_dir": "prompts_A", "critic_mode": "independent"},
             "B": {"prompts_dir": "prompts_B", "critic_mode": "cumulative"},
         },
-        "retrieval": {"mode": "replay", "snapshot_path": "experiments/runs_rev/retrieval_snapshot.json",
-                      "snapshot_sha256": mf.sha256_file(SNAPSHOT)},
+        "retrieval": {"mode": "replay", "snapshot_path": _ARGS.snapshot,
+                      "snapshot_sha256": mf.sha256_file(SNAPSHOT), "rag_selection": _ARGS.rag_selection},
         "models": {
             "generation_model_requested": gen,
             "critic_provider": "anthropic",
@@ -148,8 +171,11 @@ def main() -> int:
         "order_rule": "per block, which condition goes first is drawn with the seed from the 20 sequences in "
                       "which each condition goes first in 2 or 3 of the 5 blocks",
         "order": run_order(),
-        "execution": "one new Python process per run, sequential, in manifest order, "
-                     "out-dir experiments/runs_rev/main",
+        "out_dir": _ARGS.out_dir,
+        "corpus": _corpus_block(),
+        "preparation": {"file_hashes": {f: mf.sha256_file(ROOT / f) for f in PREPARATION_FILES
+                                        if (ROOT / f).is_file()}},
+        "execution": "one new Python process per run, sequential, in manifest order, in out_dir",
         "analysis": {
             "script": "experiments/reproducibility/analyze_revision.py (hash in code.file_hashes)",
             "missing_sampled_report": "if a report drawn for the second judge is missing, the replacement is "

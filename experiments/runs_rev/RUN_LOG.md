@@ -140,3 +140,10 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Selected for the agents: EFSA 2025 animals (section 4), Japan MHLW procedures (p.1), EFSA 2024 microorganisms (section 4), Codex CXG 45 (p.12), Health Canada guidelines (p.61). All 19 candidates and scores are in the snapshot build record.
 - The live `rag_search_tool` path (not used in replay runs) still uses plain top-k.
 - Next: pilot A_1/B_1 into `pilot_v1`, then manifest v2 (out_dir `main_v1`), then ten runs.
+
+## 2026-11-07 — Pilot v1 (corpus v1, snapshot 56fecbf9)
+
+- A_1: ok, 7 rounds (cap), 25 min, 68 calls, 0 failed calls, Critic stop_reason end_turn throughout. B_1: ok, early stop at round 4, 16 min, 47 calls, 0 failed.
+- Both: team of 5 (Genomics, Toxicology, Regulatory, Risk, Bioinformatics), response models gpt-5-2025-08-07 and claude-opus-5, snapshot hash 56fecbf9 at start, report statistics from full outputs, corpus v1 documents cited, no v0 placeholder names.
+- Leakage audit (A): 6 candidates, all in the prior-feedback channel and all the same sentence repeated from round 2 ("... 'cisgenic background'. (4) 'A central premise ..."), where "(4)" is a list number. Draft judgement: 0 confirmed leaks; masking fired 0 times.
+- Pass criteria met. Pilot runs are not part of the main set.

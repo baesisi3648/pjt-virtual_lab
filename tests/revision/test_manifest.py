@@ -284,3 +284,18 @@ def test_amendment_excludes_attempts_from_counting(tmp_path):
     assert mf.check_order(m, "A", "2", 2, runs) == []
     assert mf.next_attempt(m, "A", "2", runs) == "2"
     assert mf.next_attempt(m, "A", "1", runs) == "done"
+
+
+def test_preparation_and_corpus_hashes_are_verified(tmp_path, env):
+    r = _repo(tmp_path)
+    m = _manifest(r)
+    (r / "scripts").mkdir()
+    (r / "scripts" / "build.py").write_text("a = 1\n", encoding="utf-8")
+    (r / "corpus.json").write_text("{}", encoding="utf-8")
+    m["preparation"] = {"file_hashes": {"scripts/build.py": mf.sha256_file(r / "scripts" / "build.py")}}
+    m["corpus"] = {"manifest_path": "corpus.json", "manifest_sha256": mf.sha256_file(r / "corpus.json")}
+    assert _verify(r, m) == []
+    (r / "scripts" / "build.py").write_text("a = 2\n", encoding="utf-8")
+    (r / "corpus.json").write_text('{"x": 1}', encoding="utf-8")
+    text = "\n".join(_verify(r, m))
+    assert "preparation file differs" in text and "corpus manifest differs" in text
