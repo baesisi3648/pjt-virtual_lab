@@ -123,20 +123,26 @@ def _configure_retrieval(args) -> dict:
     return {"mode": args.retrieval_mode, "snapshot": str(snapshot)}
 
 
-MAIN_OUT = (ROOT / "experiments" / "runs_rev" / "main").resolve()
+RUNS_REV = (ROOT / "experiments" / "runs_rev").resolve()
+MAIN_OUT = (RUNS_REV / "main").resolve()  # run root of manifest v1; later manifests name theirs in "out_dir"
+
+
+def _is_main_root(out: Path) -> bool:
+    """Any experiments/runs_rev/main* folder (main, main_v1, ...) or a subfolder of one."""
+    try:
+        first = out.relative_to(RUNS_REV).parts[0]
+    except (ValueError, IndexError):
+        return False
+    return first.startswith("main") and not first.startswith("main_logs")
 
 
 def _check_manifest(args) -> dict | None:
     """Refuse to start when the inputs differ from the manifest (revision_plan 7.3, C7)."""
     out = (ROOT / args.out_dir).resolve()
-    is_main = out == MAIN_OUT or MAIN_OUT in out.parents
     if args.manifest is None:
-        if is_main:
-            raise SystemExit("main runs require --manifest experiments/runs_rev/experiment_manifest.json")
+        if _is_main_root(out):
+            raise SystemExit("main runs require --manifest (the manifest names the run root)")
         return None
-    if out != MAIN_OUT:
-        raise SystemExit(f"runs checked against the manifest must use --out-dir experiments/runs_rev/main "
-                         f"(got {out}); subfolders would bypass the order check and the analysis")
     from dotenv import load_dotenv
     from utils import manifest as mf
     load_dotenv(ROOT / ".env")  # GPT_MODEL is compared below
@@ -144,13 +150,17 @@ def _check_manifest(args) -> dict | None:
     if not path.is_file():
         raise SystemExit(f"manifest not found: {path}")
     manifest, digest = mf.load(path)
+    expected_out = (ROOT / manifest.get("out_dir", "experiments/runs_rev/main")).resolve()
+    if out != expected_out:
+        raise SystemExit(f"runs checked against this manifest must use --out-dir {manifest.get('out_dir', 'experiments/runs_rev/main')} "
+                         f"(got {out}); other folders would bypass the order check and the analysis")
     snapshot = (ROOT / args.retrieval_snapshot).resolve()
     if snapshot != (ROOT / manifest["retrieval"]["snapshot_path"]).resolve():
         raise SystemExit(f"--retrieval-snapshot {snapshot} is not the manifest snapshot")
     problems = mf.verify(manifest, condition=args.condition, run_id=str(args.run_id), attempt=args.attempt,
                          retrieval_mode=args.retrieval_mode, snapshot_path=snapshot,
                          topic=args.topic, constraints=args.constraints,
-                         runs_dir=MAIN_OUT)
+                         runs_dir=expected_out)
     if problems:
         raise SystemExit("inputs differ from the manifest, run not started:\n  - " + "\n  - ".join(problems))
     try:

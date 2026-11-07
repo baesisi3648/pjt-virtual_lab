@@ -153,7 +153,7 @@ def test_specialist_round1_reads_three_keys(tmp_path, monkeypatch):
     from agents import scientist as sci
     snap = tmp_path / "s.json"
     _write_snapshot(snap, {
-        "specialist_rag": (sci.disambiguate("t", "safety assessment"), "RAG TEXT"),
+        "specialist_rag": (sci.rag_query("t", "safety assessment"), "RAG TEXT"),
         "specialist_web": (sci.disambiguate("t", "regulation 2025"), "WEB TEXT"),
         "specialist_efsa": (sci.disambiguate("t", "EFSA opinion"), "EFSA TEXT"),
     })

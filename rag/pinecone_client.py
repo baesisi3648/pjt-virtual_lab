@@ -83,6 +83,7 @@ class PineconeRAGClient:
         documents = []
         for match in results["matches"]:
             documents.append({
+                "id": match.get("id") if hasattr(match, "get") else getattr(match, "id", None),
                 "text": match["metadata"]["text"],
                 "source": match["metadata"]["source"],
                 "page": match["metadata"].get("page", 0),

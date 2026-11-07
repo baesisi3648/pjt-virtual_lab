@@ -12,6 +12,7 @@ Document attributes (agency, jurisdiction, year, type, scope) are added by hand 
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 import sys
@@ -21,11 +22,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-OUT = ROOT / "experiments" / "runs_rev" / "results" / "corpus"
+OUT = None  # set in main from --out-name
 SNAPSHOT = ROOT / "experiments" / "runs_rev" / "retrieval_snapshot.json"
+if "--snapshot" in sys.argv:
+    SNAPSHOT = ROOT / sys.argv[sys.argv.index("--snapshot") + 1]
+OUT_NAME = sys.argv[sys.argv.index("--out-name") + 1] if "--out-name" in sys.argv else "corpus"
+INDEX_OVERRIDE = sys.argv[sys.argv.index("--index") + 1] if "--index" in sys.argv else None
 
 
 def index_vectors():
+    import os
+    if INDEX_OVERRIDE:
+        os.environ["PINECONE_INDEX_NAME"] = INDEX_OVERRIDE
     from rag.pinecone_client import PineconeRAGClient
     client = PineconeRAGClient()
     index = client.index
@@ -63,7 +71,7 @@ def snapshot_sources():
     rows = []
     for key, entry in snap["entries"].items():
         text = entry.get("result", "") if isinstance(entry, dict) else str(entry)
-        for m in re.finditer(r"\*\*출처\*\*: ([^\n]+?) \(p\.([\d.]+)\)", text):
+        for m in re.finditer(r"\*\*출처\*\*: ([^\n]+) \(((?:p\.)?[^()\n]+)\)\s*$", text, re.M):
             rows.append({"retrieval_key": key, "kind": "rag", "source": m.group(1), "page": m.group(2)})
         for url in dict.fromkeys(re.findall(r"https?://[^\s)\]>\"']+", text)):
             rows.append({"retrieval_key": key, "kind": "web/efsa", "source": url.rstrip(".,"), "page": ""})
@@ -78,10 +86,12 @@ def write_csv(path, rows, fields):
 
 
 def main() -> int:
+    global OUT
+    OUT = ROOT / "experiments" / "runs_rev" / "results" / OUT_NAME
     OUT.mkdir(parents=True, exist_ok=True)
     extracted = datetime.now(timezone.utc).isoformat()
     stats, chunks = index_vectors()
-    chunks.sort(key=lambda r: (r["source"], float(r["page"] or 0), r["id"]))
+    chunks.sort(key=lambda r: (r["source"], str(r["page"]).zfill(8), r["id"]))
     write_csv(OUT / "index_chunks.csv", chunks, ["namespace", "id", "source", "page", "text_chars"])
 
     docs = defaultdict(lambda: {"chunks": 0, "pages": set(), "chars": 0})
@@ -104,7 +114,8 @@ def main() -> int:
         "pinecone_stats": json.loads(json.dumps(stats, default=str)),
         "index": {"vectors": len(chunks), "distinct_source_files": len(doc_rows)},
         "retrieval_snapshot": {
-            "sha256_prefix": "f36ac68c",
+            "path": str(SNAPSHOT.relative_to(ROOT)).replace("\\", "/"),
+            "sha256": hashlib.sha256(SNAPSHOT.read_bytes()).hexdigest(),
             "keys": sorted({r["retrieval_key"] for r in snap_rows}),
             "rag_source_files": sorted({r["source"] for r in snap_rows if r["kind"] == "rag"}),
             "rag_chunks_retrieved": sum(1 for r in snap_rows if r["kind"] == "rag"),

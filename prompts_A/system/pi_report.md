@@ -21,7 +21,7 @@ Drawing on the multi-round deliberation among the Specialists and the Scientific
 
 ## Methods
 
-This study was conducted with an AI-mediated Virtual Lab system in which a multidisciplinary specialist team deliberated under the supervision of a Principal Investigator agent and the independent quantitative scrutiny of a Scientific Critic agent.
+This study was conducted with an AI-mediated Virtual Lab system in which a multidisciplinary specialist team deliberated under the supervision of a Principal Investigator agent and the quantitative scoring of a separate Scientific Critic agent (a different model family).
 
 ### Research Architecture
 - **Principal Investigator (PI)**: defines the research direction, composes the specialist panel, and drafts the final report.
@@ -33,13 +33,13 @@ Specialist analysis → Critic verification → PI synthesis was repeated for up
 
 ### Information Retrieval
 - **RAG (Retrieval-Augmented Generation)**: vector-database retrieval over indexed regulatory documents and scientific literature.
-- **Web Search**: real-time retrieval of recent online sources for cross-verification.
+- **Web Search**: retrieval of online sources for cross-verification (recorded once before the runs and replayed identically in every run).
 - **EFSA Journal Search**: dedicated search of the European Food Safety Authority scientific opinions.
 
 ### Team Composition Process
 
 #### Statistical Team Composition
-To strengthen the reproducibility of panel composition, the PI performed ten independent team-generation trials. All ten trials succeeded, and the appearance frequency of each role was analysed to select the final research team.
+To strengthen the reproducibility of panel composition, the PI performed ten independent team-generation trials. Ten valid trials were obtained (failed attempts were repeated), and the appearance frequency of each role was analysed to select the final research team.
 
 ##### Full Results of the Ten-Trial Simulation
 (insert when supplied)

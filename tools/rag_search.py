@@ -12,6 +12,25 @@ from utils.errors import SearchError
 logger = logging.getLogger(__name__)
 
 
+def format_docs(docs: list) -> str:
+    """Text injected into the agents for RAG results (also used by the snapshot builder)."""
+    result = []
+    for i, doc in enumerate(docs, start=1):
+        score = doc.get('score', 0)
+        source = doc.get('source', 'unknown')
+        page = doc.get('page', 0)
+        text = doc.get('text', '')
+        # Revision (corpus v1): XML documents carry a section label, not a page number.
+        loc = f"p.{page}" if isinstance(page, (int, float)) or str(page).replace(".", "", 1).isdigit() else str(page)
+        result.append(f"""
+### 문서 {i} (유사도: {score:.2f})
+**출처**: {source} ({loc})
+
+{text}
+""")
+    return "\n\n".join(result)
+
+
 @tool
 def rag_search_tool(query: str) -> str:
     """
@@ -43,22 +62,7 @@ def rag_search_tool(query: str) -> str:
 
         logger.info(f"RAG Hit: {len(docs)} documents")
 
-        # 결과 포맷팅
-        result = []
-        for i, doc in enumerate(docs, start=1):
-            score = doc.get('score', 0)
-            source = doc.get('source', 'unknown')
-            page = doc.get('page', 0)
-            text = doc.get('text', '')
-
-            result.append(f"""
-### 문서 {i} (유사도: {score:.2f})
-**출처**: {source} (p.{page})
-
-{text}
-""")
-
-        return "\n\n".join(result)
+        return format_docs(docs)
 
     except Exception as e:
         logger.error(f"RAG 검색 오류: {str(e)}")

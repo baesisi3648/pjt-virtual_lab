@@ -341,6 +341,11 @@ def decide_team_statistically(user_query: str, n_trials: int = 10) -> dict:
             for m in final_team
         ):
             raise AgentFailureError("PI final team selection returned an empty or incomplete team")
+        # Revision: the final team obeys the same 1-5 cap as the trials, with distinct roles.
+        if not 1 <= len(final_team) <= 5:
+            raise AgentFailureError(f"PI final team has {len(final_team)} members (allowed 1-5)")
+        if len({m["role"].strip().lower() for m in final_team}) != len(final_team):
+            raise AgentFailureError("PI final team contains duplicate roles")
 
         # Apply deterministic short-name post-processing
         for member in final_team:
@@ -563,6 +568,49 @@ def _compute_word_counts(messages: list[dict]) -> dict:
     return stats
 
 
+def _compute_output_stats(state: AgentState) -> dict:
+    """Per-agent turns and characters from the full outputs of every completed round (revision).
+
+    Same definition as run_experiment._output_stats: characters of the full text returned by the
+    model, whitespace included; a specialist turn is one analysis or revision per round; Critic text is
+    the overall plus per-specialist feedback; PI text is the round summaries (the final report, being
+    written now, is not counted here).
+    """
+    # Archived rounds (workflow.graph.increment_round) keep critique_feedback / specialist_feedback;
+    # the current round is still in the live state (CritiqueResult dataclass).
+    rounds = [{"round": r.get("round"), "specialist_outputs": r.get("specialist_outputs", []) or [],
+               "critique": {"feedback": r.get("critique_feedback", ""),
+                            "specialist_feedback": r.get("specialist_feedback", {}) or {}},
+               "pi_summary": r.get("pi_summary", "") or ""}
+              for r in (state.get("meeting_history", []) or [])]
+    current = state.get("current_round", 1)
+    if not rounds or rounds[-1].get("round") != current:
+        crit = state.get("critique")
+        rounds.append({
+            "round": current,
+            "specialist_outputs": state.get("specialist_outputs", []) or [],
+            "critique": {"feedback": getattr(crit, "feedback", "") or "",
+                         "specialist_feedback": getattr(crit, "specialist_feedback", {}) or {}} if crit else {},
+            "pi_summary": state.get("draft", "") or "",
+        })
+    stats: dict[str, dict[str, int]] = {}
+
+    def add(key: str, text: str) -> None:
+        s = stats.setdefault(key, {"count": 0, "chars": 0})
+        s["count"] += 1
+        s["chars"] += len(text or "")
+
+    for rnd in rounds:
+        for so in rnd.get("specialist_outputs", []) or []:
+            add(so.get("role", "Specialist"), so.get("output", ""))
+        crit = rnd.get("critique") or {}
+        if crit:
+            add("Critic", (crit.get("feedback") or "") + "".join((crit.get("specialist_feedback") or {}).values()))
+        if rnd.get("pi_summary"):
+            add("PI", rnd["pi_summary"])
+    return stats
+
+
 def run_final_synthesis(state: AgentState) -> dict:
     """Synthesise the multi-round deliberation into the final research report."""
     meeting_history = state.get("meeting_history", [])
@@ -688,11 +736,10 @@ def run_final_synthesis(state: AgentState) -> dict:
             f"{intro_lines}\n"
         )
 
-    all_messages = list(state.get("messages", []))
-    word_counts = _compute_word_counts(all_messages)
+    word_counts = _compute_output_stats(state)  # revision: full outputs, not message-log previews
     word_counts_text = ""
     if word_counts:
-        wc_lines = "| Agent | Turns | Total characters |\n|---|---|---|\n"
+        wc_lines = "| Agent | Turns | Total characters (full outputs; final report not counted) |\n|---|---|---|\n"
         for agent, stats in sorted(word_counts.items()):
             wc_lines += f"| {agent} | {stats['count']} | {stats['chars']:,} |\n"
         word_counts_text = (

@@ -111,6 +111,31 @@ COMMON_CHANGES: list[tuple[str, str, str, str]] = [
     ),
 ]
 
+# P5 (revision, 2026-11-07, corpus v1 rerun): factual corrections of the fixed Methods text in the report
+# template. The template stated things the experiment does not do (live web retrieval during the runs;
+# trials that "all succeeded" when failed attempts are retried). Scientific instructions are unchanged.
+COMMON_CHANGES += [
+    (
+        "P5-methods-critic",
+        "system/pi_report.md",
+        "and the independent quantitative scrutiny of a Scientific Critic agent.",
+        "and the quantitative scoring of a separate Scientific Critic agent (a different model family).",
+    ),
+    (
+        "P5-methods-web",
+        "system/pi_report.md",
+        "- **Web Search**: real-time retrieval of recent online sources for cross-verification.",
+        "- **Web Search**: retrieval of online sources for cross-verification (recorded once before the runs "
+        "and replayed identically in every run).",
+    ),
+    (
+        "P5-methods-trials",
+        "system/pi_report.md",
+        "All ten trials succeeded, and the appearance frequency",
+        "Ten valid trials were obtained (failed attempts were repeated), and the appearance frequency",
+    ),
+]
+
 A_ONLY_CHANGES: list[tuple[str, str, str, str]] = [
     (
         "A-critic-scoring-rules",

@@ -10,7 +10,7 @@ Usage:
     python -B scripts/revision/build_retrieval_snapshot.py --out experiments/runs_rev/retrieval_snapshot.json
 
 Queries are built exactly as in the agents:
-    specialist_rag   disambiguate(topic, "safety assessment")       RAG (Pinecone, top-k chunks)
+    specialist_rag   rag_query(topic, "safety assessment")          RAG (Pinecone, top-k chunks; no negation operators)
     specialist_web   disambiguate(topic, "regulation 2025")         Tavily
     specialist_efsa  disambiguate(topic, "EFSA opinion")            Tavily, EFSA Journal only
     critic_web       disambiguate(topic, "regulatory verification") Tavily
@@ -36,6 +36,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 DEFAULT_OUT = "experiments/runs_rev/retrieval_snapshot.json"
+DEFAULT_INDEX = "virtual-lab-corpus-v1"  # corpus v1 (2026-11-07); v0 was "virtual-lab"
 PLAN = [
     ("specialist_rag", "rag", "safety assessment"),
     ("specialist_web", "web", "regulation 2025"),
@@ -63,7 +64,18 @@ def _versions() -> dict:
     return out
 
 
-def build(out: Path, topic: str, tools: dict | None = None) -> str:
+class _Fixed:
+    """Tool stand-in returning a precomputed result (base-snapshot entry or a recorded RAG search)."""
+
+    def __init__(self, name: str, result: str):
+        self.name, self._result = name, result
+
+    def invoke(self, _payload):
+        return self._result
+
+
+def build(out: Path, topic: str, tools: dict | None = None, index: str | None = None,
+          base: str | None = None) -> str:
     """Build and publish the snapshot; return its sha256. `tools` may be injected for tests."""
     out = out.resolve()
     if out.exists():
@@ -78,26 +90,62 @@ def build(out: Path, topic: str, tools: dict | None = None) -> str:
     try:
         if tmp.exists():
             tmp.unlink()
+        if index:  # the RAG tool reads the index name from settings at import time
+            os.environ["PINECONE_INDEX_NAME"] = index
         os.environ["VIRTUAL_LAB_RETRIEVAL_MODE"] = "record"
         os.environ["VIRTUAL_LAB_RETRIEVAL_SNAPSHOT"] = str(tmp)
         from utils import retrieval_snapshot as rs
-        from utils.search_query import disambiguate
+        from utils.search_query import disambiguate, rag_query
         rs.reset()
         if tools is None:
             from tools.rag_search import rag_search_tool
             from tools.web_search import efsa_search, web_search
             tools = {"rag": rag_search_tool, "web": web_search, "efsa": efsa_search}
 
+        rag_index = None
+        if index:
+            from config import settings
+            if settings.PINECONE_INDEX_NAME != index:
+                raise SystemExit(f"RAG would use index {settings.PINECONE_INDEX_NAME!r}, expected {index!r}")
+            rag_index = index
+        raw_rag = {}
+        base_entries = {}
+        if base:
+            base_data = json.loads(Path(base).read_text(encoding="utf-8"))
+            base_entries = base_data["entries"]
         started = datetime.now(timezone.utc).isoformat()
         for key, kind, intent in PLAN:
-            text = rs.retrieve(key, tools[kind], disambiguate(topic, intent))
+            query = rag_query(topic, intent) if kind == "rag" else disambiguate(topic, intent)
+            if base and kind != "rag":
+                entry = base_entries[key]  # unchanged web/EFSA retrieval from the base snapshot
+                if entry["query"] != query:
+                    raise SystemExit(f"base snapshot query differs for {key}")
+                tool = _Fixed(entry.get("tool", kind), entry["result"])
+            elif kind == "rag" and rag_index:
+                # One search: the raw matches are recorded and the same matches are formatted for the agents.
+                from config import settings
+                from rag.pinecone_client import get_pinecone_client
+                from tools.rag_search import format_docs
+                docs = get_pinecone_client().search(query, top_k=settings.TOP_K)
+                if not docs:
+                    raise SystemExit("RAG search returned no documents")
+                raw_rag[key] = [{"rank": i + 1, "id": d.get("id"), "score": d.get("score"),
+                                 "source": d.get("source"), "page": d.get("page")} for i, d in enumerate(docs)]
+                tool = _Fixed("rag_search_tool", format_docs(docs))
+            else:
+                tool = tools[kind]
+            text = rs.retrieve(key, tool, query)
             print(f"  {key:16s} {len(text):6d} chars{'  (EMPTY)' if not text.strip() else ''}")
 
         data = json.loads(tmp.read_text(encoding="utf-8"))
         data["build"] = {"topic": topic, "started_utc": started,
                          "finished_utc": datetime.now(timezone.utc).isoformat(),
                          "git_commit": _git_commit(), "python": sys.version, "packages": _versions(),
-                         "script": "scripts/revision/build_retrieval_snapshot.py"}
+                         "script": "scripts/revision/build_retrieval_snapshot.py",
+                         "rag_index": rag_index, "rag_raw_matches": raw_rag,
+                         "base_snapshot": ({"path": str(base), "sha256": rs.file_sha256(Path(base)),
+                                            "copied_keys": [k for k, kind, _ in PLAN if kind != "rag"]}
+                                           if base else None)}
         tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
         if out.exists():
             raise SystemExit(f"snapshot appeared during the build, refusing to overwrite: {out}")
@@ -117,9 +165,12 @@ def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--out", default=DEFAULT_OUT)
     p.add_argument("--topic", default=DEFAULT_TOPIC)
+    p.add_argument("--index", default=DEFAULT_INDEX, help="Pinecone index of the RAG corpus")
+    p.add_argument("--base", default=None,
+                   help="earlier snapshot whose web/EFSA entries are copied unchanged (only the RAG entry is new)")
     args = p.parse_args()
     out = (ROOT / args.out)
-    digest = build(out, args.topic)
+    digest = build(out, args.topic, index=args.index, base=(str(ROOT / args.base) if args.base else None))
     print(f"snapshot: {out.resolve()}\nsha256:   {digest}")
     return 0
 

@@ -140,10 +140,24 @@ def test_run_experiment_requires_manifest_for_main(monkeypatch):
     assert rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/pilot", manifest=None)) is None
     with pytest.raises(SystemExit, match="require --manifest"):
         rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/main/batch_01", manifest=None))
-    with pytest.raises(SystemExit, match="must use --out-dir"):
-        rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/main/batch_01", manifest="m.json"))
-    with pytest.raises(SystemExit, match="must use --out-dir"):
-        rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/pilot", manifest="m.json"))
+    with pytest.raises(SystemExit, match="require --manifest"):
+        rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/main_v1", manifest=None))
+    assert rex._check_manifest(SimpleNamespace(out_dir="experiments/runs_rev/main_logs", manifest=None)) is None
+
+
+def test_run_root_comes_from_manifest(tmp_path):
+    import run_experiment as rex
+    v1 = tmp_path / "v1.json"
+    v1.write_text(json.dumps({"retrieval": {"snapshot_path": "x.json"}}), encoding="utf-8")
+    v2 = tmp_path / "v2.json"
+    v2.write_text(json.dumps({"out_dir": "experiments/runs_rev/main_v1", "retrieval": {"snapshot_path": "x.json"}}),
+                  encoding="utf-8")
+    for out in ("experiments/runs_rev/main/batch_01", "experiments/runs_rev/pilot", "experiments/runs_rev/main_v1"):
+        with pytest.raises(SystemExit, match="must use --out-dir experiments/runs_rev/main"):
+            rex._check_manifest(SimpleNamespace(out_dir=out, manifest=str(v1)))
+    for out in ("experiments/runs_rev/main", "experiments/runs_rev/main_v1/x"):
+        with pytest.raises(SystemExit, match="must use --out-dir experiments/runs_rev/main_v1"):
+            rex._check_manifest(SimpleNamespace(out_dir=out, manifest=str(v2)))
 
 
 def test_run_experiment_rejects_mismatch(tmp_path, monkeypatch):

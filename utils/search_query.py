@@ -43,3 +43,16 @@ def disambiguate(topic: str, intent: str = "") -> str:
         parts.append(intent.strip())
     parts.append(NEGATIONS)
     return " ".join(p for p in parts if p)
+
+
+def rag_query(topic: str, intent: str = "") -> str:
+    """Query for the RAG vector search (revision, corpus v1).
+
+    Same topic, anchor and intent as disambiguate(), without the web-search negation operators: an
+    embedding model does not read "-term" as exclusion, so the operators only add those words' meaning
+    to the query vector.
+    """
+    parts = [topic.strip(), DOMAIN_ANCHOR]
+    if intent.strip():
+        parts.append(intent.strip())
+    return " ".join(p for p in parts if p)

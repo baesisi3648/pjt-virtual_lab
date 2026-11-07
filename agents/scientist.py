@@ -17,7 +17,7 @@ from tools.rag_search import rag_search_tool
 from tools.web_search import web_search, efsa_search
 from agents.factory import create_specialist
 from utils.prompt_loader import load_system, render
-from utils.search_query import disambiguate
+from utils.search_query import disambiguate, rag_query
 from utils.errors import AgentFailureError
 from utils.retrieval_snapshot import retrieve
 
@@ -72,7 +72,7 @@ def _perform_searches(topic: str, state: AgentState) -> tuple[str, str, str]:
 
     def do_rag_search() -> str:
         # C12 (revision): a failed search raises SearchError and aborts the run.
-        result = retrieve("specialist_rag", rag_search_tool, disambiguate(topic, "safety assessment"))
+        result = retrieve("specialist_rag", rag_search_tool, rag_query(topic, "safety assessment"))
         logger.info("RAG search completed")
         return f"\n\n[Reference regulatory documents]\n{result}" if result else ""
 

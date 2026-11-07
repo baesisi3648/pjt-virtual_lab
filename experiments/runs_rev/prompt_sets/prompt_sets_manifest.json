@@ -76,6 +76,21 @@
         },
         {
           "condition": "A",
+          "change_id": "P5-methods-critic",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P5-methods-web",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "A",
+          "change_id": "P5-methods-trials",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "A",
           "change_id": "A-critic-scoring-rules",
           "file": "system/critic.md"
         },
@@ -97,7 +112,7 @@
         "system/critic.md": "4977317b24a5783ac0a9a3aaf97313301491af57a982cf6466bf143ff428c388",
         "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
         "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
-        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_report.md": "f54ba1cbcfdb5a22faebb3f924dfe6fffe5a8f5d29ff066be6e5ebb6b7413178",
         "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
         "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
         "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
@@ -155,6 +170,21 @@
           "condition": "B",
           "change_id": "P4-tone-guide-exception",
           "file": "data/academic_tone_guide.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P5-methods-critic",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P5-methods-web",
+          "file": "system/pi_report.md"
+        },
+        {
+          "condition": "B",
+          "change_id": "P5-methods-trials",
+          "file": "system/pi_report.md"
         }
       ],
       "files": {
@@ -164,7 +194,7 @@
         "system/critic.md": "4be4036de367ddb8de3f4f4935f3fcf00d5b54e9d568f94b4e1ad0cc744799c9",
         "system/intro_generator.md": "55d815c92bf5f6b1eae11e60450ad3f921bdd1f5d3fa2c3c6ce1e25671054c8d",
         "system/intro_generator_user.md": "cc5dac587dd30a6f64e878f712e6a274933aea70fa8a5c96462f0e2a3b105503",
-        "system/pi_report.md": "243ce679211ad4b5ca4064a57deda029f2874d8ad86b08084c5c4954ca36487e",
+        "system/pi_report.md": "f54ba1cbcfdb5a22faebb3f924dfe6fffe5a8f5d29ff066be6e5ebb6b7413178",
         "system/pi_summary.md": "76adc59e5a101f8573bf2caa9bf4b21a72f3ae28f55679cbe52e9c951e9179c5",
         "system/pi_team_decision.md": "cc6df69d0d75191de69380fb5cd8d6c29c31dc5871e16fab6ef589813c3d116e",
         "system/pi_team_selection.md": "4e466631c9dbce21c670d6d9c743537cb0f11578cd6d4f2da34dc940a9d1559d",
