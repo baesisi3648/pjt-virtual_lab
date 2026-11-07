@@ -58,7 +58,7 @@
       "utils/call_log.py": "df4baa15270dcffc3316668f6b0058371f3f88aea193d64137eefd672daea62c",
       "utils/errors.py": "48108b5535623cdb9df4a03d6f4b4e21a13d8b3d1b124f12bdf3e7c1c570ec29",
       "utils/llm.py": "523df41c5cb70047218b12803f4383e94ad3b483e50464e76a352e8ea81c0474",
-      "utils/manifest.py": "6bfe69c31d2d368e6e437c415f3bc116523899b8175a33499eabb775a3aab167",
+      "utils/manifest.py": "c618f08c50ddd803f397374e0816dde5fbd6e254256fb8124cc51c5ac6e56c40",
       "utils/prompt_loader.py": "89d65fb7ff1c4e1c22f6f0d8e6f5e5deb0320611d99535a13844c83b7b5db3e6",
       "utils/redact.py": "8d4b4a1a105ee781bddeb151c0df3cb7ad22da2895e6a219556666ec732e35c6",
       "utils/retrieval_snapshot.py": "505f2474cfaf87f6b0e73aaa6e892ea2b1c402ce1e2cda14b9f13c73a2b4420d",
@@ -68,7 +68,8 @@
       "workflow/graph.py": "4295f8e536e6c04a3b4fdd1395437b5b4d5875dc9ace671ce2dcdaf6f4fd85b5",
       "workflow/state.py": "86c00f92e8d16797474afa39acfb15d170f0874e9c96c26d9470f357fcd82412"
     },
-    "comparison": "by file content; run_experiment.py refuses to start if any tracked file differs"
+    "comparison": "by file content; run_experiment.py refuses to start if any tracked file differs",
+    "commit_at_amendment": "c9fc8d9ddf5cfae7be601ea451ad151c1ddbb3b3"
   },
   "prompts": {
     "A": {
@@ -329,5 +330,305 @@
       "zstandard": "0.25.0"
     },
     "enforced": "run_experiment.py refuses to start if the Python version or any installed package version differs"
+  },
+  "amendment": {
+    "number": 1,
+    "created": {
+      "utc": "2026-11-07T00:06:58.319017+00:00",
+      "kst": "2026-11-07T09:06:58.319017+09:00"
+    },
+    "supersedes": {
+      "file": "experiment_manifest.v1.json",
+      "sha256": "ae922a5db1a34e8c3eaa95b218d7a4d79989a56fe93fee0228cec20c5d1bb66c"
+    },
+    "reason": "The OpenAI credit balance was exhausted during B_2 attempt_01 (2026-11-06, about 20:40 KST). All later attempts failed within minutes with HTTP 429 and consumed the three attempts of every remaining run. A test call at about 22:30 KST returned HTTP 429, error type insufficient_quota, code credit_balance_exhausted. This is an account billing failure, a technical failure under the retry policy, that occurred before any report was opened. The 429 response bodies of the failed attempts were not recorded, so their cause is inferred from the timing, the identical failure pattern and the diagnostic calls (22:30 KST on 2026-11-06, and again after the top-up on 2026-11-07 before the credit became available). This is a one-off decision for the fixed list below, made after the failures and before any report was opened.",
+    "rule": "Attempts listed in excluded_attempts are not counted toward max_attempts_per_run and do not count as a started or finished run in the order check. They are kept on disk and reported. New attempts take the next folder number. Every other input of v1 is unchanged; the only code change is utils/manifest.py (amendment-aware counting).",
+    "outage_window_kst": [
+      "2026-11-06T20:19:00+09:00",
+      "2026-11-06T22:09:00+09:00"
+    ],
+    "evidence_criteria": "status failed; started within the outage window; final error is the OpenAI 429 retry exhaustion or the team-composition failure caused by it; every failed OpenAI call ended with HTTP 429; no successful OpenAI call after the first failure; no failure of any other provider",
+    "use_of_excluded_attempts": "kept on disk and reported (24 attempts in total: 3 successful, 21 excluded); their outputs and scores are not used in any analysis; a run is restarted from the beginning in a new process",
+    "unchanged_runs": [
+      "A_1/attempt_01",
+      "B_1/attempt_01",
+      "A_2/attempt_01"
+    ],
+    "excluded_attempts": [
+      {
+        "attempt": "A_3/attempt_01",
+        "started_kst": "2026-11-06T21:05:32.795392+09:00",
+        "finished_kst": "2026-11-06T21:09:41.235013+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:05:32.810848+00:00"
+      },
+      {
+        "attempt": "A_3/attempt_02",
+        "started_kst": "2026-11-06T21:09:43.146284+09:00",
+        "finished_kst": "2026-11-06T21:13:51.553584+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:09:43.160509+00:00"
+      },
+      {
+        "attempt": "A_3/attempt_03",
+        "started_kst": "2026-11-06T21:13:53.771585+09:00",
+        "finished_kst": "2026-11-06T21:18:02.354276+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:13:53.782063+00:00"
+      },
+      {
+        "attempt": "A_4/attempt_01",
+        "started_kst": "2026-11-06T21:18:04.381411+09:00",
+        "finished_kst": "2026-11-06T21:22:13.450373+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:18:04.398381+00:00"
+      },
+      {
+        "attempt": "A_4/attempt_02",
+        "started_kst": "2026-11-06T21:22:15.538750+09:00",
+        "finished_kst": "2026-11-06T21:26:24.300673+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:22:15.550521+00:00"
+      },
+      {
+        "attempt": "A_4/attempt_03",
+        "started_kst": "2026-11-06T21:26:26.290459+09:00",
+        "finished_kst": "2026-11-06T21:30:34.627984+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:26:26.298719+00:00"
+      },
+      {
+        "attempt": "A_5/attempt_01",
+        "started_kst": "2026-11-06T21:55:49.344216+09:00",
+        "finished_kst": "2026-11-06T21:59:57.513787+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:55:49.361582+00:00"
+      },
+      {
+        "attempt": "A_5/attempt_02",
+        "started_kst": "2026-11-06T21:59:59.496955+09:00",
+        "finished_kst": "2026-11-06T22:04:07.988418+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:59:59.509069+00:00"
+      },
+      {
+        "attempt": "A_5/attempt_03",
+        "started_kst": "2026-11-06T22:04:10.036125+09:00",
+        "finished_kst": "2026-11-06T22:08:18.680688+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T13:04:10.052466+00:00"
+      },
+      {
+        "attempt": "B_2/attempt_01",
+        "started_kst": "2026-11-06T20:19:50.460135+09:00",
+        "finished_kst": "2026-11-06T20:44:33.646567+09:00",
+        "status": "failed",
+        "error": "OpenAI API rate limit exceeded after 5 retries",
+        "openai_calls_ok_before_failure": 46,
+        "openai_calls_failed": 1,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T11:43:51.292805+00:00"
+      },
+      {
+        "attempt": "B_2/attempt_02",
+        "started_kst": "2026-11-06T20:44:35.841242+09:00",
+        "finished_kst": "2026-11-06T20:48:44.439072+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T11:44:35.853385+00:00"
+      },
+      {
+        "attempt": "B_2/attempt_03",
+        "started_kst": "2026-11-06T20:48:46.395118+09:00",
+        "finished_kst": "2026-11-06T20:52:54.755451+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T11:48:46.411106+00:00"
+      },
+      {
+        "attempt": "B_3/attempt_01",
+        "started_kst": "2026-11-06T20:52:56.736193+09:00",
+        "finished_kst": "2026-11-06T20:57:07.506377+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T11:52:56.750239+00:00"
+      },
+      {
+        "attempt": "B_3/attempt_02",
+        "started_kst": "2026-11-06T20:57:09.470596+09:00",
+        "finished_kst": "2026-11-06T21:01:18.149843+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T11:57:09.490535+00:00"
+      },
+      {
+        "attempt": "B_3/attempt_03",
+        "started_kst": "2026-11-06T21:01:20.080435+09:00",
+        "finished_kst": "2026-11-06T21:05:30.775096+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:01:20.091944+00:00"
+      },
+      {
+        "attempt": "B_4/attempt_01",
+        "started_kst": "2026-11-06T21:30:36.710510+09:00",
+        "finished_kst": "2026-11-06T21:34:45.420949+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:30:36.718088+00:00"
+      },
+      {
+        "attempt": "B_4/attempt_02",
+        "started_kst": "2026-11-06T21:34:47.410063+09:00",
+        "finished_kst": "2026-11-06T21:38:56.976153+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:34:47.419251+00:00"
+      },
+      {
+        "attempt": "B_4/attempt_03",
+        "started_kst": "2026-11-06T21:38:59.022611+09:00",
+        "finished_kst": "2026-11-06T21:43:07.443146+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:38:59.034288+00:00"
+      },
+      {
+        "attempt": "B_5/attempt_01",
+        "started_kst": "2026-11-06T21:43:09.522031+09:00",
+        "finished_kst": "2026-11-06T21:47:17.542268+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:43:09.538333+00:00"
+      },
+      {
+        "attempt": "B_5/attempt_02",
+        "started_kst": "2026-11-06T21:47:27.751239+09:00",
+        "finished_kst": "2026-11-06T21:51:36.985385+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:47:27.792406+00:00"
+      },
+      {
+        "attempt": "B_5/attempt_03",
+        "started_kst": "2026-11-06T21:51:38.982393+09:00",
+        "finished_kst": "2026-11-06T21:55:47.254076+09:00",
+        "status": "failed",
+        "error": "Team composition did not reach 10 trials after 30 attempts (0 succeeded).",
+        "openai_calls_ok_before_failure": 0,
+        "openai_calls_failed": 30,
+        "http_statuses_of_failed_calls": [
+          429
+        ],
+        "first_failure_utc": "2026-11-06T12:51:38.999154+00:00"
+      }
+    ],
+    "prevention": "scripts/revision/run_main.sh makes one minimal OpenAI request before each attempt with the same key resolution as the run (environment first, then .env), logs it to main_logs/preflight.jsonl, and stops without starting the attempt on any non-200 response or error. A successful preflight does not guarantee the balance for a whole run."
   }
 }

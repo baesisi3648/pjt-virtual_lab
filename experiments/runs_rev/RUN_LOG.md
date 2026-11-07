@@ -57,3 +57,20 @@ Code: commit `1db581c` plus uncommitted protocol-development changes (Critic `cl
   - Second-judge sample (seed 20261107): A_4, B_1, B_2. Blinding seed 20261108.
 - Analysis criteria: two-stage freeze (revision_plan 7.3). `analysis_criteria.json` (L3 codebook etc.) is frozen before any main-run report or deliberation text is opened; until then only run status and call-log completeness are checked.
 - Decision before freezing: MAX_ROUNDS kept at 7, as in the submitted system (pilot 3 A gained about one 5-score cell per round; 10 rounds would not change the non-convergence outcome).
+
+## 2026-11-06 — Main runs interrupted: OpenAI credit balance exhausted
+
+- Completed (status ok, call logs complete, Critic stop_reason end_turn in every call, manifest ae922a5d): A_1 (18:42–19:17), B_1 (19:17–19:41), A_2 (19:41–20:19).
+- B_2 attempt_01 failed at round 4–5 (20:44) with repeated OpenAI HTTP 429. Every later attempt (B_2 #2–3, B_3, A_3, A_4, B_4, B_5, A_5, three each) failed in about 4 minutes during team composition: 30 OpenAI calls, all HTTP 429, no successful response. The driver marked these runs "exhausted".
+- Cause, confirmed with one test call at about 22:30 KST: HTTP 429, error type `insufficient_quota`, code `credit_balance_exhausted` ("You have no credits remaining"). This is an account billing state, not request-rate limiting; the pipeline logged it as "rate limit exceeded" because the 429 body is not recorded.
+- No report or deliberation text of any run was opened. All failed attempt folders are kept.
+- Pending decision: how to resume after credits are added (protocol amendment needed, because the manifest allows at most 3 attempts per run and all 24 attempts were consumed by the billing failure).
+
+## 2026-11-07 — Manifest amendment 1
+
+- After the outage, the original 3-attempt limit was changed once, before any report was opened: the 21 failed attempts of the outage (2026-11-06 20:19–22:09 KST) are excluded from attempt counting and kept on disk. Attempts in total so far: 24 (3 successful, 21 excluded). Their outputs and scores are not used.
+- The 429 response bodies of those attempts were not recorded; the cause (credit balance exhausted) is inferred from the timing, the identical failure pattern and the diagnostic calls (2026-11-06 22:30 KST; 2026-11-07, still `credit_balance_exhausted` after the reported top-up).
+- Only code change: `utils/manifest.py` (amendment-aware counting). Prompts, snapshot, models, limits, order and environment unchanged (checked by `scripts/revision/amend_manifest.py`).
+- v1 kept as `experiment_manifest.v1.json` (sha256 ae922a5d…). Amended manifest `experiment_manifest.json`, sha256 `b24eefac8a45b30a1b15d6323f005403f12ba78e636fcf9625d93f055659b780`.
+- A_1, B_1, A_2 remain valid (run under v1; v1 and the amendment differ only in attempt counting). Resumption starts at B_2 attempt_04.
+- Driver: OpenAI preflight before each attempt (logged to `main_logs/preflight.jsonl`), stop on any non-200.
