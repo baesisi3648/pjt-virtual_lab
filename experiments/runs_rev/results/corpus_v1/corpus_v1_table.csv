@@ -1,0 +1,20 @@
+﻿doc_id,citation,agency,jurisdiction,year,status,scope,licence,chunks,best_chunk_rank,best_chunk_score,given_to_agents,raw_sha256
+codex_cxg44,"Codex Alimentarius Commission. CAC/GL 44-2003 (amended 2008, 2011)",Codex,international,2003/2011,adopted guideline,all,FAO terms of use,14,13,0.638,no,ccb08eb1ce8cf132
+codex_cxg45,Codex Alimentarius Commission. CAC/GL 45-2003 (Annexes II-III 2008),Codex,international,2003/2008,adopted guideline,plants,FAO terms of use,83,4,0.672,yes,6f240e4b5fdc29ed
+codex_cxg46,Codex Alimentarius Commission. CAC/GL 46-2003,Codex,international,2003,adopted guideline,microorganisms,FAO terms of use,68,10,0.644,no,58eca1574747f5a9
+codex_cxg68,Codex Alimentarius Commission. CAC/GL 68-2008,Codex,international,2008,adopted guideline,animals,FAO terms of use,63,11,0.643,no,0312eb918b686284
+efsa_2011_2150,EFSA GMO Panel. EFSA Journal 2011;9(5):2150,EFSA,EU,2011,guidance,plants,EFSA Journal terms,158,14,0.638,no,727c61988f19619e
+efsa_2011_2193,EFSA GMO Panel. EFSA Journal 2011;9(6):2193,EFSA,EU,2011,guidance,microorganisms,EFSA Journal terms,188,9,0.649,no,172ae33f5fe205b3
+efsa_2012_2501,EFSA GMO and AHAW Panels. EFSA Journal 2012;10(1):2501,EFSA,EU,2012,guidance,animals,EFSA Journal terms,191,15,0.633,no,8454f5b23cc1294e
+efsa_2012_2561,EFSA GMO Panel. EFSA Journal 2012;10(2):2561,EFSA,EU,2012,scientific opinion,plants,EFSA Journal terms,143,19,0.619,no,2cd8ce88e6ef8838
+efsa_2012_2943,EFSA GMO Panel. EFSA Journal 2012;10(10):2943,EFSA,EU,2012,scientific opinion,plants,EFSA Journal terms,127,17,0.623,no,6f93c1b19856cad3
+efsa_2020_6299,EFSA GMO Panel. EFSA Journal 2020;18(11):6299,EFSA,EU,2020,scientific opinion,plants,CC BY-ND 4.0,41,12,0.639,no,2d739fddeb495c52
+efsa_2022_7618,EFSA. EFSA Journal 2022;20(10):7618,EFSA,EU,2022,statement,plants,CC BY-ND 4.0,29,16,0.627,no,56700c4b9189759d
+efsa_2022_7621,EFSA GMO Panel. EFSA Journal 2022;20(10):7621,EFSA,EU,2022,scientific opinion,plants,CC BY-ND 4.0,119,7,0.66,no,e136fdddc0f0c4ee
+efsa_2024_8895,EFSA GMO Panel. EFSA Journal 2024;22(7):e8895,EFSA,EU,2024,scientific opinion,microorganisms,CC BY-ND 4.0,169,3,0.676,yes,68c9562e0dcf471a
+efsa_2025_9566,EFSA GMO Panel. EFSA Journal 2025;23(8):e9566,EFSA,EU,2025,scientific opinion,animals,CC BY-ND 4.0,304,1,0.713,yes,4dcd8886cf19fb66
+eu_com_2023_411,"European Commission. COM(2023) 411 final, 5.7.2023",European Commission,EU,2023,legislative proposal,plants,EUR-Lex reuse policy,223,8,0.651,no,22ad8984eac09c0f
+eu_reg_2026_1388,Regulation (EU) 2026/1388 of 17 June 2026,European Parliament and Council,EU,2026,adopted regulation,plants,EUR-Lex reuse policy,170,18,0.622,no,8ce9d0629a778e2f
+fsanz_p1055,"Food Standards Australia New Zealand. Approval Report P1055, 18 June 2025",FSANZ,Australia/New Zealand,2025,approval report,all,FSANZ copyright terms,382,6,0.661,no,604930b3e87638d4
+health_canada_nf,Health Canada. Guidelines for the Safety Assessment of Novel Foods (2006; appendices 2022),Health Canada,Canada,2006/2022,guidance,all,Government of Canada terms,341,5,0.664,yes,100c66ea16e9a662
+japan_mhlw,"Ministry of Health, Labour and Welfare (Japan), 2019, amended 2020 (English)",MHLW,Japan,2019/2020,administrative procedure,all,MHLW terms,17,2,0.68,yes,f7f62fe84fab0ddb

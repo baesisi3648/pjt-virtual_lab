@@ -1,0 +1,31 @@
+﻿retrieval_key,kind,source,page
+specialist_rag,rag,EFSA 2025 New developments in biotechnology applied to animals,section 4
+specialist_rag,rag,Japan MHLW Food hygiene handling procedures for food and additives derived from genome editing technology,p.1
+specialist_rag,rag,EFSA 2024 New developments in biotechnology applied to microorganisms,section 4
+specialist_rag,rag,Codex CXG 45-2003 Guideline for food safety assessment of foods derived from recombinant-DNA plants,p.12
+specialist_rag,rag,"Health Canada Guidelines for the Safety Assessment of Novel Foods (2006, 2022 plant breeding appendices)",p.61
+specialist_web,web/efsa,https://pmc.ncbi.nlm.nih.gov/articles/PMC12660440,
+specialist_web,web/efsa,https://www.sciencedirect.com/science/article/pii/S1871678426001172,
+specialist_web,web/efsa,https://www.sciencedirect.com/science/article/pii/S2666833526001942,
+specialist_web,web/efsa,https://www.nature.com/articles/s44264-026-00154-9,
+specialist_web,web/efsa,https://www.fda.gov/news-events/press-announcements/fda-issues-draft-guidance-genome-editing-safety-standards-advance-gene-therapy-development,
+specialist_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/j.efsa.2025.9566,
+specialist_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/j.efsa.2021.6314,
+specialist_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2026.e240901,
+specialist_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2025.9619,
+specialist_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2021.6314,
+critic_web,web/efsa,https://www.sciencedirect.com/science/article/pii/S2666833526001942,
+critic_web,web/efsa,https://pmc.ncbi.nlm.nih.gov/articles/PMC11375430,
+critic_web,web/efsa,https://pmc.ncbi.nlm.nih.gov/articles/PMC13396206,
+critic_web,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2021.6314,
+critic_web,web/efsa,https://pmc.ncbi.nlm.nih.gov/articles/PMC8316157,
+pi_final_web,web/efsa,https://www.sciencedirect.com/science/article/pii/S2666833526001942,
+pi_final_web,web/efsa,https://www.fda.gov/news-events/press-announcements/fda-issues-draft-guidance-genome-editing-safety-standards-advance-gene-therapy-development,
+pi_final_web,web/efsa,https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Biotechnology+and+Other+New+Production+Technologies+Annual_Bangkok_Thailand_TH2025-0032.pdf,
+pi_final_web,web/efsa,https://www.nature.com/articles/s44264-026-00154-9,
+pi_final_web,web/efsa,https://pmc.ncbi.nlm.nih.gov/articles/PMC13396206,
+pi_final_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/j.efsa.2025.9566,
+pi_final_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/abs/10.2903/j.efsa.2021.6314,
+pi_final_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2026.e240901,
+pi_final_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2025.9619,
+pi_final_efsa,web/efsa,https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2021.6314,

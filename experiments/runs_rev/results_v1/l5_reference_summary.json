@@ -1,0 +1,45 @@
+{
+  "reference_entries": 89,
+  "unique_documents": 22,
+  "unique_documents_per_report": {
+    "A_1": 14,
+    "A_2": 19,
+    "A_3": 14,
+    "A_4": 13,
+    "A_5": 18
+  },
+  "duplicate_entries_within_reports": 11,
+  "entries_by_input_route": {
+    "direct: retrieved web/EFSA result": 54,
+    "direct: RAG chunk": 27,
+    "not in retrieved inputs": 6,
+    "indirect: named in a retrieved text": 2
+  },
+  "unique_documents_by_input_route": {
+    "direct: retrieved web/EFSA result": 10,
+    "direct: RAG chunk": 5,
+    "not in retrieved inputs": 5,
+    "indirect: named in a retrieved text": 2
+  },
+  "exists": {
+    "yes": 89
+  },
+  "title": {
+    "accurate": 66,
+    "different title": 8,
+    "descriptive label": 15
+  },
+  "domain_notes": {
+    "human gene-therapy guidance; outside the food-safety domain": 5,
+    "report on Thailand (US agency)": 5
+  },
+  "reports_listing_fda_gene_therapy": [
+    "A_1",
+    "A_2",
+    "A_3",
+    "A_4",
+    "A_5"
+  ],
+  "note": "Listing is not evidence of use: retrieved sources are added to the References by the pipeline. 'not in retrieved inputs' does not establish generation from prior knowledge. title_found_in_body is a rough text check, not a claim-citation link.",
+  "status": "draft judgements by Claude; author confirmation pending"
+}

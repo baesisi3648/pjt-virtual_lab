@@ -1,0 +1,44 @@
+{
+  "extracted_utc": "2026-11-07T17:32:03.363293+00:00",
+  "note": "Current index state at extraction time; not asserted to equal the index at the time of the submitted runs (revision_plan L7).",
+  "pinecone_stats": {
+    "namespaces": {
+      "__default__": {
+        "vector_count": 2830
+      }
+    },
+    "dimension": 1536,
+    "index_fullness": 0.0,
+    "total_vector_count": 2830,
+    "metric": "cosine",
+    "vector_type": "dense",
+    "memory_fullness": 0.0,
+    "storage_fullness": 0.0,
+    "response_info": null
+  },
+  "index": {
+    "vectors": 2830,
+    "distinct_source_files": 19
+  },
+  "retrieval_snapshot": {
+    "path": "experiments/runs_rev/retrieval_snapshot_v1.json",
+    "sha256": "56fecbf9a240357738d2da4b7001b1a3d03f13dc592c81d7990ed69f76091f15",
+    "keys": [
+      "critic_web",
+      "pi_final_efsa",
+      "pi_final_web",
+      "specialist_efsa",
+      "specialist_rag",
+      "specialist_web"
+    ],
+    "rag_source_files": [
+      "Codex CXG 45-2003 Guideline for food safety assessment of foods derived from recombinant-DNA plants",
+      "EFSA 2024 New developments in biotechnology applied to microorganisms",
+      "EFSA 2025 New developments in biotechnology applied to animals",
+      "Health Canada Guidelines for the Safety Assessment of Novel Foods (2006, 2022 plant breeding appendices)",
+      "Japan MHLW Food hygiene handling procedures for food and additives derived from genome editing technology"
+    ],
+    "rag_chunks_retrieved": 5,
+    "distinct_urls": 14
+  }
+}
