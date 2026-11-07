@@ -223,7 +223,7 @@ def build_primary(ids, items, path):
         "근거 위치: 절·단계·노드 (예: CQ5 Step 4, SDN-3 tree node E5).",
         "일부 보고서는 모델이 본문을 두 번 썼습니다(두 번째는 짧은 판). 보고서 전체를 한 판정 단위로 보고 생성된 그대로 판정합니다. 반복을 추가 점수로 세지 않습니다. 두 판이 서로 다르면 비고에 적고, 반대되는 서술이면 상충 우선 규칙을 따릅니다.",
         "중대 사례 시트: 어느 항목이든 필수 평가 생략, 근거 없는 면제, 안전성 결론에 중요한 불확실성이 남았는데 종료한 서술을 모두 적습니다. 같은 사례가 중대 항목의 누락·상충과 겹치면 '관련 항목 ID'로 연결해 중복 집계를 막습니다.",
-        "원인 '검색 자료 없음'은 검색 스냅샷(experiments/runs_rev/retrieval_snapshot.json)을 확인해야 정할 수 있습니다. 참고문헌 목록만으로 정하지 않습니다.",
+        "원인 '검색 자료 없음'은 패키지의 '검색입력_공통.md'(모든 보고서에 똑같이 들어간 검색 자료)를 확인해야 정할 수 있습니다. 참고문헌 목록만으로 정하지 않습니다.",
         "AI 추가 제안 시트: 어느 항목에도 해당하지 않는 평가·제안과 근거 충분 여부.",
         "L4 시트: 판단 지점 17개마다 보고서에 나타난 분기를 한 행에 하나씩 적습니다 (행이 모자라면 복사해 추가). 위치(통합 트리, SDN-1·2·3·ODM 트리, 본문 단계)를 적고, 통합 트리와 개별 트리의 분기가 같으면 한 번만, 다르면 둘 다 적습니다. 지점 자체가 없으면 '유무=없음' 한 행. 범주가 보고서 범위 밖이면 '적용=범위 밖'.",
         "L4 정규화: 같은 뜻의 노드 표현은 '정규화 변환표' 시트에 원문 표현 → 정규화 코드로 등록하고, L4 시트의 정규화 열에는 그 코드를 씁니다.",
@@ -300,6 +300,18 @@ def main() -> int:
     key_doc = {"seed": manifest["analysis"]["blinding_seed"], "rule": "random.Random(seed).shuffle(sorted run names); "
                "position i -> R{i+1:02d}", "key": dict(sorted(key.items())),
                "report_source": {run: str(ok_attempt(run).relative_to(ROOT)).replace("\\", "/") for run in runs}}
+    # Common retrieval input (identical for every run, so it carries no condition information).
+    snap = json.loads((ROOT / manifest["retrieval"]["snapshot_path"]).read_text(encoding="utf-8"))
+    used = ["specialist_rag", "specialist_web", "specialist_efsa", "critic_web", "pi_final_web"]
+    lines = ["# 검색입력_공통 (모든 보고서에 동일하게 들어간 검색 자료)", "",
+             "판정 시트의 원인 '검색 자료 없음'을 정할 때 확인하는 자료입니다. 아래 다섯 묶음이 모든 실행에 똑같이 들어갔습니다.",
+             "전문가 1라운드: specialist_rag, specialist_web, specialist_efsa / Critic: critic_web / PI 최종 보고서: pi_final_web.",
+             "(pi_final_efsa는 전문가 EFSA 검색이 비었을 때만 쓰이며 이번 실행에서는 쓰이지 않았습니다.)", ""]
+    for k in used:
+        e = snap["entries"][k]
+        lines += [f"## {k}", "", f"질의: `{e['query']}`", "", e["result"].strip(), ""]
+    (OUT / "retrieval_inputs.md").write_text("\n".join(lines), encoding="utf-8")
+
     key_path = OUT / "blinding_key.json"
     key_path.write_text(json.dumps(key_doc, ensure_ascii=False, indent=2), encoding="utf-8")
 

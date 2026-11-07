@@ -1,0 +1,13 @@
+{
+  "condition": "A",
+  "representative": "A_5",
+  "mean_similarity_to_others": {
+    "A_1": 0.8822985942460042,
+    "A_2": 0.9260748976161424,
+    "A_3": 0.9230017931300277,
+    "A_4": 0.8729699626204924,
+    "A_5": 0.9285864876385147
+  },
+  "rule": "highest mean content similarity to the other runs; ties -> smaller run number",
+  "complete_main_set": true
+}

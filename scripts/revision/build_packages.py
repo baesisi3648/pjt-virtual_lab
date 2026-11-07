@@ -99,6 +99,8 @@ def primary(dst: Path, ids, mermaid: Path):
     for r in ids:
         copy_report(r, dst)
     shutil.copy2(J / "primary_judge_sheet.xlsx", dst / "주판정_시트.xlsx")
+    if (J / "retrieval_inputs.md").is_file():
+        shutil.copy2(J / "retrieval_inputs.md", dst / "검색입력_공통.md")
     body = CODEBOOK_PAGE.read_text(encoding="utf-8")
     (dst / "기준표_codebook.html").write_text(
         '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -118,6 +120,7 @@ def primary(dst: Path, ids, mermaid: Path):
 {file_row("기준표_codebook.html", "기준표_codebook.html", "판정 기준 (확정본 v1.0)")}
 {file_row("주판정_시트.xlsx", "주판정_시트.xlsx", "L3 300행, 중대 사례, AI 추가 제안, L4, 정규화 변환표")}
 {file_row("reports/", "reports/", "보고서 R01–R10 (HTML, 영문·한국어 md)")}
+{file_row("검색입력_공통.md", "검색입력_공통.md", "모든 보고서에 똑같이 들어간 검색 자료 (원인 판정용)")}
 </div></section>
 {sources_card()}
 <section class="card warn"><h2>지켜 주실 것</h2><ul class="plain">
@@ -200,9 +203,9 @@ def zip_dir(src: Path):
 
 def main() -> int:
     mermaid = Path(_A.mermaid)
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir(parents=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+    for child in OUT.iterdir():  # empty the folder (the folder itself may be held open by Explorer/OneDrive)
+        shutil.rmtree(child) if child.is_dir() else child.unlink()
     ids = sorted(p.stem for p in (J / "reports").glob("R*.html"))
     second_ids = sorted({c.value for c in __import__("openpyxl").load_workbook(J / "second_judge_sheet.xlsx")["L3 판정"]["A"][1:]})
     ext_id = sorted(p.name for p in (J / "external").iterdir() if p.is_dir())[0]

@@ -160,3 +160,19 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 
 - The corresponding author (Bae Seongu) confirmed the draft judgements: v0 main set, 12 candidates, all SDN category numbers (`results/leakage_judgement.json`); pilot v1 A_1, 6 candidates, all the list number "(4)". Confirmed prior-score leaks: 0.
 - The corresponding author has drafted the deadline-extension request to the editorial office.
+
+## 2026-11-08 — Main runs v1 complete; analysis; judging kit v1
+
+- Ten runs in `main_v1` (manifest v2 ae7f5440…), KST 2026-11-07 21:44:57 – 2026-11-08 01:06:45, all ok at attempt 1, 568 calls (54 Critic calls), 0 failed calls, Critic stop_reason end_turn throughout, snapshot 56fecbf9 at start in every run, response models gpt-5-2025-08-07 and claude-opus-5.
+- L2: A 0/5 reached all-5 (all stopped at the 7-round cap); B 5/5 (rounds 3, 4, 4, 4, 4). Score decreases: A 64, B 0.
+- L1 content similarity (descriptive; pairs not independent): within A 0.907 (0.839–0.964), within B 0.926 (0.895–0.970), A vs B 0.920 (0.858–0.969). Full text: 0.940, 0.959, 0.945. Representative run (condition-A medoid): A_5 (0.9286; next 0.9261).
+- v0 for comparison (inputs and code differ; descriptive only): content 0.904 / 0.892 / 0.903; decreases A 51, B 4.
+- Leakage audit (A): 2 candidates, both in A_2 round-1 specialist outputs, both SDN category numbers (draft judgement; author confirmation pending). Masking fired 0 times.
+- Duplicated report bodies (model output): 4 of 10 reports, including all three reports of the fixed second-judge sample. Kept as generated; the whole report is the judging unit with the conflict-first rule.
+- Judging kit v1 (`reference/revision/judging_v1`, blinding key sha256 94d71073…; same seed and therefore the same ID mapping rule as v0) and packages v1 (`reference/revision/packages_v1`, zip names end with `_재실험v1`). Codex review found and I fixed: (1) the codebook page listed the second-judge sample by original run IDs (a condition cue; also present in the paused v0 package) — replaced by neutral wording; (2) the primary-judge guide pointed to the v0 snapshot — the package now includes `검색입력_공통.md` (the common retrieval input, identical for all runs) and the guide refers to it. Rechecked: no run IDs and no key file in any package. Errata 2026-11-08 applied (coverage for corpus v1).
+- Package sha256 (first 16 hex):
+  - 1_주판정자_함준혁박사_재실험v1.zip 147c1f186179e16d
+  - 2_2차판정자_재실험v1.zip 67704ef642eb1d3c
+  - 3_외부판정자_1_재실험v1.zip f4bfcd0c31c51f72
+  - 4_외부판정자_2_재실험v1.zip 5b9f93b8bbe808f1
+- To record when sent: date, recipients, reply deadlines; the v0 packages are superseded.

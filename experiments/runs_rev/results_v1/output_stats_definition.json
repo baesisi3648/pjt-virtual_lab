@@ -1,0 +1,3 @@
+{
+  "definition": "Definition: characters of the full text returned by the model, whitespace included.\n    Specialist turns = one analysis or revision per round. Critic text = overall plus\n    per-specialist feedback. PI text = round summaries plus the final report."
+}

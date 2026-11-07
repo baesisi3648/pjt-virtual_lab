@@ -1,0 +1,11 @@
+run,condition,rounds,all_five_reached,score_decreases,failed_attempts
+A_1,A,7,False,7,0
+A_2,A,7,False,11,0
+A_3,A,7,False,13,0
+A_4,A,7,False,15,0
+A_5,A,7,False,18,0
+B_1,B,4,True,0,0
+B_2,B,4,True,0,0
+B_3,B,3,True,0,0
+B_4,B,4,True,0,0
+B_5,B,4,True,0,0

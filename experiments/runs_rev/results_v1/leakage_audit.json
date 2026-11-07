@@ -1,0 +1,94 @@
+{
+  "runs": {
+    "A_1": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 0,
+      "candidates_by_channel": {
+        "specialist_outputs": 0,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_2": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 2,
+      "candidates_by_channel": {
+        "specialist_outputs": 2,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_3": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 0,
+      "candidates_by_channel": {
+        "specialist_outputs": 0,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_4": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 0,
+      "candidates_by_channel": {
+        "specialist_outputs": 0,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    },
+    "A_5": {
+      "auditable": true,
+      "missing_rounds": [],
+      "critic_calls": 7,
+      "masked_tokens": 0,
+      "candidate_mentions": 0,
+      "candidates_by_channel": {
+        "specialist_outputs": 0,
+        "retrieval_context": 0,
+        "prior_feedback": 0,
+        "instructions": 0,
+        "header": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "run": "A_2",
+      "round": 1,
+      "call_id": "d8f93d5bd9f942a7b91fc7be775ae15b",
+      "channel": "specialist_outputs",
+      "context": " in silico/in vitro protein assessment as a primary line of evidence for SDN-3 traits expressing new proteins, with additional testing tri",
+      "manual_judgement": null
+    },
+    {
+      "run": "A_2",
+      "round": 1,
+      "call_id": "d8f93d5bd9f942a7b91fc7be775ae15b",
+      "channel": "specialist_outputs",
+      "context": "isation and comparative analysis. Two clarifications favour proportionality. First, for SDN-1, SDN-2, and ODM edits that do not introduce a new coding se",
+      "manual_judgement": null
+    }
+  ],
+  "note": "    The detector is deliberately broad (it also flags phrases such as\n    \"Evidence from 3 studies\"), so every hit must be reviewed by hand; the\n    examples carry the call ID and an empty \"manual_judgement\" field for that.\n    Hit counts are candidate mentions, not confirmed leaks. A run whose call log\n    is missing, or whose logged Critic rounds do not cover every scored round,\n    is reported as not auditable rather than as zero hits.",
+  "pass_criteria": "Every candidate is judged by hand. Pass: 0 confirmed prior-score leaks, 0 unjudged candidates, 0 scientific-content damage from masking (revision_plan 7.6). Candidate counts need not be 0."
+}
