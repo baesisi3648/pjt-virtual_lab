@@ -155,3 +155,8 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Pilot v1 notes (Codex review): the RAG text (5,656 characters) reached all five specialists in round 1; B_1 shows a duplicated body/tree and an EFSA title–URL mismatch (model-output defects, kept and reported). The six A_1 leakage candidates are list numbers; author confirmation is pending (recorded as a draft judgement).
 - Report statistics exclude the final report (stated in the table header); `meta.json` statistics include it.
 - Environment check before start: venv Python 3.12.10 and all 84 installed distributions match the manifest (Codex's sandbox could not start the venv interpreter; not an issue in the run environment).
+
+## 2026-11-07 — Leakage judgements confirmed
+
+- The corresponding author (Bae Seongu) confirmed the draft judgements: v0 main set, 12 candidates, all SDN category numbers (`results/leakage_judgement.json`); pilot v1 A_1, 6 candidates, all the list number "(4)". Confirmed prior-score leaks: 0.
+- The corresponding author has drafted the deadline-extension request to the editorial office.
