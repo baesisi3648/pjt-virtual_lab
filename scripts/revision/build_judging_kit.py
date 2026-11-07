@@ -69,10 +69,32 @@ def ok_attempt(run: str) -> Path:
     raise SystemExit(f"no successful attempt for {run}")
 
 
-def strip_methods(text: str) -> str:
+PANEL_HEADINGS = ("### Team Composition", "### 팀 구성")
+
+
+def panel_from_methods(methods: str, korean: bool) -> str:
+    """The team-composition subsection of Methods (decided before any Critic scoring, identical prompts in A
+    and B). Rounds, per-agent statistics, timings and score charts in the rest of Methods are withheld."""
+    subs = re.split(r"(?m)^(?=### )", methods)
+    panel = next((s for s in subs if s.startswith(PANEL_HEADINGS)), None)
+    if panel is None:
+        raise SystemExit("team-composition subsection not found")
+    body = panel.split("\n", 1)[1] if "\n" in panel else ""
+    if korean:
+        title, note = "## 전문가 패널", "*(생성된 보고서의 방법 절에서 팀 구성 부분만 옮겼습니다. 나머지 방법 절은 블라인드 판정을 위해 뺐습니다.)*"
+    else:
+        title, note = "## Expert Panel", ("*(Team-composition part of the generated report's Methods section; the rest of "
+                                          "Methods is withheld for blinded judging.)*")
+    return f"{title}\n\n{note}\n\n{body.strip()}\n\n---\n\n"
+
+
+def strip_methods(text: str, korean: bool = False) -> str:
     parts = re.split(r"(?m)^(?=## )", text)
     head, sections = parts[0], parts[1:]
-    return head + "".join(s for s in sections if not s.startswith(METHODS_HEADINGS))
+    out = head
+    for s in sections:
+        out += panel_from_methods(s, korean) if s.startswith(METHODS_HEADINGS) else s
+    return out
 
 
 def to_html(md_text: str) -> str:
@@ -103,7 +125,7 @@ button[aria-pressed=true]{{background:#24605a;color:#fff;border-color:#24605a}}
 pre.mermaid{{background:#fff;border:1px dashed #d5dcd9;padding:8px;overflow-x:auto}} h2{{border-top:1px solid #d5dcd9;padding-top:18px}}
 </style></head><body><main>
 <header><b>보고서 {rid}</b><button id="b-en" aria-pressed="true">English (원문, 판정 기준)</button><button id="b-ko" aria-pressed="false">한국어 (자동 번역, 참고용)</button>
-<span class="note">Methods 절은 판정과 무관해 제외했습니다. 나머지는 생성된 그대로입니다.</span></header>
+<span class="note">Methods 절은 팀 구성(전문가 패널)만 남기고 뺐습니다. 나머지는 생성된 그대로입니다.</span></header>
 <article id="en" lang="en">{to_html(en)}</article><article id="ko" lang="ko" hidden>{to_html(ko)}</article>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
@@ -261,7 +283,7 @@ def main() -> int:
     for run, rid in key.items():
         att = ok_attempt(run)
         en = strip_methods((att / "final_report.md").read_text(encoding="utf-8"))
-        ko = strip_methods((att / "final_report.ko.md").read_text(encoding="utf-8"))
+        ko = strip_methods((att / "final_report.ko.md").read_text(encoding="utf-8"), korean=True)
         (OUT / "reports" / f"{rid}_en.md").write_text(en, encoding="utf-8")
         (OUT / "reports" / f"{rid}_ko.md").write_text(ko, encoding="utf-8")
         (OUT / "reports" / f"{rid}.html").write_text(report_page(rid, en, ko), encoding="utf-8")

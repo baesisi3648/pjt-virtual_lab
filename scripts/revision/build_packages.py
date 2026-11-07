@@ -102,7 +102,7 @@ def primary(dst: Path, ids, mermaid: Path):
 <p style="margin-top:8px;color:var(--muted)">AI가 생성한 유전자편집식품 안전성 평가체계 보고서 10개를 EFSA 2022와 Codex CXG 45 기준으로 판정해 주세요.</p></header>
 <section class="card"><h2>진행 순서</h2><ol class="steps">
 <li><p><b>기준표 읽기.</b> <a href="기준표_codebook.html">기준표_codebook.html</a>에서 판정 방법과 30개 항목을 먼저 봐 주세요. 맨 위 "판정하시는 분께"와 "판정 시 유의할 점"이 요점입니다.</p></li>
-<li><p><b>보고서 열기.</b> 아래 보고서를 브라우저로 엽니다. 영문 원문이 판정 기준이고 한국어는 참고용 자동 번역입니다. Methods 절은 판정과 무관해 뺐습니다.</p>{report_links(ids)}</li>
+<li><p><b>보고서 열기.</b> 아래 보고서를 브라우저로 엽니다. 영문 원문이 판정 기준이고 한국어는 참고용 자동 번역입니다. Methods 절은 전문가 패널(팀 구성)만 남기고 뺐습니다.</p>{report_links(ids)}</li>
 <li><p><b>L3 판정.</b> <a href="주판정_시트.xlsx">주판정_시트.xlsx</a>의 "L3 판정" 시트에서 보고서마다 30개 항목의 반영 상태(드롭다운), 원인(해당 칸에 O), 근거 위치를 적습니다. "항목 비고"의 규칙을 우선 적용합니다.</p></li>
 <li><p><b>중대 사례와 AI 추가 제안.</b> 필수 평가 생략, 근거 없는 면제, 불확실한 상태의 종료는 "중대 사례" 시트에, 기준표에 없는 제안은 "AI 추가 제안" 시트에 적습니다.</p></li>
 <li><p><b>L4 구조.</b> "L4 구조" 시트에 판단 지점 17개의 분기를 한 행에 하나씩 기록하고, 같은 뜻의 표현은 "정규화 변환표"에 등록합니다.</p></li>
@@ -134,7 +134,7 @@ def second(dst: Path, ids, mermaid: Path):
 <p style="margin-top:8px;color:var(--muted)">AI가 생성한 유전자편집식품 안전성 평가체계 보고서 3개를 EFSA 2022와 Codex CXG 45 기준으로 독립 판정해 주세요. 판정자 간 일치도 계산에 쓰입니다.</p></header>
 <section class="card"><h2>진행 순서</h2><ol class="steps">
 <li><p><b>판정 방법 읽기.</b> <a href="2차판정_시트.xlsx">2차판정_시트.xlsx</a>의 "안내" 시트에 반영 상태 5가지의 정의와 규칙이 있습니다.</p></li>
-<li><p><b>보고서 열기.</b> 영문 원문이 판정 기준이고 한국어는 참고용입니다. Methods 절은 판정과 무관해 뺐습니다.</p>{report_links(ids)}</li>
+<li><p><b>보고서 열기.</b> 영문 원문이 판정 기준이고 한국어는 참고용입니다. Methods 절은 전문가 패널(팀 구성)만 남기고 뺐습니다.</p>{report_links(ids)}</li>
 <li><p><b>판정.</b> "L3 판정" 시트에서 보고서마다 30개 항목의 반영 상태 하나를 드롭다운으로 고르고, 근거 위치를 적습니다. "항목 비고"의 규칙을 우선 적용합니다.</p></li>
 <li><p><b>회신.</b> 작성한 시트를 그대로 보내 주세요.</p></li>
 </ol></section>
