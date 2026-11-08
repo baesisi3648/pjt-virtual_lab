@@ -1,0 +1,49 @@
+{
+  "representative_run": "A_5 (main_v1)",
+  "candidates_logged": 37,
+  "decisions": {
+    "excluded": 3,
+    "included": 30,
+    "duplicate": 4
+  },
+  "claims": 30,
+  "by_stratum": {
+    "a": 7,
+    "b": 4,
+    "c": 12,
+    "d": 7
+  },
+  "sampling": "not needed (30 claims after splitting and de-duplication; threshold: more than 30)",
+  "cited_claims": 0,
+  "uncited_claims": 30,
+  "support_rate": "not computable (no cited claims); this is not 0% support",
+  "inline_citations_cq1_5_all_reports": {
+    "A_1": 3,
+    "A_2": 0,
+    "A_3": 5,
+    "A_4": 0,
+    "A_5": 0,
+    "B_1": 0,
+    "B_2": 0,
+    "B_3": 0,
+    "B_4": 0,
+    "B_5": 1
+  },
+  "inline_citations_examples": {
+    "A_1": [
+      "(CXG 44-2003)",
+      "(CXG 45-2003)",
+      "(CXG 44‑2003 and CXG 45‑2003)"
+    ],
+    "A_3": [
+      "(CXG 45-2003)",
+      "(CAC/GL 46-2003)",
+      "(Codex CXG 45-2003)"
+    ],
+    "B_5": [
+      "(Codex CXG 45-2003 for plants; Codex GL44-2003 for microorganisms)"
+    ]
+  },
+  "inline_citation_definition": "bracketed source tags, numbered references, or parenthetical agency/document citations with a year or document number in Core Questions 1-5; a guideline named as a subject is not counted",
+  "status": "selection drafted by Claude (revised after Codex review); author confirmation pending"
+}
