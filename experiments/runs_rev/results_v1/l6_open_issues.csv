@@ -1,0 +1,148 @@
+﻿run,round,open_issue
+A_1,1,Counter-arguments and precautionary readings to be integrated
+A_1,1,Glossary and readability
+A_1,1,Deduplication and ownership
+A_1,1,Citation hygiene
+A_1,1,Tone and framing
+A_1,1,Exposure and uncertainty methods
+A_1,2,Deduplication and ownership
+A_1,2,Glossary integration and residual gaps
+A_1,2,Section-specific refinements
+A_1,2,Citation hygiene
+A_1,2,Decision workflow integration
+A_1,3,Final glossary pass for uniform first‑use explanations
+A_1,3,Engage live EU policy development
+A_1,3,Process‑cue deduplication
+A_1,3,Section‑specific refinements from Critic
+A_1,3,Decision workflow integration
+A_1,4,Editorial and glossing clean‑up (ownership noted per section)
+A_1,4,Decision workflow integration
+A_1,4,Final glossary pass and consistency
+A_1,4,Residual deduplication
+A_1,5,Uniform first‑use glossing across the integrated document
+A_1,5,Tone alignment
+A_1,5,Citation traceability
+A_1,5,Define the “quiet digital map” explicitly (Bioinformatics)
+A_1,5,Extend scope beyond plants
+A_1,5,Decision‑workflow artifact
+A_1,5,Section‑specific polish (owners in parentheses)
+A_1,6,Uniform first-use glossing across the integrated document (integration pass)
+A_1,6,Regulatory density and residual apparatus
+A_1,6,Bioinformatics readability tweak
+A_1,6,Toxicology alignment and light pruning
+A_1,6,Risk terminology and micro-edits
+A_1,6,Genetics transfer emphasis
+A_1,6,Decision-workflow artifact
+A_1,7,Cross‑section consistency and final glossing
+A_1,7,Editor‑class completeness
+A_1,7,Minor intra‑section pruning
+A_1,7,Decision‑workflow artifact
+A_2,1,Cross-cutting items for next round
+A_2,1,Substantive issues needing deeper treatment
+A_2,1,Specialist-specific strengthening requests
+A_2,2,Cross-cutting editorial actions for the integrated draft
+A_2,2,Substantive refinements to incorporate
+A_2,2,Specialist-specific strengthening requests
+A_2,2,Structural consolidation choices for next round
+A_2,3,Cross-cutting editorial integrations (next round)
+A_2,3,Structural choices
+A_2,3,Specialist-specific strengthening (concrete to-dos)
+A_2,4,Cross-cutting integration tasks
+A_2,4,Specialist‑specific strengthening (next round)
+A_2,5,Cross‑cutting integration tasks (next round)
+A_2,5,Targeted specialist actions
+A_2,6,Cross‑cutting integration for the combined document
+A_2,6,Specialist‑focused strengthening (next round)
+A_2,7,Integration and readability
+A_2,7,Balance of competing readings
+A_2,7,Section‑specific tightening
+A_3,1,Substantive items for next round
+A_3,1,Clarity and sourcing
+A_3,1,Editorial integration to reduce duplication
+A_3,1,Deliverables to support proportionate waivers
+A_3,1,Toxicology Specialist: add base/prime editor considerations; define and exemplify read‑across and structural alerts; acknowledge detection‑limit counter‑argument and justify pathway‑anchored targeting.
+A_3,1,Bioinformatics Specialist: compress metadata details into a conceptual reproducibility standard; add plain‑language glosses; hedge/replace clinical‑domain citations.
+A_3,1,Genetics Specialist: add a brief counter‑argument section (“fewer but potentially more consequential changes”) and clarify clinical‑to‑food analogy; expand lay glosses for key terms.
+A_3,1,Risk Specialist: soften directive phrasing into interpretive conclusions; add history‑of‑safe‑use counter‑argument and why field/agronomic observations inform composition and thus food safety.
+A_3,1,Regulatory Specialist: tighten Japan MHLW description; add a paragraph engaging precautionary/process‑based positions and traceability concerns.
+A_3,2,Integration and ownership
+A_3,2,Citation precision and scope
+A_3,2,Mechanistic and interpretive clarifications
+A_3,2,Post‑market and uncertainty
+A_3,2,Deliverables for the next round
+A_3,3,Integration/editorial
+A_3,3,Substantive completions
+A_3,3,Deliverables and templates
+A_3,4,Editorial integration
+A_3,4,Substantive alignments
+A_3,4,Targeted refinements by specialist
+A_3,5,Cross‑cutting integration to complete next round
+A_3,5,Targeted per‑specialist refinements
+A_3,6,Cross‑cutting integration
+A_3,6,Targeted refinements by specialist
+A_3,6,Templates/annexes
+A_3,7,Cross‑cutting integration to complete next round
+A_3,7,Targeted readability refinements
+A_3,7,Templates/annexes
+A_4,1,Citation hygiene (Critic priority)
+A_4,1,Shared terminology and readability (Critic priority)
+A_4,1,Engage the precautionary counter‑position (Critic priority)
+A_4,1,Base and prime editors
+A_4,1,"Data standards: keep conceptual, not prescriptive"
+A_4,1,Vocabulary harmonisation
+A_4,1,Jurisdictional divergences
+A_4,1,Stability reasoning
+A_4,1,Residual process exposure rationale
+A_4,1,Limits of prediction
+A_4,2,Cross‑cutting items flagged by the Critic (to resolve next round)
+A_4,2,Specialist‑specific strengthening
+A_4,3,Cross‑cutting (final merge blockers)
+A_4,3,Specialist‑specific strengthening
+A_4,4,Cross‑cutting (final consolidation tasks)
+A_4,4,Specialist‑specific strengthening (per Critic)
+A_4,5,Cross‑cutting (must resolve before merge)
+A_4,5,Specialist‑specific strengthening (per Critic)
+A_4,6,Cross‑cutting (blockers before merge)
+A_4,6,Specialist‑specific strengthening (per Critic)
+A_4,7,Cross‑cutting (merge‑blocking)
+A_4,7,Cross‑cutting (clean‑up)
+A_4,7,Specialist‑specific strengthening
+A_5,1,Harmonise trigger vocabulary and cross-referencing across layers
+A_5,1,Readability and terminology glosses
+A_5,1,Surface competing interpretations and limits
+A_5,1,Evidence and citation hygiene
+A_5,2,Editorial and readability clean‑up
+A_5,2,Citation precision and evidentiary anchors
+A_5,2,Shared cross‑reference passage and junction logic
+A_5,2,Database curation impact made concrete
+A_5,2,Prose refinement for Risk workflow
+A_5,3,Editorial clean‑up and readability (cross‑cutting)
+A_5,3,Remove internal question labels and tighten prose
+A_5,3,Strengthen explicit linkages to the shared triggers
+A_5,3,Citations and scope alignment
+A_5,3,Make the cross‑layer workflow unmistakable
+A_5,3,Bioinformatics: Remove numbers in the curation vignette; add missing glosses; connect residual‑element checks to triggers; replace “signal‑to‑noise” metaphor.
+A_5,3,Genetics: Gloss end‑joining and pangenome‑aware where used; hedge the cross‑organism claim; use the closing to underscore hand‑off to comparative composition and the decision record.
+A_5,3,Risk: Define remaining terms; clarify uncertainty register versus decision log (what each records and why both are needed); adjust the omics/escalation citation.
+A_5,3,Toxicology: Replace Q‑labels; gloss remaining terms; integrate protein safety reasoning into prose; call out shared triggers explicitly.
+A_5,3,Regulatory: Replace Q‑labels; add rationale prose for two exemplar triggers; ensure base/prime‑editor by‑products are linked to edible‑tissue expression; name specific EFSA opinions or recast as practice.
+A_5,4,Final readability polish and term glosses
+A_5,4,Remove duplication and tighten prose
+A_5,4,Citation alignment and precision
+A_5,4,Strengthen alternative‑interpretation layer where thin
+A_5,4,Genetics: Gloss multiplexed; remove duplicate chain; avoid re‑listing triggers; narrow or support animal‑application claim.
+A_5,4,Bioinformatics: Replace provenance‑tracked; add structural‑off‑target counter‑view and omics‑follow‑up nuance; align EFSA citations.
+A_5,4,Toxicology: Add two glosses; split trigger sentence; align EFSA SDN‑1/SDN‑2/ODM date; remove duplicate chain.
+A_5,4,Regulatory: Remove duplicate glossary; convert bullets to prose; add counter‑view passage; add two glosses; explain continuity‑based protein reading.
+A_5,4,Risk: Gloss deaminase domain; split trigger list; show non‑plant application; tidy abbreviation use.
+A_5,5,Citation consistency and precision
+A_5,5,Final glosses of residual terms
+A_5,5,Tighten scope and readability
+A_5,5,Minor de‑duplication and sentence hygiene
+A_5,6,Citation alignment and naming precision (cross‑cutting)
+A_5,6,Final readability/glosses
+A_5,6,Minor de‑duplication and sentence hygiene
+A_5,7,Citation alignment and naming precision (final harmonisation)
+A_5,7,Readability polish and remaining glosses
+A_5,7,"Small, per‑specialist refinements"
+A_5,7,Sentence hygiene and de‑duplication

@@ -1,0 +1,320 @@
+{
+  "scope": "revised-protocol runs of main_v1; detailed tracing for the representative run A_5",
+  "a5_round1_topic_mentions": {
+    "genome-wide sequencing": {
+      "Genetics Specialist": 2,
+      "Bioinformatics Specialist": 7,
+      "Toxicology Specialist": 0,
+      "Regulatory Specialist": 2,
+      "Risk Specialist": 0
+    },
+    "whole-food animal studies": {
+      "Genetics Specialist": 0,
+      "Bioinformatics Specialist": 0,
+      "Toxicology Specialist": 3,
+      "Regulatory Specialist": 1,
+      "Risk Specialist": 1
+    },
+    "residual DNA and delivery": {
+      "Genetics Specialist": 2,
+      "Bioinformatics Specialist": 3,
+      "Toxicology Specialist": 0,
+      "Regulatory Specialist": 3,
+      "Risk Specialist": 2
+    },
+    "untargeted omics": {
+      "Genetics Specialist": 0,
+      "Bioinformatics Specialist": 5,
+      "Toxicology Specialist": 1,
+      "Regulatory Specialist": 1,
+      "Risk Specialist": 0
+    }
+  },
+  "a5_trace": [
+    {
+      "topic": "genome-wide sequencing",
+      "round1_positions": "Genetics, Bioinformatics and Regulatory state targeted confirmation by default and genome-wide sequencing when triggers apply (multiplexing, persistent editor expression or DNA vectors, extended tissue culture, repetitive targets, polyploidy). Long-read and trigger provisions are present from round 1.",
+      "critic": "R1 notes that the view of genome-wide sequencing as a routine baseline is never engaged and that the argument is one-directional.",
+      "later": "R2 Bioinformatics and R6-R7 Risk state the sequence-everything-by-default view and answer it. R4-R5 Bioinformatics adds a passage conceding that prediction-led searches can miss structural or mismatch-tolerant changes.",
+      "handling": "No disagreement between specialists. The opposing view was introduced at the Critic's request and answered within one contribution."
+    },
+    {
+      "topic": "conditions for widening to genome-wide or omics analysis",
+      "round1_positions": "Genetics and Bioinformatics consider widening on process or molecular triggers alone.",
+      "critic": "No comment on this difference.",
+      "later": "R7 Risk describes widening in a combined-trigger example only when a composition outlier persists.",
+      "handling": "Difference in conditions that cannot be judged as a disagreement, because the Risk passage may apply only to its example."
+    },
+    {
+      "topic": "whole-food animal studies",
+      "round1_positions": "Toxicology, Risk and Regulatory state that such studies are not a default and are considered only for a specific testable hypothesis. Genetics and Bioinformatics do not address them. No specialist proposes them as a default.",
+      "critic": "R4 calls the treatment exemplary and requests no opposing view.",
+      "later": "Unchanged through R7.",
+      "handling": "No disagreement observed."
+    },
+    {
+      "topic": "unintended edits after transient delivery",
+      "round1_positions": "Specialists treat transient ribonucleoprotein delivery as narrowing the window for unintended edits.",
+      "critic": "R1 asks that the view that transient delivery does not fully exclude unintended change be aired.",
+      "later": "Aired and answered from R2 (Genetics, Risk).",
+      "handling": "No disagreement between specialists. Counter-view introduced at the Critic's request."
+    },
+    {
+      "topic": "residual DNA from DNA-based delivery",
+      "round1_positions": "Genetics, Bioinformatics, Regulatory and Risk link the depth of characterisation to the presence of foreign DNA and the delivery route.",
+      "critic": "R5 asks for a clause on why DNA-free delivery cannot leave a DNA residue.",
+      "later": "Added in later rounds.",
+      "handling": "No disagreement observed."
+    },
+    {
+      "topic": "divergence among regulatory frameworks",
+      "round1_positions": "Regulatory asserts convergence among Codex, EFSA, Health Canada and Japan.",
+      "critic": "R1 notes that convergence is asserted without examining where the frameworks diverge.",
+      "later": "From R2, Regulatory names divergences (comparator breadth, protein-testing conventions, the foreign-DNA trigger in Japan, stability emphasis) and proposes a core-plus-annex dossier. R5-R6 add how the scaffold reads where foreign-DNA presence is decisive.",
+      "handling": "Divergence between jurisdictions, not between agents. Retained in the report as a described difference."
+    },
+    {
+      "topic": "citation of EFSA documents",
+      "round1_positions": "Not applicable.",
+      "critic": "R4-R7 note that the EFSA opinion on SDN-1, SDN-2 and ODM is cited with different years and titles across specialists.",
+      "later": "Partly aligned and still flagged in R7.",
+      "handling": "Inconsistency in citation, not a scientific disagreement. Unresolved at the end."
+    }
+  ],
+  "a5_summary": "No pair of incompatible positions between specialists was identified. On the main proportionality questions the specialists who addressed them stated compatible positions from round 1. The opposing views observed entered as counter-arguments that a specialist stated and answered after the Critic asked for them. One difference in the conditions for widening to genome-wide analysis could not be judged. PI open issues combined editorial clean-up with requests on assessment conditions, uncertainty handling and further evidence. Absence of observed dissent does not show that conformity was absent.",
+  "runs": {
+    "A_1": {
+      "open_issue_items_per_round": [
+        6,
+        5,
+        5,
+        4,
+        7,
+        7,
+        4
+      ],
+      "open_issue_items_total": 38,
+      "critic_cross_specialist_inconsistency_remarks": 3,
+      "remarks_by_keyword_category": {
+        "citation": 1,
+        "terminology or readability": 2
+      },
+      "remarks": [
+        {
+          "round": 3,
+          "category_by_keyword": "terminology or readability",
+          "text": "  Concrete actions: restructure the opening so that the common product-focused principle is stated first and each jurisdiction then illustrates one comparative point in its own short sentence; add a short passage on the 2023 European proposal and what its differentiated structure implies for the proportionality argument developed here; gloss plasmid (a small circular piece of DNA used to carry sequences into cells), allele (a naturally occurring version of a gene) and master regulator (a gene whose product controls the activity of many others); and add a clause qualifying the known-allele argument where background or dosage differs from prior experience, cross-referencing the Genetics treatment of that point."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: (a) 'promoter' appears in the variant-impact discussion without explanation even though the same term is glossed in another contribution, which will read inconsistently once the sections are combined; (b) the claim that a quiet digital map supports 'deferring broad, undirected testing' is well defended, but what a 'quiet' map means in interpretive terms — few candidates, none near functionally salient genes, none in edible tissues — is implied rather than stated in one place, so the reader assembles it from fragments; (c) the Codex reference is cited by code alone, so its subject is not recoverable from the text."
+        },
+        {
+          "round": 6,
+          "category_by_keyword": "terminology or readability",
+          "text": "First, when the sections are read as a single text a few acronyms and terms still arrive bare or are glossed inconsistently: 'GMO' is used in running prose in two sections without expansion; 'T-DNA' appears unexplained in the Regulatory delivery discussion; ''omics', 'multiplex designs' and 'analytes' are glossed in some sections but not in others; and 'promoter' now carries an identical parenthetical twice within one contribution."
+        }
+      ]
+    },
+    "A_2": {
+      "open_issue_items_per_round": [
+        3,
+        4,
+        3,
+        2,
+        2,
+        2,
+        3
+      ],
+      "open_issue_items_total": 19,
+      "critic_cross_specialist_inconsistency_remarks": 4,
+      "remarks_by_keyword_category": {
+        "citation": 3,
+        "terminology or readability": 1
+      },
+      "remarks": [
+        {
+          "round": 2,
+          "category_by_keyword": "citation",
+          "text": "The Codex citations use the older CAC/GL numbering with no document titles, so a non-specialist cannot tell which guidance covers plants, which covers microorganisms, and which sets general principles; this also creates an inconsistency with the numbering used by the other specialists."
+        },
+        {
+          "round": 3,
+          "category_by_keyword": "citation",
+          "text": "(2) Codex numbering is still split between CAC/GL and CXG conventions across the team; a single convention with a one-line explanation of what the code signifies, given once at document level, would remove the inconsistency."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the Codex code convention used here differs from that used by the other four contributions, so the explanation is attached to the minority convention and will need relocating at integration."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "terminology or readability",
+          "text": "The clustered-repeat nuclease name is expanded letter-for-letter but never described in a plain clause saying what it does, and base editors and prime editors are named without any indication of how they differ from a cutting nuclease — these are the two places where a non-specialist is most likely to stall."
+        }
+      ]
+    },
+    "A_3": {
+      "open_issue_items_per_round": [
+        9,
+        5,
+        3,
+        3,
+        2,
+        3,
+        3
+      ],
+      "open_issue_items_total": 28,
+      "critic_cross_specialist_inconsistency_remarks": 1,
+      "remarks_by_keyword_category": {
+        "citation": 1
+      },
+      "remarks": [
+        {
+          "round": 7,
+          "category_by_keyword": "citation",
+          "text": "Second, one verifiable citation inconsistency persists across accounts: the Canadian source is cited in the computational section as guidance on whether a plant is subject to the Seeds Regulations, Part V, while the toxicology, genetics and regulatory sections cite Health Canada guidance on the Novel Foods Regulations; these are different instruments issued under different mandates, and a single, correctly attributed entry should be settled before integration."
+        }
+      ]
+    },
+    "A_4": {
+      "open_issue_items_per_round": [
+        10,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3
+      ],
+      "open_issue_items_total": 23,
+      "critic_cross_specialist_inconsistency_remarks": 12,
+      "remarks_by_keyword_category": {
+        "citation": 12
+      },
+      "remarks": [
+        {
+          "round": 2,
+          "category_by_keyword": "citation",
+          "text": "(1) Citation consistency on Codex texts: the microorganism guideline is cited inconsistently across contributions (one refers to CXG 44-2003 as covering microorganisms, another correctly points to CAC/GL 46-2003 while treating CAC/GL 44-2003 as the general risk-analysis principles)."
+        },
+        {
+          "round": 2,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the Codex citations need checking — CXG 44-2003 is cited as the microorganism text, whereas the microorganism guideline is CAC/GL 46-2003 and CAC/GL 44-2003 is the general principles document; another contribution cites these correctly, so the merged text would contain an internal contradiction."
+        },
+        {
+          "round": 3,
+          "category_by_keyword": "citation",
+          "text": "(1) Codex numbering is still internally inconsistent: four contributions now correctly treat CAC/GL 44-2003 as the general risk-analysis principles, CAC/GL 45-2003 as plants, CAC/GL 46-2003 as microorganisms and CAC/GL 68-2008 as animals, but the genetics contribution attributes the microorganism material to CAC/GL 44-2003 and the animal material to CAC/GL 46-2003 throughout; this must be reconciled against a single agreed citation table or the merged text will contradict itself."
+        },
+        {
+          "round": 3,
+          "category_by_keyword": "citation",
+          "text": "Because the cross-species extension is one of the strongest new sections, resting it on misidentified documents weakens an otherwise sound interpretive chain, and it contradicts the numbering used by the other four contributions."
+        },
+        {
+          "round": 4,
+          "category_by_keyword": "citation",
+          "text": "The Health Canada 2022 title used here differs from the titles used by the risk and regulatory contributions for what appears to be the same body of guidance, and the 'FAO/WHO 2021' entry is described by subject rather than by a locatable title."
+        },
+        {
+          "round": 4,
+          "category_by_keyword": "citation",
+          "text": "The Health Canada 2022 title used here differs from the forms used by the bioinformatics and regulatory contributions, and the FAO/WHO 2023 item is given by descriptive title only."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "citation",
+          "text": "Likewise, the Health Canada 2022 guidance still appears under four different titles across the team, and the FAO/WHO expert-consultation items are given in two different forms; a single agreed citation table would remove the inconsistency."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the primary-literature citations (Kim 2019, Rees 2019, Kosicki 2018, Cullot 2019, Anzalone 2019) are identified by author, year and journal only, with no titles, which makes them harder to verify than the fully titled Codex and Health Canada entries in the same text; the Health Canada 2022 guidance is also given in a form that differs from the three other forms used across the team."
+        },
+        {
+          "round": 6,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the Health Canada 2022 entry is given in a form that differs from the three other forms used across the team, which will produce an internal inconsistency on merging."
+        },
+        {
+          "round": 6,
+          "category_by_keyword": "citation",
+          "text": "The Health Canada 2022 entry is given here in a form that differs from the three others used across the team, and the two United States entries, while now locatable, mix a formal rule citation with a programme name in the same bracket."
+        },
+        {
+          "round": 7,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the Health Canada 2022 entry is still given in a form that differs from the three other forms used across the team, so the merged document would contain an internal inconsistency on a source that carries the foreign-DNA distinction."
+        },
+        {
+          "round": 7,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: the Health Canada 2022 entry is given here in a fourth distinct form across the team, which is the only remaining internal inconsistency in an otherwise well-disciplined reference set."
+        }
+      ]
+    },
+    "A_5": {
+      "open_issue_items_per_round": [
+        4,
+        5,
+        10,
+        9,
+        4,
+        3,
+        4
+      ],
+      "open_issue_items_total": 39,
+      "critic_cross_specialist_inconsistency_remarks": 7,
+      "remarks_by_keyword_category": {
+        "citation": 6,
+        "terminology or readability": 1
+      },
+      "remarks": [
+        {
+          "round": 1,
+          "category_by_keyword": "citation",
+          "text": "Open items for the next round: (i) several contributions still carry graduate-level vocabulary without an accessible gloss (isogenic comparator, deaminase domain, paralog, isoform, polyploid, metabolic flux, 'molecular footprint', 'process signature'/'process fingerprint'), which is the most consistent weakness across the panel; (ii) alternative or competing interpretations are rarely surfaced — for example, the counter-argument that transient delivery does not fully exclude residual change, or that comparator variability ranges can mask trait-driven shifts, deserves explicit airing; (iii) one or two citations are vague or non-specific and would benefit from being tied to a concrete, identifiable source or dropped; (iv) the panel should align on a single shared vocabulary for the triggers that escalate analysis, since each specialist currently names them slightly differently, which risks internal inconsistency in the final document."
+        },
+        {
+          "round": 4,
+          "category_by_keyword": "citation",
+          "text": "(iii) Citation precision is close to settled, but two anchors are still loose: the EFSA document on SDN-1/SDN-2/ODM applicability is dated inconsistently across contributions (2020 in Toxicology, 2021 in Genetics and Bioinformatics, with a separate 2021 overview cited by Risk and Regulatory), and 'EFSA GMO guidance updates' remains an institution-level label."
+        },
+        {
+          "round": 4,
+          "category_by_keyword": "citation",
+          "text": "Aligning the date and title of that opinion across the panel would remove an avoidable internal inconsistency in the final document."
+        },
+        {
+          "round": 4,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: (1) 'provenance-tracked' survives in the toxin passage without explanation and belongs to the same family of compressed technical phrasing flagged earlier; (2) the EFSA opinion on SDN-1, SDN-2 and ODM is cited here with a date that differs from the form used by the toxicology layer, and 'EFSA GMO guidance updates' remains an institution-level label rather than a named document; (3) the alternative-interpretation layer is confined to the 'sequence everything by default' debate — the competing view that prediction-anchored searches systematically miss certain classes of unintended change, such as larger structural rearrangements or edits at sites with several mismatches, is mentioned only in passing and not weighed; (4) the discussion of when broad omics add clarity is sound but the counter-case, that an unexplained composition outlier might be better pursued through repeat compositional work than through a transcriptome or proteome survey, is not considered, leaving the omics-trigger argument slightly one-sided."
+        },
+        {
+          "round": 5,
+          "category_by_keyword": "terminology or readability",
+          "text": "\", 'Regulatory Specialist': \"What improved: the terminal glossary has been removed and the terms now live inline, the category-scaled dossier material is connected prose that argues why each element scales as it does rather than listing it, and the continuity-based protein reading is unpacked at first use so a non-specialist can see how it differs from the full novel-protein package."
+        },
+        {
+          "round": 6,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: (1) base-editor bystander changes and prime-editor nearby outcomes are explained in near-identical terms in the sequencing-plan paragraph and again in the later 'two editor-specific nuances' paragraph, so the same content appears twice in a piece that is otherwise tightly argued; (2) the EFSA opinion on SDN-1, SDN-2 and ODM is cited here under a year that differs from the form used by the toxicology and bioinformatics layers, where the applicability statement and the later overview of NGT opinions are kept apart as distinct documents; (3) the Japan reference is given as a year-range institutional label rather than a named notice, which sits below the precision of the Codex and EFSA anchors around it."
+        },
+        {
+          "round": 6,
+          "category_by_keyword": "citation",
+          "text": "  Remaining weaknesses: (1) the annex material is still presented as two bullet entries while the surrounding text is connected prose, so the document shifts register at the point where its most distinctive design choice is explained; (2) the EFSA opinion on SDN-1, SDN-2 and ODM is cited under a form that differs from the one the toxicology and bioinformatics layers have settled on, and the Health Canada and Japan references remain institution-plus-topic labels rather than named instruments; (3) the cross-category reach stays plant-centred — the scaffold is described in terms of plants, crops and regeneration, with no indication of how the core-plus-annex design would behave for an edited animal or a production microorganism, even though the risk layer shows that extension is straightforward."
+        }
+      ]
+    }
+  },
+  "counting_notes": {
+    "open_issue_items": "list entries in the Open Issues section of each round summary, summed over rounds; includes repeated entries and assigned actions, so not a count of distinct issues or of issues left at the end",
+    "critic_remarks": "automatic keyword extraction of candidate remarks on inconsistency between specialists; not validated, includes substantive review requests and praise; not reported as a statistic"
+  },
+  "status": "draft judgements by Claude; author confirmation pending"
+}

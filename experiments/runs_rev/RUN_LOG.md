@@ -200,3 +200,10 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Blinding note (Codex): the judging-kit code and the anonymization seed are in the public branch, so the R01–R10 mapping can be recomputed without the key. No further judging-related pushes until all judgements are final; judges to be asked to confirm they did not consult the repository.
 - `scripts/revision/build_si_tables.py` generates the new SI items (Note S1, Tables S7–S12) from the result files.
 - Decisions (2026-11-09, corresponding author): the judges do not know the repository address, so the repository stays public and pushes continue. Original-submission materials (experiments/runs run_1–5, the original analysis results, the preserved original prompts) are added to the data package with notes that per-round records were not kept and that identity of the preserved prompts with those used at the time is not confirmed.
+
+## 2026-11-09 — L6 dissent analysis (draft, author confirmation pending)
+
+- `scripts/revision/l6_dissent.py` → `results_v1/l6_dissent.json`, `l6_open_issues.csv`; SI Table S13 via `build_si_tables.py`.
+- A_5 (representative): no pair of incompatible positions between specialists identified. On the main proportionality questions, the specialists who addressed them held compatible positions from round 1. Opposing views entered only as counter-arguments a specialist stated and answered after the Critic noted one-directional contributions. One difference in conditions for widening to genome-wide analysis (R7 Risk example vs Genetics/Bioinformatics triggers) could not be judged. PI open issues combined editorial clean-up with requests on assessment conditions, uncertainty and evidence.
+- Open-issue list entries in PI summaries, A_1–A_5: 38, 19, 28, 23, 39 (147; entries repeat across rounds and include assigned actions; not distinct issues or disagreements). Keyword-extracted Critic remarks on inconsistency between specialists are unvalidated candidates and are not reported as a statistic.
+- Codex review applied (overstatements on Critic remarks and PI open issues removed; condition difference recorded; trace rows corrected).
