@@ -1,5 +1,5 @@
 # Baseline record (2026-11-05T08:37:06Z UTC)
-cwd: /c/Users/user/OneDrive/바탕 화면/배성우/projects/pjt-virtual_lab
+cwd: <repo>
 commit: ca4b833c8845f98db76213d40d5290d3acfd8684
 
 ## git status --short

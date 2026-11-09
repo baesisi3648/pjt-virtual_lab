@@ -79,7 +79,7 @@ docker-compose --version
 ### 3.1 저장소 이동
 
 ```bash
-cd C:\Users\배성우\Desktop\pjt-virtual_lab
+cd <repo>
 ```
 
 ### 3.2 Python 가상환경 생성 및 활성화

@@ -296,7 +296,7 @@ P0-T5 태스크가 성공적으로 완료되었습니다.
 - Docker 설치 또는 Redis 직접 설치 후 실행 가능합니다.
 
 ### 파일 작업 위치 확인
-모든 파일이 `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-0-setup\` 디렉토리에 올바르게 생성되었습니다.
+모든 파일이 `<repo>\worktree\phase-0-setup\` 디렉토리에 올바르게 생성되었습니다.
 
 ---
 

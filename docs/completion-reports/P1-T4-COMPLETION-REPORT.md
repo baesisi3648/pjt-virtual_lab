@@ -151,15 +151,15 @@ python test_scientist_rag_simple.py
 ## Files Created/Modified
 
 ### Created
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\tools\__init__.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\tools\rag_search.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\tests\test_agent_rag_integration.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\test_scientist_rag_simple.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\verify_scientist_rag.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\demo_scientist_rag.py`
+- `<repo>\worktree\phase-1-rag\tools\__init__.py`
+- `<repo>\worktree\phase-1-rag\tools\rag_search.py`
+- `<repo>\worktree\phase-1-rag\tests\test_agent_rag_integration.py`
+- `<repo>\worktree\phase-1-rag\test_scientist_rag_simple.py`
+- `<repo>\worktree\phase-1-rag\verify_scientist_rag.py`
+- `<repo>\worktree\phase-1-rag\demo_scientist_rag.py`
 
 ### Modified
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-1-rag\agents\scientist.py`
+- `<repo>\worktree\phase-1-rag\agents\scientist.py`
   - Import: `from tools.rag_search import rag_search_tool`
   - Logic: `.bind_tools([rag_search_tool])`
   - Tool calling loop (max 3 iterations)

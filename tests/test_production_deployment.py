@@ -17,7 +17,7 @@ import time
 import httpx
 
 
-WORKTREE_ROOT = "C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs"
+WORKTREE_ROOT = "<repo>/worktree/phase-4-nextjs"
 
 
 def test_docker_compose_prod_exists():

@@ -132,7 +132,7 @@ worktree/phase-4-nextjs/
 
 ### 1. Backend Test
 ```bash
-cd /c/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs
+cd <repo>/worktree/phase-4-nextjs
 
 # Start FastAPI server
 uvicorn server:app --reload --port 8000
@@ -177,7 +177,7 @@ P4-T2: SSE Timeline 검증
 
 ### 2. Frontend Test
 ```bash
-cd /c/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs/frontend
+cd <repo>/worktree/phase-4-nextjs/frontend
 
 # Start Next.js dev server
 npm run dev

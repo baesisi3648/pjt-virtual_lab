@@ -87,16 +87,16 @@ $ pytest tests/test_pi_decision.py tests/test_pi_decision_integration.py -v
 ## 구현 파일 목록
 
 ### 핵심 구현
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-3-api-ui\agents\pi.py`
+- `<repo>\worktree\phase-3-api-ui\agents\pi.py`
   - `decide_team()` 함수 추가
   - `TEAM_DECISION_PROMPT` 상수 추가
 
 ### 테스트
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-3-api-ui\tests\test_pi_decision.py`
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-3-api-ui\tests\test_pi_decision_integration.py`
+- `<repo>\worktree\phase-3-api-ui\tests\test_pi_decision.py`
+- `<repo>\worktree\phase-3-api-ui\tests\test_pi_decision_integration.py`
 
 ### 예제
-- `C:\Users\배성우\Desktop\pjt-virtual_lab\worktree\phase-3-api-ui\examples\pi_decision_example.py`
+- `<repo>\worktree\phase-3-api-ui\examples\pi_decision_example.py`
 
 ## 검증 기준 충족 여부
 

@@ -1,4 +1,4 @@
-C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\venv\Lib\site-packages\pytest_asyncio\plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+<repo>\venv\Lib\site-packages\pytest_asyncio\plugin.py:300: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
 The event loop scope for asynchronous fixtures will default to the "fixture" caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to "function" scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
 
   warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
@@ -14,7 +14,7 @@ tests\test_factory.py:20: in <module>
     ???
 <frozen importlib._bootstrap_external>:1190: in get_data
     ???
-E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/factory.py'
+E   FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-3-api-ui/agents/factory.py'
 _____________ ERROR collecting tests/test_factory_integration.py ______________
 tests\test_factory_integration.py:17: in <module>
     _spec.loader.exec_module(_factory)
@@ -24,7 +24,7 @@ tests\test_factory_integration.py:17: in <module>
     ???
 <frozen importlib._bootstrap_external>:1190: in get_data
     ???
-E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/factory.py'
+E   FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-3-api-ui/agents/factory.py'
 _________________ ERROR collecting tests/test_pi_decision.py __________________
 tests\test_pi_decision.py:20: in <module>
     _spec.loader.exec_module(_pi)
@@ -34,7 +34,7 @@ tests\test_pi_decision.py:20: in <module>
     ???
 <frozen importlib._bootstrap_external>:1190: in get_data
     ???
-E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/pi.py'
+E   FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-3-api-ui/agents/pi.py'
 ___________ ERROR collecting tests/test_pi_decision_integration.py ____________
 tests\test_pi_decision_integration.py:30: in <module>
     _spec.loader.exec_module(_pi)
@@ -44,7 +44,7 @@ tests\test_pi_decision_integration.py:30: in <module>
     ???
 <frozen importlib._bootstrap_external>:1190: in get_data
     ???
-E   FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/pi.py'
+E   FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-3-api-ui/agents/pi.py'
 ================================== FAILURES ===================================
 _______________ TestRAGSearchTool.test_rag_search_tool_success ________________
 
@@ -96,7 +96,7 @@ self = <unittest.mock._patch object at 0x0000020148847500>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+E           AttributeError: <module 'tools.rag_search' from '<repo>\\tools\\rag_search.py'> does not have the attribute 'retrieve'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestRAGSearchTool.test_rag_search_tool_no_results ______________
@@ -149,7 +149,7 @@ self = <unittest.mock._patch object at 0x00000201488477D0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+E           AttributeError: <module 'tools.rag_search' from '<repo>\\tools\\rag_search.py'> does not have the attribute 'retrieve'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestRAGSearchTool.test_rag_search_tool_exception _______________
@@ -202,7 +202,7 @@ self = <unittest.mock._patch object at 0x0000020148C78770>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'tools.rag_search' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\tools\\rag_search.py'> does not have the attribute 'retrieve'
+E           AttributeError: <module 'tools.rag_search' from '<repo>\\tools\\rag_search.py'> does not have the attribute 'retrieve'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 __________________ TestScientist.test_returns_draft_in_state __________________
@@ -255,7 +255,7 @@ self = <unittest.mock._patch object at 0x0000020148E431D0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestScientist.test_includes_guidelines_in_prompt _______________
@@ -308,7 +308,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3380>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ___________________ TestScientist.test_adds_message_to_log ____________________
@@ -361,7 +361,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3410>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestScientist.test_incorporates_critique_feedback ______________
@@ -414,7 +414,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3CE0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ____________ TestScientist.test_does_not_mutate_original_messages _____________
@@ -467,7 +467,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3560>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ___________________ TestCritic.test_returns_critique_result ___________________
@@ -520,7 +520,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3680>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 __________________ TestCritic.test_includes_rubric_in_prompt __________________
@@ -573,7 +573,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3740>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestCritic.test_revise_decision_includes_feedback ______________
@@ -626,7 +626,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3800>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 __________________ TestCritic.test_approve_decision_message ___________________
@@ -679,7 +679,7 @@ self = <unittest.mock._patch object at 0x0000020148ED38C0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestCritic.test_invalid_json_defaults_to_approve _______________
@@ -732,7 +732,7 @@ self = <unittest.mock._patch object at 0x0000020148ED38F0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ____________________ TestCritic.test_scores_are_preserved _____________________
@@ -785,7 +785,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3B30>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestCritic.test_does_not_mutate_original_messages ______________
@@ -838,7 +838,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3C20>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _______________ TestCritic.test_merge_views_removes_duplicates ________________
@@ -848,7 +848,7 @@ self = <tests.test_agents.TestCritic object at 0x0000020148F11670>
     def test_merge_views_removes_duplicates(self):
         """중복된 의견을 제거해야 한다."""
 >       from agents.critic import merge_views
-E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (<repo>\agents\critic.py)
 
 tests\test_agents.py:341: ImportError
 ___________ TestCritic.test_merge_views_selects_conservative_safety ___________
@@ -858,7 +858,7 @@ self = <tests.test_agents.TestCritic object at 0x0000020148F11940>
     def test_merge_views_selects_conservative_safety(self):
         """가장 보수적인 안전 기준을 선택해야 한다."""
 >       from agents.critic import merge_views
-E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (<repo>\agents\critic.py)
 
 tests\test_agents.py:355: ImportError
 ___________ TestCritic.test_merge_views_rejects_unfounded_opinions ____________
@@ -868,7 +868,7 @@ self = <tests.test_agents.TestCritic object at 0x0000020148F11C10>
     def test_merge_views_rejects_unfounded_opinions(self):
         """근거 없는 의견을 기각해야 한다."""
 >       from agents.critic import merge_views
-E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (<repo>\agents\critic.py)
 
 tests\test_agents.py:368: ImportError
 ________________ TestCritic.test_merge_views_handles_conflicts ________________
@@ -878,7 +878,7 @@ self = <tests.test_agents.TestCritic object at 0x0000020148F11EE0>
     def test_merge_views_handles_conflicts(self):
         """상충되는 의견을 합리적으로 해결해야 한다."""
 >       from agents.critic import merge_views
-E       ImportError: cannot import name 'merge_views' from 'agents.critic' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\critic.py)
+E       ImportError: cannot import name 'merge_views' from 'agents.critic' (<repo>\agents\critic.py)
 
 tests\test_agents.py:382: ImportError
 ______________________ TestPI.test_returns_final_report _______________________
@@ -930,7 +930,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3D40>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _______________________ TestPI.test_formats_as_markdown _______________________
@@ -982,7 +982,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3E00>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _______________________ TestPI.test_appends_pi_message ________________________
@@ -1034,7 +1034,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3EC0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 __________________ TestPI.test_passes_topic_and_draft_to_llm __________________
@@ -1086,7 +1086,7 @@ self = <unittest.mock._patch object at 0x0000020148ED3F80>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ________________ TestPI.test_does_not_mutate_original_messages ________________
@@ -1138,7 +1138,7 @@ self = <unittest.mock._patch object at 0x0000020148F10080>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ____________________ test_config_loads_with_valid_env_vars ____________________
@@ -1291,7 +1291,7 @@ self = <unittest.mock._patch object at 0x0000020148F13650>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestE2EWorkflow.test_full_pipeline_with_revision _______________
@@ -1344,7 +1344,7 @@ self = <unittest.mock._patch object at 0x000002014943F710>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _______________ TestE2EFastAPI.test_api_returns_valid_response ________________
@@ -1435,7 +1435,7 @@ self = <unittest.mock._patch object at 0x000002014943F8F0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ____________________ TestGetGPT4o.test_returns_chat_model _____________________
@@ -1445,7 +1445,7 @@ self = <tests.test_llm.TestGetGPT4o object at 0x000002014946A870>
     @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
     def test_returns_chat_model(self):
 >       from utils.llm import get_gpt4o
-E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (<repo>\utils\llm.py)
 
 tests\test_llm.py:13: ImportError
 ____________________ TestGetGPT4o.test_model_name_is_gpt4o ____________________
@@ -1455,7 +1455,7 @@ self = <tests.test_llm.TestGetGPT4o object at 0x000002014946A360>
     @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
     def test_model_name_is_gpt4o(self):
 >       from utils.llm import get_gpt4o
-E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (<repo>\utils\llm.py)
 
 tests\test_llm.py:19: ImportError
 ____________________ TestGetGPT4o.test_temperature_is_set _____________________
@@ -1465,7 +1465,7 @@ self = <tests.test_llm.TestGetGPT4o object at 0x0000020149469E80>
     @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
     def test_temperature_is_set(self):
 >       from utils.llm import get_gpt4o
-E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (<repo>\utils\llm.py)
 
 tests\test_llm.py:25: ImportError
 __________________ TestGetGPT4oMini.test_returns_chat_model ___________________
@@ -1475,7 +1475,7 @@ self = <tests.test_llm.TestGetGPT4oMini object at 0x00000201494687D0>
     @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
     def test_returns_chat_model(self):
 >       from utils.llm import get_gpt4o_mini
-E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
+E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (<repo>\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
 
 tests\test_llm.py:35: ImportError
 _______________ TestGetGPT4oMini.test_model_name_is_gpt4o_mini ________________
@@ -1485,7 +1485,7 @@ self = <tests.test_llm.TestGetGPT4oMini object at 0x0000020149468500>
     @patch.dict("os.environ", {"OPENAI_API_KEY": "sk-test-key"})
     def test_model_name_is_gpt4o_mini(self):
 >       from utils.llm import get_gpt4o_mini
-E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
+E       ImportError: cannot import name 'get_gpt4o_mini' from 'utils.llm' (<repo>\utils\llm.py). Did you mean: 'call_gpt4o_mini'?
 
 tests\test_llm.py:41: ImportError
 ______________ TestAPIKeyValidation.test_raises_without_api_key _______________
@@ -1499,7 +1499,7 @@ self = <tests.test_llm.TestAPIKeyValidation object at 0x000002014946B200>
         import utils.llm
         importlib.reload(utils.llm)
 >       from utils.llm import get_gpt4o
-E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\utils\llm.py)
+E       ImportError: cannot import name 'get_gpt4o' from 'utils.llm' (<repo>\utils\llm.py)
 
 tests\test_llm.py:55: ImportError
 _______________________ test_docker_compose_prod_exists _______________________
@@ -1510,7 +1510,7 @@ _______________________ test_docker_compose_prod_exists _______________________
 >       assert os.path.exists(compose_file), "docker-compose.prod.yml should exist"
 E       AssertionError: docker-compose.prod.yml should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\docker-compose.prod.yml')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\docker-compose.prod.yml')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1523,7 +1523,7 @@ __________________________ test_nginx_config_exists ___________________________
 >       assert os.path.exists(nginx_config), "nginx/nginx.conf should exist"
 E       AssertionError: nginx/nginx.conf should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\nginx\\nginx.conf')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\nginx\\nginx.conf')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1536,7 +1536,7 @@ ______________________ test_env_validation_script_exists ______________________
 >       assert os.path.exists(validation_script), "scripts/validate_env.py should exist"
 E       AssertionError: scripts/validate_env.py should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\scripts\\validate_env.py')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\scripts\\validate_env.py')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1549,7 +1549,7 @@ _____________________ test_docker_compose_prod_structure ______________________
     
 >       with open(compose_file, 'r') as f:
              ^^^^^^^^^^^^^^^^^^^^^^^
-E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\docker-compose.prod.yml'
+E       FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-4-nextjs\\docker-compose.prod.yml'
 
 tests\test_production_deployment.py:45: FileNotFoundError
 _________________________ test_nginx_config_structure _________________________
@@ -1560,7 +1560,7 @@ _________________________ test_nginx_config_structure _________________________
     
 >       with open(nginx_config, 'r') as f:
              ^^^^^^^^^^^^^^^^^^^^^^^
-E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\nginx\\nginx.conf'
+E       FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-4-nextjs\\nginx\\nginx.conf'
 
 tests\test_production_deployment.py:67: FileNotFoundError
 ____________________ test_env_validation_script_structure _____________________
@@ -1571,7 +1571,7 @@ ____________________ test_env_validation_script_structure _____________________
     
 >       with open(validation_script, 'r') as f:
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\scripts\\validate_env.py'
+E       FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-4-nextjs\\scripts\\validate_env.py'
 
 tests\test_production_deployment.py:83: FileNotFoundError
 _______________________ test_frontend_dockerfile_exists _______________________
@@ -1582,7 +1582,7 @@ _______________________ test_frontend_dockerfile_exists _______________________
 >       assert os.path.exists(frontend_dockerfile), "frontend/Dockerfile should exist"
 E       AssertionError: frontend/Dockerfile should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\frontend\\Dockerfile')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\frontend\\Dockerfile')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1595,7 +1595,7 @@ _______________________ test_backend_dockerfile_exists ________________________
 >       assert os.path.exists(backend_dockerfile), "Backend Dockerfile should exist"
 E       AssertionError: Backend Dockerfile should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\Dockerfile')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\Dockerfile')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1608,7 +1608,7 @@ _____________________ test_frontend_dockerfile_multistage _____________________
     
 >       with open(frontend_dockerfile, 'r') as f:
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\frontend\\Dockerfile'
+E       FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-4-nextjs\\frontend\\Dockerfile'
 
 tests\test_production_deployment.py:111: FileNotFoundError
 _____________________ test_production_env_example_exists ______________________
@@ -1619,7 +1619,7 @@ _____________________ test_production_env_example_exists ______________________
 >       assert os.path.exists(env_example), ".env.production.example should exist"
 E       AssertionError: .env.production.example should exist
 E       assert False
-E        +  where False = <built-in function _path_exists>('C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\.env.production.example')
+E        +  where False = <built-in function _path_exists>('<repo>/worktree/phase-4-nextjs\\.env.production.example')
 E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
 E        +      where <module 'ntpath' (frozen)> = os.path
 
@@ -1632,7 +1632,7 @@ ____________________ test_production_env_example_structure ____________________
     
 >       with open(env_example, 'r') as f:
              ^^^^^^^^^^^^^^^^^^^^^^
-E       FileNotFoundError: [Errno 2] No such file or directory: 'C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-4-nextjs\\.env.production.example'
+E       FileNotFoundError: [Errno 2] No such file or directory: '<repo>/worktree/phase-4-nextjs\\.env.production.example'
 
 tests\test_production_deployment.py:130: FileNotFoundError
 ______________________ TestRetriever.test_retrieve_basic ______________________
@@ -2118,10 +2118,10 @@ tests\test_server.py:204: AssertionError
   Exception message: Object of type Mock is not JSON serializable
   Traceback:
 Traceback (most recent call last):
-  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 561, in generate_research_events
+  File "<repo>\server.py", line 561, in generate_research_events
     yield send_event("decision", event_data)
           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 407, in send_event
+  File "<repo>\server.py", line 407, in send_event
     return f"data: {json.dumps(event_data, ensure_ascii=False)}\n\n"
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\__init__.py", line 238, in dumps
@@ -2141,10 +2141,10 @@ TypeError: Object of type Mock is not JSON serializable
 
 ------------------------------ Captured log call ------------------------------
 ERROR    sse:server.py:728 SSE Error: Traceback (most recent call last):
-  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 561, in generate_research_events
+  File "<repo>\server.py", line 561, in generate_research_events
     yield send_event("decision", event_data)
           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\server.py", line 407, in send_event
+  File "<repo>\server.py", line 407, in send_event
     return f"data: {json.dumps(event_data, ensure_ascii=False)}\n\n"
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\json\__init__.py", line 238, in dumps
@@ -2311,7 +2311,7 @@ self = <unittest.mock._patch object at 0x000002014B8B55E0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.scientist' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
+E           AttributeError: <module 'agents.scientist' from '<repo>\\agents\\scientist.py'> does not have the attribute 'get_gpt4o_mini'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _____________ TestCriticWebSearch.test_critic_can_use_web_search ______________
@@ -2364,7 +2364,7 @@ self = <unittest.mock._patch object at 0x000002014B9FB0E0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.critic' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.critic' from '<repo>\\agents\\critic.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 _________________ TestPIWebSearch.test_pi_can_use_web_search __________________
@@ -2417,7 +2417,7 @@ self = <unittest.mock._patch object at 0x000002014B9FB6E0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 __ TestWebSearchSystemPrompts.test_scientist_prompt_includes_search_guidance __
@@ -2427,7 +2427,7 @@ self = <tests.test_web_search_integration.TestWebSearchSystemPrompts object at 0
     def test_scientist_prompt_includes_search_guidance(self):
         """Scientist의 System Prompt에 web_search 사용 지침이 있어야 한다."""
 >       from agents.scientist import SYSTEM_PROMPT
-E       ImportError: cannot import name 'SYSTEM_PROMPT' from 'agents.scientist' (C:\Users\user\OneDrive\바탕 화면\배성우\projects\pjt-virtual_lab\agents\scientist.py)
+E       ImportError: cannot import name 'SYSTEM_PROMPT' from 'agents.scientist' (<repo>\agents\scientist.py)
 
 tests\test_web_search_integration.py:170: ImportError
 ___ TestWebSearchSystemPrompts.test_critic_prompt_includes_search_guidance ____
@@ -2504,7 +2504,7 @@ self = <unittest.mock._patch object at 0x000002014BA48650>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ______________ TestWorkflowRevisionLoop.test_revise_then_approve ______________
@@ -2557,7 +2557,7 @@ self = <unittest.mock._patch object at 0x000002014BA4B7D0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 ___________ TestWorkflowMaxIterations.test_stops_at_max_iterations ____________
@@ -2610,7 +2610,7 @@ self = <unittest.mock._patch object at 0x000002014BA48FE0>
 >           raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             )
-E           AttributeError: <module 'agents.pi' from 'C:\\Users\\user\\OneDrive\\바탕 화면\\배성우\\projects\\pjt-virtual_lab\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
+E           AttributeError: <module 'agents.pi' from '<repo>\\agents\\pi.py'> does not have the attribute 'get_gpt4o'
 
 C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py:1437: AttributeError
 =========================== short test summary info ===========================

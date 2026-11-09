@@ -119,7 +119,7 @@ worktree/phase-0-setup/
 
 1. **Start Services**
    ```bash
-   cd C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-0-setup
+   cd <repo>/worktree/phase-0-setup
    docker compose up -d
    ```
 

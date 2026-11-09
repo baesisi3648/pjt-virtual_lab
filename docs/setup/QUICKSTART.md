@@ -10,7 +10,7 @@
 
 ```bash
 # 프로젝트 디렉토리로 이동
-cd C:\Users\배성우\Desktop\pjt-virtual_lab
+cd <repo>
 
 # 가상환경 생성 및 활성화 (Windows)
 python -m venv venv

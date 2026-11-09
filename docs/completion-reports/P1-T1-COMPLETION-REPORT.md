@@ -183,17 +183,17 @@ print(f"Collection count: {collection.count()}")  # 0 (초기 상태)
 ## 생성된 파일 경로
 
 ### RAG 모듈
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/rag/__init__.py`
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/rag/config.py`
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/rag/chroma_client.py`
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/rag/embeddings.py`
+- `<repo>/worktree/phase-1-rag/rag/__init__.py`
+- `<repo>/worktree/phase-1-rag/rag/config.py`
+- `<repo>/worktree/phase-1-rag/rag/chroma_client.py`
+- `<repo>/worktree/phase-1-rag/rag/embeddings.py`
 
 ### 검증 스크립트
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/verify_rag_structure.py`
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/test_rag_setup.py`
+- `<repo>/worktree/phase-1-rag/verify_rag_structure.py`
+- `<repo>/worktree/phase-1-rag/test_rag_setup.py`
 
 ### 설정 파일
-- `C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/config.py` (RAG 설정 추가)
+- `<repo>/worktree/phase-1-rag/config.py` (RAG 설정 추가)
 
 ---
 

@@ -14,7 +14,7 @@ from unittest.mock import Mock, patch
 # 순환 import 방지를 위해 직접 파일에서 로드
 _spec = importlib.util.spec_from_file_location(
     "agents_pi",
-    "C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/pi.py"
+    "<repo>/worktree/phase-3-api-ui/agents/pi.py"
 )
 _pi = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_pi)
@@ -188,7 +188,7 @@ class TestPITeamDecisionIntegration:
         # factory 모듈 로드
         _spec_factory = importlib.util.spec_from_file_location(
             "agents_factory",
-            "C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-3-api-ui/agents/factory.py"
+            "<repo>/worktree/phase-3-api-ui/agents/factory.py"
         )
         _factory = importlib.util.module_from_spec(_spec_factory)
         _spec_factory.loader.exec_module(_factory)

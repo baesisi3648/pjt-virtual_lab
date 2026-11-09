@@ -48,7 +48,7 @@ def demo_with_mock_rag():
         import importlib.util
         spec = importlib.util.spec_from_file_location(
             "scientist",
-            "C:/Users/배성우/Desktop/pjt-virtual_lab/worktree/phase-1-rag/agents/scientist.py"
+            "<repo>/worktree/phase-1-rag/agents/scientist.py"
         )
         scientist_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(scientist_module)
