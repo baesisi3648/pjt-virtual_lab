@@ -88,3 +88,6 @@ experiments/runs_rev/pilot_v1_logs/
 experiments/runs_rev/main_v1/
 experiments/runs_rev/main_v1_logs/
 experiments/runs_rev/results_v1/extracted/
+
+# public data package built locally (scripts/revision/build_release.py)
+release/
