@@ -37,6 +37,10 @@ SOURCES = ["main_v1", "main_v1_logs", "pilot_v1", "pilot_v1_logs", "main", "main
            "retrieval_snapshot.json", "retrieval_snapshot_v1.json",
            "retrieval_snapshot_v1_first_top5_unused.json", "retrieval_snapshot_v1_float_pages_unused.json"]
 SNAPSHOTS = [s for s in SOURCES if s.startswith("retrieval_snapshot")]
+# Original submission (decision D3, 2026-11-09): the five original runs (final reports, message previews, scores,
+# meta; no per-round records were kept), the original analysis results, and the preserved original prompts
+# (current copy; identity with the prompts used at the time is not confirmed). Paths relative to the repository root.
+ORIGINAL = ["experiments/runs", "experiments/reproducibility/results", "prompts"]
 TEXT_SUFFIXES = {".json", ".jsonl", ".md", ".log", ".txt", ".csv", ".html"}
 OUTPUT_FILES = {"conversations.json", "messages.json", "critic_scores.json", "final_report.md", "final_report.ko.md",
                 "team_selection.json"}
@@ -159,6 +163,15 @@ repository root so that the files land in `experiments/runs_rev/`.
 - `retrieval_snapshot*.json` — the fixed retrieval inputs (v1 used in the main runs; v0 for the replaced set; two
   unused v1 variants that document the change of the RAG selection rule).
 
+## Original submission
+- `experiments/runs/run_1` … `run_5` — the five runs reported in the original submission: final reports, message
+  previews, Critic scores and run metadata. Complete per-round records, call logs and response model identifiers were
+  not kept for these runs.
+- `experiments/reproducibility/results/` — the original similarity and Critic-score analysis.
+- `prompts/` — the original prompt set as preserved in the repository. Whether it is identical to the prompts used at
+  the time of the original runs cannot be confirmed. The changes made for the revision are listed in Supplementary
+  Table S11 and as patches in `experiments/runs_rev/prompt_sets/` (code repository).
+
 ## Removed third-party text
 Retrieval results (web pages, EFSA Journal records and RAG chunks of regulatory documents) are third-party text under
 different terms. They were removed where they were injected, namely in the snapshot files and in the `system_prompt` and
@@ -191,7 +204,7 @@ def main() -> int:
     a = ap.parse_args()
     out = (ROOT / a.out).resolve()
     tmp = out.with_name(out.name + ".building")
-    missing = [s for s in SOURCES if not (RUNS / s).exists()]
+    missing = [s for s in SOURCES if not (RUNS / s).exists()] + [s for s in ORIGINAL if not (ROOT / s).exists()]
     if missing:
         print("missing inputs:", missing)
         return 1
@@ -238,12 +251,12 @@ def main() -> int:
         return clean_path(obj) if isinstance(obj, str) else obj
 
     files, problems, quoted = [], [], []
-    for src in SOURCES:
-        base = RUNS / src
+    bases = [(s, RUNS / s) for s in SOURCES] + [(s, ROOT / s) for s in ORIGINAL]
+    for src, base in bases:
         items = [base] if base.is_file() else sorted(p for p in base.rglob("*") if p.is_file())
         for p in items:
-            rel = p.relative_to(RUNS)
-            dst = tmp / "experiments" / "runs_rev" / rel
+            rel = p.relative_to(ROOT)
+            dst = tmp / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
             raw = p.read_bytes()
             pub = raw
@@ -287,7 +300,7 @@ def main() -> int:
                     problems.append(f"local path in {rel}")
                 pub = t2.encode("utf-8")
             dst.write_bytes(pub)
-            files.append({"path": str(Path("experiments/runs_rev") / rel).replace("\\", "/"),
+            files.append({"path": str(rel).replace("\\", "/"),
                           "sha256": sha(pub), "original_sha256": sha(raw), "modified": pub != raw})
     (tmp / "DATA_README.md").write_text(DATA_README, encoding="utf-8")
     commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
