@@ -1,0 +1,957 @@
+{
+ "completeness": {
+  "status_cells": 300,
+  "cause_cells": 0,
+  "location_cells": 0,
+  "critical_case_rows": 0,
+  "ai_addition_rows": 0,
+  "normalisation_rows": 0,
+  "l4_rows_judged": 0,
+  "l4_rows": 340
+ },
+ "overall": {
+  "n": 300,
+  "counts": {
+   "일치": 176,
+   "부분": 76,
+   "누락": 44,
+   "상충": 4,
+   "범위 밖": 0
+  },
+  "conformity": 0.7133333333333334,
+  "strict": 0.5866666666666667
+ },
+ "per_report": {
+  "R01": {
+   "n": 30,
+   "counts": {
+    "일치": 18,
+    "부분": 11,
+    "누락": 1,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7833333333333333,
+   "strict": 0.6
+  },
+  "R02": {
+   "n": 30,
+   "counts": {
+    "일치": 17,
+    "부분": 10,
+    "누락": 3,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7333333333333333,
+   "strict": 0.5666666666666667
+  },
+  "R03": {
+   "n": 30,
+   "counts": {
+    "일치": 15,
+    "부분": 10,
+    "누락": 4,
+    "상충": 1,
+    "범위 밖": 0
+   },
+   "conformity": 0.6666666666666666,
+   "strict": 0.5
+  },
+  "R04": {
+   "n": 30,
+   "counts": {
+    "일치": 15,
+    "부분": 11,
+    "누락": 4,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.6833333333333333,
+   "strict": 0.5
+  },
+  "R05": {
+   "n": 30,
+   "counts": {
+    "일치": 21,
+    "부분": 5,
+    "누락": 3,
+    "상충": 1,
+    "범위 밖": 0
+   },
+   "conformity": 0.7833333333333333,
+   "strict": 0.7
+  },
+  "R06": {
+   "n": 30,
+   "counts": {
+    "일치": 15,
+    "부분": 9,
+    "누락": 5,
+    "상충": 1,
+    "범위 밖": 0
+   },
+   "conformity": 0.65,
+   "strict": 0.5
+  },
+  "R07": {
+   "n": 30,
+   "counts": {
+    "일치": 20,
+    "부분": 5,
+    "누락": 5,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.75,
+   "strict": 0.6666666666666666
+  },
+  "R08": {
+   "n": 30,
+   "counts": {
+    "일치": 18,
+    "부분": 6,
+    "누락": 6,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7,
+   "strict": 0.6
+  },
+  "R09": {
+   "n": 30,
+   "counts": {
+    "일치": 19,
+    "부분": 6,
+    "누락": 5,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7333333333333333,
+   "strict": 0.6333333333333333
+  },
+  "R10": {
+   "n": 30,
+   "counts": {
+    "일치": 18,
+    "부분": 3,
+    "누락": 8,
+    "상충": 1,
+    "범위 밖": 0
+   },
+   "conformity": 0.65,
+   "strict": 0.6
+  }
+ },
+ "per_report_conformity": {
+  "median": 0.7166666666666666,
+  "min": 0.65,
+  "max": 0.7833333333333333
+ },
+ "per_item": {
+  "CB01": {
+   "area": "Classification",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 10,
+    "부분": 0,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 1.0,
+   "strict": 1.0
+  },
+  "CB02": {
+   "area": "Host plant",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 3,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.85,
+   "strict": 0.7
+  },
+  "CB03": {
+   "area": "Molecular characterisation",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 10,
+    "부분": 0,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 1.0,
+   "strict": 1.0
+  },
+  "CB04": {
+   "area": "Molecular characterisation",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 1,
+    "부분": 3,
+    "누락": 2,
+    "상충": 4,
+    "범위 밖": 0
+   },
+   "conformity": 0.25,
+   "strict": 0.1
+  },
+  "CB05": {
+   "area": "Molecular characterisation",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 0,
+    "부분": 6,
+    "누락": 4,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.3,
+   "strict": 0.0
+  },
+  "CB06": {
+   "area": "Molecular characterisation",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 8,
+    "부분": 2,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.9,
+   "strict": 0.8
+  },
+  "CB07": {
+   "area": "Molecular characterisation",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 3,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.85,
+   "strict": 0.7
+  },
+  "CB08": {
+   "area": "Molecular characterisation",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 5,
+    "부분": 5,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.75,
+   "strict": 0.5
+  },
+  "CB09": {
+   "area": "Expressed substances",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 10,
+    "부분": 0,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 1.0,
+   "strict": 1.0
+  },
+  "CB10": {
+   "area": "Molecular characterisation",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 9,
+    "부분": 1,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.95,
+   "strict": 0.9
+  },
+  "CB11": {
+   "area": "Unintended effects",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 10,
+    "부분": 0,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 1.0,
+   "strict": 1.0
+  },
+  "CB12": {
+   "area": "Allele function",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 3,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.85,
+   "strict": 0.7
+  },
+  "CB13": {
+   "area": "History of safe use",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 5,
+    "부분": 3,
+    "누락": 2,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.65,
+   "strict": 0.5
+  },
+  "CB14": {
+   "area": "Allele function",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 0,
+    "부분": 4,
+    "누락": 6,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.2,
+   "strict": 0.0
+  },
+  "CB15": {
+   "area": "Toxicity",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 8,
+    "부분": 2,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.9,
+   "strict": 0.8
+  },
+  "CB16": {
+   "area": "Toxicity",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 10,
+    "부분": 0,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 1.0,
+   "strict": 1.0
+  },
+  "CB17": {
+   "area": "Metabolites",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 3,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.85,
+   "strict": 0.7
+  },
+  "CB18": {
+   "area": "Donor",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 5,
+    "부분": 4,
+    "누락": 1,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7,
+   "strict": 0.5
+  },
+  "CB19": {
+   "area": "Allergenicity",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 9,
+    "부분": 1,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.95,
+   "strict": 0.9
+  },
+  "CB20": {
+   "area": "Allergenicity",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 3,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.85,
+   "strict": 0.7
+  },
+  "CB21": {
+   "area": "Allergenicity",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 0,
+    "부분": 1,
+    "누락": 9,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.05,
+   "strict": 0.0
+  },
+  "CB22": {
+   "area": "Comparative analysis",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 8,
+    "부분": 2,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.9,
+   "strict": 0.8
+  },
+  "CB23": {
+   "area": "Comparative analysis",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 1,
+    "부분": 3,
+    "누락": 6,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.25,
+   "strict": 0.1
+  },
+  "CB24": {
+   "area": "Comparative analysis",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 7,
+    "부분": 2,
+    "누락": 1,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.8,
+   "strict": 0.7
+  },
+  "CB25": {
+   "area": "Processing",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 9,
+    "부분": 1,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.95,
+   "strict": 0.9
+  },
+  "CB26": {
+   "area": "Nutrition and exposure",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 3,
+    "부분": 7,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.65,
+   "strict": 0.3
+  },
+  "CB27": {
+   "area": "Multiple modifications",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 5,
+    "부분": 4,
+    "누락": 1,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7,
+   "strict": 0.5
+  },
+  "CB28": {
+   "area": "Whole food studies",
+   "critical": true,
+   "n": 10,
+   "counts": {
+    "일치": 3,
+    "부분": 2,
+    "누락": 5,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.4,
+   "strict": 0.3
+  },
+  "CB29": {
+   "area": "Marker genes",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 1,
+    "부분": 2,
+    "누락": 7,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.2,
+   "strict": 0.1
+  },
+  "CB30": {
+   "area": "Conclusion and review",
+   "critical": false,
+   "n": 10,
+   "counts": {
+    "일치": 4,
+    "부분": 6,
+    "누락": 0,
+    "상충": 0,
+    "범위 밖": 0
+   },
+   "conformity": 0.7,
+   "strict": 0.4
+  }
+ },
+ "critical_omission_or_conflict": [
+  {
+   "report": "R02",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R03",
+   "item": "CB04",
+   "status": "상충"
+  },
+  {
+   "report": "R04",
+   "item": "CB04",
+   "status": "누락"
+  },
+  {
+   "report": "R05",
+   "item": "CB04",
+   "status": "상충"
+  },
+  {
+   "report": "R05",
+   "item": "CB28",
+   "status": "누락"
+  },
+  {
+   "report": "R06",
+   "item": "CB04",
+   "status": "상충"
+  },
+  {
+   "report": "R06",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R06",
+   "item": "CB28",
+   "status": "누락"
+  },
+  {
+   "report": "R07",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R07",
+   "item": "CB28",
+   "status": "누락"
+  },
+  {
+   "report": "R08",
+   "item": "CB04",
+   "status": "누락"
+  },
+  {
+   "report": "R08",
+   "item": "CB13",
+   "status": "누락"
+  },
+  {
+   "report": "R08",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R08",
+   "item": "CB28",
+   "status": "누락"
+  },
+  {
+   "report": "R09",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R10",
+   "item": "CB04",
+   "status": "상충"
+  },
+  {
+   "report": "R10",
+   "item": "CB13",
+   "status": "누락"
+  },
+  {
+   "report": "R10",
+   "item": "CB14",
+   "status": "누락"
+  },
+  {
+   "report": "R10",
+   "item": "CB28",
+   "status": "누락"
+  }
+ ],
+ "sensitivity_excluding_template_items": {
+  "note": "sensitivity only; not a causal correction for template influence",
+  "items_excluded": [
+   "CB01",
+   "CB03",
+   "CB11",
+   "CB15",
+   "CB19",
+   "CB22",
+   "CB27"
+  ],
+  "n": 230,
+  "counts": {
+   "일치": 116,
+   "부분": 67,
+   "누락": 43,
+   "상충": 4,
+   "범위 밖": 0
+  },
+  "conformity": 0.65,
+  "strict": 0.5043478260869565
+ },
+ "agreement": {
+  "all": {
+   "n": 90,
+   "agree": 60,
+   "percent": 0.6666666666666666,
+   "kappa": 0.3929856115107913
+  },
+  "note": "three-report sample between authors; not external validation",
+  "R03": {
+   "n": 30,
+   "agree": 21,
+   "percent": 0.7,
+   "kappa": 0.4934333958724202
+  },
+  "R08": {
+   "n": 30,
+   "agree": 20,
+   "percent": 0.6666666666666666,
+   "kappa": 0.3589743589743589
+  },
+  "R10": {
+   "n": 30,
+   "agree": 19,
+   "percent": 0.6333333333333333,
+   "kappa": 0.2584269662921348
+  },
+  "confusion_primary_by_second": {
+   "일치": {
+    "일치": 44,
+    "부분": 6,
+    "누락": 1,
+    "상충": 0
+   },
+   "부분": {
+    "일치": 10,
+    "부분": 9,
+    "누락": 0,
+    "상충": 0
+   },
+   "누락": {
+    "일치": 7,
+    "부분": 4,
+    "누락": 7,
+    "상충": 0
+   },
+   "상충": {
+    "일치": 0,
+    "부분": 0,
+    "누락": 2,
+    "상충": 0
+   }
+  },
+  "disagreements": [
+   {
+    "report": "R03",
+    "item": "CB02",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R03",
+    "item": "CB04",
+    "critical": true,
+    "primary": "상충",
+    "second": "누락"
+   },
+   {
+    "report": "R03",
+    "item": "CB12",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R03",
+    "item": "CB18",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R03",
+    "item": "CB23",
+    "critical": false,
+    "primary": "누락",
+    "second": "부분"
+   },
+   {
+    "report": "R03",
+    "item": "CB25",
+    "critical": false,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R03",
+    "item": "CB27",
+    "critical": false,
+    "primary": "누락",
+    "second": "부분"
+   },
+   {
+    "report": "R03",
+    "item": "CB28",
+    "critical": true,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R03",
+    "item": "CB30",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB05",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB07",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB13",
+    "critical": true,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB14",
+    "critical": true,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB15",
+    "critical": true,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R08",
+    "item": "CB16",
+    "critical": true,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R08",
+    "item": "CB17",
+    "critical": false,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R08",
+    "item": "CB22",
+    "critical": true,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB23",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R08",
+    "item": "CB28",
+    "critical": true,
+    "primary": "누락",
+    "second": "부분"
+   },
+   {
+    "report": "R10",
+    "item": "CB04",
+    "critical": true,
+    "primary": "상충",
+    "second": "누락"
+   },
+   {
+    "report": "R10",
+    "item": "CB05",
+    "critical": false,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB13",
+    "critical": true,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB14",
+    "critical": true,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB18",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB22",
+    "critical": true,
+    "primary": "일치",
+    "second": "부분"
+   },
+   {
+    "report": "R10",
+    "item": "CB23",
+    "critical": false,
+    "primary": "누락",
+    "second": "부분"
+   },
+   {
+    "report": "R10",
+    "item": "CB24",
+    "critical": false,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB27",
+    "critical": false,
+    "primary": "일치",
+    "second": "누락"
+   },
+   {
+    "report": "R10",
+    "item": "CB28",
+    "critical": true,
+    "primary": "누락",
+    "second": "일치"
+   },
+   {
+    "report": "R10",
+    "item": "CB30",
+    "critical": false,
+    "primary": "부분",
+    "second": "일치"
+   }
+  ]
+ }
+}

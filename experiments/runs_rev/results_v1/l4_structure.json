@@ -1,0 +1,178 @@
+{
+ "note": "Exact-label overlap reflects shared wording only. L3 status agreement compares human judgements of guideline conformity, not branch structure. Pooled values are over 45 anonymous pairs and are not a condition comparison.",
+ "per_report": {
+  "R01": {
+   "diagrams": 5,
+   "nodes": 83,
+   "arrows": 111,
+   "decision_nodes": 31,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 8,
+   "additional_data_to_terminal_only": 8
+  },
+  "R02": {
+   "diagrams": 5,
+   "nodes": 90,
+   "arrows": 118,
+   "decision_nodes": 31,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 8,
+   "additional_data_to_terminal_only": 8
+  },
+  "R03": {
+   "diagrams": 5,
+   "nodes": 85,
+   "arrows": 103,
+   "decision_nodes": 21,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 12,
+   "additional_data_to_terminal_only": 12
+  },
+  "R04": {
+   "diagrams": 5,
+   "nodes": 91,
+   "arrows": 117,
+   "decision_nodes": 35,
+   "terminal_nodes": 11,
+   "additional_data_nodes": 10,
+   "additional_data_to_terminal_only": 4
+  },
+  "R05": {
+   "diagrams": 5,
+   "nodes": 73,
+   "arrows": 92,
+   "decision_nodes": 23,
+   "terminal_nodes": 6,
+   "additional_data_nodes": 8,
+   "additional_data_to_terminal_only": 8
+  },
+  "R06": {
+   "diagrams": 5,
+   "nodes": 88,
+   "arrows": 106,
+   "decision_nodes": 21,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 8,
+   "additional_data_to_terminal_only": 8
+  },
+  "R07": {
+   "diagrams": 5,
+   "nodes": 111,
+   "arrows": 148,
+   "decision_nodes": 40,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 15,
+   "additional_data_to_terminal_only": 15
+  },
+  "R08": {
+   "diagrams": 5,
+   "nodes": 69,
+   "arrows": 93,
+   "decision_nodes": 27,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 5,
+   "additional_data_to_terminal_only": 5
+  },
+  "R09": {
+   "diagrams": 5,
+   "nodes": 89,
+   "arrows": 120,
+   "decision_nodes": 34,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 5,
+   "additional_data_to_terminal_only": 5
+  },
+  "R10": {
+   "diagrams": 5,
+   "nodes": 76,
+   "arrows": 91,
+   "decision_nodes": 18,
+   "terminal_nodes": 5,
+   "additional_data_nodes": 9,
+   "additional_data_to_terminal_only": 9
+  }
+ },
+ "pooled": {
+  "counts": {
+   "diagrams": {
+    "median": 5.0,
+    "min": 5,
+    "max": 5
+   },
+   "nodes": {
+    "median": 86.5,
+    "min": 69,
+    "max": 111
+   },
+   "arrows": {
+    "median": 108.5,
+    "min": 91,
+    "max": 148
+   },
+   "decision_nodes": {
+    "median": 29.0,
+    "min": 18,
+    "max": 40
+   },
+   "terminal_nodes": {
+    "median": 5.0,
+    "min": 5,
+    "max": 11
+   },
+   "additional_data_nodes": {
+    "median": 8.0,
+    "min": 5,
+    "max": 15
+   },
+   "additional_data_to_terminal_only": {
+    "median": 8.0,
+    "min": 4,
+    "max": 15
+   }
+  },
+  "node_label_jaccard": {
+   "mean": 0.08599164094917867,
+   "min": 0.020618556701030927,
+   "max": 0.16071428571428573,
+   "n_pairs": 45
+  },
+  "arrow_triple_jaccard": {
+   "mean": 0.01558745236504564,
+   "min": 0.0,
+   "max": 0.06382978723404255,
+   "n_pairs": 45
+  },
+  "l3_status_agreement_17_points": {
+   "mean": 0.6,
+   "min": 0.4117647058823529,
+   "max": 0.8235294117647058,
+   "n_pairs": 45
+  },
+  "l3_status_agreement_excluding_template_points": {
+   "mean": 0.4909090909090909,
+   "min": 0.18181818181818182,
+   "max": 0.7272727272727273,
+   "n_pairs": 45,
+   "n_points": 11
+  },
+  "modal_status_share_by_point": {
+   "CB01": 1.0,
+   "CB03": 1.0,
+   "CB04": 0.4,
+   "CB05": 0.6,
+   "CB06": 0.8,
+   "CB11": 1.0,
+   "CB13": 0.5,
+   "CB14": 0.6,
+   "CB16": 1.0,
+   "CB19": 0.9,
+   "CB20": 0.7,
+   "CB22": 0.8,
+   "CB24": 0.7,
+   "CB27": 0.5,
+   "CB28": 0.5,
+   "CB29": 0.7,
+   "CB30": 0.6
+  }
+ }
+}

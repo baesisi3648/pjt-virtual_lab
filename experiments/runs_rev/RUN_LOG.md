@@ -207,3 +207,31 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - A_5 (representative): no pair of incompatible positions between specialists identified. On the main proportionality questions, the specialists who addressed them held compatible positions from round 1. Opposing views entered only as counter-arguments a specialist stated and answered after the Critic noted one-directional contributions. One difference in conditions for widening to genome-wide analysis (R7 Risk example vs Genetics/Bioinformatics triggers) could not be judged. PI open issues combined editorial clean-up with requests on assessment conditions, uncertainty and evidence.
 - Open-issue list entries in PI summaries, A_1–A_5: 38, 19, 28, 23, 39 (147; entries repeat across rounds and include assigned actions; not distinct issues or disagreements). Keyword-extracted Critic remarks on inconsistency between specialists are unvalidated candidates and are not reported as a statistic.
 - Codex review applied (overstatements on Critic remarks and PI open issues removed; condition difference recorded; trace rows corrected).
+
+## 2026-11-10 Judging sheets returned (stage 1 check)
+
+- Returned: primary and second L3 sheets, two external evaluations of R05, two L6 reviews, response draft with two co-author memos (`reference/판정시트/`, not committed).
+- `scripts/revision/l3_aggregate.py` → `results_v1/l3_summary.json` (no condition split; `--unblind` not run). Primary L3: 176 match, 76 partial, 44 omission, 4 conflict, 0 out of scope; conformity 71.3%, strict 58.7%; per report median 71.7% (65.0–78.3%). Excluding the seven template_overlap items (sensitivity only): 65.0%, strict 50.4%.
+- 19 rows of critical items judged omission or conflict by the primary judge (CB04 6, CB14 6, CB28 5, CB13 2; nine of ten reports). The second judge scored five of them as match (R08 and R10 CB13, CB14; R10 CB28).
+- Second vs primary on R03, R08, R10: 60/90 (66.7%), Cohen's kappa 0.393; 24 of the 30 differences are about whether an item is a match; 13 of 30 on critical items.
+- Primary sheet incomplete: causes 0/1500, locations 0/300, critical-case, AI-addition and normalisation sheets empty, L4 0/340. Blinding stays until these are settled.
+- External R05: scores 4,4,4,5,5 and 4,3,4,5,5; C1 tables blank (no case entered). Both declined Acknowledgements and consented to anonymous quotation. L6 reviewers: topic 2 is a difference of expression; other topics agreed.
+- Codex review of this check: numbers confirmed; corrections applied to the plan (five, not four, critical rows scored match by the second judge; critical-case check must cover whole reports; L4 extraction must include step text).
+
+## 2026-11-10 L4 supplement for the primary judge (not yet sent)
+
+- `scripts/revision/l4_extract.py` (deterministic Mermaid parser and fixed keyword rules; no LLM at run time; the rules were written by Claude and are disclosed) and `scripts/revision/build_l4_supplement.py` → `reference/revision/packages_v1/5_주판정자_보완요청/주판정_보완시트.xlsx`. All 1,386 arrows in the 65 diagrams parsed; identical repeated diagrams count once.
+- Sheet design: report × decision point with verbatim branches, proposed target class and outcome, conditional sentences from Core Questions 4–5. The judge corrects only wrong rows and signs off per report. Critical cases (none/present, one line each) and evidence numbers for the four CB04 conflict rows are on the same workbook.
+- Agreement to be computed from the human-confirmed fields: present, condition, branch value, target class, outcome type; all branches must match; (M+J)/N and M/(N−J), jointly absent J; out-of-scope excluded with reasons; unconfirmed rows are not computed.
+- Deviations to disclose: batch confirmation instead of field-by-field entry; target normalised to a class; causes, other locations and AI additions not collected.
+- Codex reviewed twice; fixes applied (chained arrows, terminal-only end coding, keyword false positives, second report body, content-based diagram de-duplication, per-report critical cases, removal of the automatic critical count, conflict rows can be sent back for re-check).
+- L6 forms were given to the two external evaluators only after their R05 evaluations were finished (confirmed by the author, 2026-11-10).
+- Korean responses R2-C2, R2-M1, R2-M4 shortened per the co-author memos (`manuscript_drafts/03_responses_ko.md`, not committed); Codex review applied. L5 judgements remain drafts pending author confirmation.
+
+## 2026-11-10 L4 changed to script structure indices
+
+- Decision by the authors: the planned field-level coding of the 17 decision points (analysis_criteria.json L4_structure) is not carried out, because whether branch codings are correct could not be judged reliably. This departs from the frozen plan and is stated in Methods. The frozen file is not edited.
+- `scripts/revision/l4_structure_metrics.py` → `results_v1/l4_structure.json` (no LLM; `--unblind` not run). Pooled, ten reports: decision nodes median 29 (18–40); additional-data nodes median 8 (5–15), median 8 of them connect only to terminal nodes (4–15). Exact node-label Jaccard over 45 pairs 0.086 (0.021–0.161), arrow triple 0.016 (0–0.064); these measure shared wording only.
+- Primary judge's L3 status agreement between reports on the 17 decision-point items: mean 60.0% over 45 pairs (41.2–82.4%); 49.1% (18.2–72.7%) on the 11 items without template overlap.
+- The keyword candidates in `l4_extract.py` are not reported: an internal check against an independent reading of the ten reports agreed on presence for 127 of 170 points, and keyword hits often had no branch on the item's condition. No value from that check enters the manuscript.
+- `scripts/revision/build_followup_sheet.py` → `packages_v1/5_주판정자_보완요청/주판정_보완시트_L4제외.xlsx` (critical cases and four conflict rows only; not yet sent as far as known).
