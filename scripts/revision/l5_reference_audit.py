@@ -9,7 +9,7 @@ Each reference is matched to one document (doc_group) by URL, RAG source name or
 - title: accurate / descriptive label (a description instead of a title) / different title;
 - domain note (e.g. human gene therapy).
 Being listed is not evidence of use: the pipeline adds retrieved sources to the References (agents/pi.py).
-Drafts by Claude; an author confirms (confirmed_by). Outputs in experiments/runs_rev/results_v1/.
+Drafts by Claude, checked with Codex (2026-11-10); no human author has confirmed them (confirmed_by stays empty). Outputs in experiments/runs_rev/results_v1/.
 """
 from __future__ import annotations
 
@@ -56,19 +56,20 @@ DOCS = {
 # identifiers used to find a document inside retrieved text (indirect route)
 NAMED = {"efsa_2020_6299": r"6299|SDN-1, SDN-2 and ODM|site-directed nucleases type 1 and 2",
          "efsa_2011_2150": r"2150|food and feed from genetically modified plants",
-         "efsa_2012_2561": r"2561|cisgenesis and intragenesis", "efsa_2017_4862": r"4862|allergenicity assessment of genetically modified",
+         "efsa_2012_2561": r"2561|cisgen\w*sis(?: and |/)intragenesis", "efsa_2017_4862": r"4862|allergenicity assessment of genetically modified",
          "efsa_2019_5708": r"5708|Threshold of Toxicological Concern", "codex_cxg44": r"GL ?44|CXG ?44|Principles for the Risk Analysis",
-         "eu_com_2023_411": r"COM\(2023\) ?411|2023/0226"}
+         "eu_com_2023_411": r"COM\(2023\) ?411|2023/0226|Proposal for a Regulation[^.]{0,120}new genomic"}
 URL_KEYS = {"PMC12660440": "pmc12660440", "S1871678426001172": "sd_s1871678426001172", "S2666833526001942": "sd_s2666833526001942",
             "s44264-026-00154-9": "npj_s44264", "fda.gov/news-events": "fda_gene_therapy", "2021.6314": "efsa_2021_6314",
             "2025.9566": "efsa_2025_9566", "e240901": "efsa_2026_e240901", "2025.9619": "efsa_2025_9619",
             "PMC13396206": "pmc13396206", "apps.fas.usda.gov": "usda_th2025"}
 RULES = [  # (pattern on the reference text, doc_group) for references without a URL
     (r"biotechnology applied to animals|NGT animals", "efsa_2025_9566"),
+    (r"allergenicity", "efsa_2017_4862"),
     (r"microorganisms", "efsa_2024_8895"),
     (r"CXG 45|CAC/GL 45|Recombinant.DNA Plants", "codex_cxg45"),
     (r"Health Canada", "health_canada"), (r"MHLW|Ministry of Health, Labour", "japan_mhlw"),
-    (r"Threshold of Toxicological Concern", "efsa_2019_5708"), (r"allergenicity", "efsa_2017_4862"),
+    (r"Threshold of Toxicological Concern", "efsa_2019_5708"),
     (r"cisgenesis", "efsa_2012_2561"), (r"genetically modified plants", "efsa_2011_2150"),
     (r"CAC/GL 44|CXG 44|Principles for the Risk Analysis", "codex_cxg44"),
     (r"European Commission|2023 Proposal", "eu_com_2023_411"),
@@ -181,7 +182,7 @@ def main() -> int:
         "note": "Listing is not evidence of use: retrieved sources are added to the References by the pipeline. "
                 "'not in retrieved inputs' does not establish generation from prior knowledge. "
                 "title_found_in_body is a rough text check, not a claim-citation link.",
-        "status": "draft judgements by Claude; author confirmation pending",
+        "status": "draft judgements by Claude, checked with Codex; no human author confirmation",
     }
     (OUT / "l5_reference_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))

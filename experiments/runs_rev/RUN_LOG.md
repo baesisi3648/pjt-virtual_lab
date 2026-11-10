@@ -235,3 +235,17 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Primary judge's L3 status agreement between reports on the 17 decision-point items: mean 60.0% over 45 pairs (41.2–82.4%); 49.1% (18.2–72.7%) on the 11 items without template overlap.
 - The keyword candidates in `l4_extract.py` are not reported: an internal check against an independent reading of the ten reports agreed on presence for 127 of 170 points, and keyword hits often had no branch on the item's condition. No value from that check enters the manuscript.
 - `scripts/revision/build_followup_sheet.py` → `packages_v1/5_주판정자_보완요청/주판정_보완시트_L4제외.xlsx` (critical cases and four conflict rows only; not yet sent as far as known).
+
+## 2026-11-10T12:44:54Z Analysis lock and unblinding (authors' decision after review with Codex)
+
+- Returned L3 sheets and the follow-up sheet are locked by SHA-256 before opening the blinding key: primary sheet 0b6f41eba20b41d1…, second sheet 98f65acecb21bc59…, follow-up sheet without L4 041b14a740aa400b…, earlier follow-up sheet 3147293e39eecf6f….
+- Only the analyst was unblinded. The primary judge's follow-up (critical cases, four CB04 evidence sentences) had not been returned. The primary judge must see no per-condition result, draft or repository update until that follow-up is final. Any later change keeps the original ratings and is identified separately.
+- Known limit: the public code and manifest seed allow the anonymous mapping to be reconstructed, so concealment cannot be proved by the procedure alone.
+
+## 2026-11-10 L5 audit corrected; figures; revised manuscript draft
+
+- L5 reference audit rules corrected after a Codex check (one citation of the 2017 allergenicity guidance was mapped to e8895; two documents named in retrieved text were counted as not retrieved). Now 22 distinct documents, 10 duplicate entries; entries by route 54 web/EFSA, 26 RAG, 4 indirect, 5 not in retrieved inputs. EFSA DOIs were resolved through Crossref on 2026-11-10; other documents are in the retrieved records or the corpus. No human author confirmed the L5 judgements; the Methods say so.
+- Two claim units (a4, c4) combine closely related requirements and were not split; reported as 30 extraction units in SI Note S3.
+- `scripts/revision/make_fig34.py`: Figures 3 and 4 redrawn from the representative report's Mermaid source without content changes. Figure 1 label changed from "X N rounds, until convergence" to "Up to 7 rounds, until all scores reach 5".
+- Per-condition result files are kept out of the public branch until the primary judge's follow-up is final.
+
