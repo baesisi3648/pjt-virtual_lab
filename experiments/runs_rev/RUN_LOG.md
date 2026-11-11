@@ -249,3 +249,11 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - `scripts/revision/make_fig34.py`: Figures 3 and 4 redrawn from the representative report's Mermaid source without content changes. Figure 1 label changed from "X N rounds, until convergence" to "Up to 7 rounds, until all scores reach 5".
 - Per-condition result files are kept out of the public branch until the primary judge's follow-up is final.
 
+
+## 2026-11-11 Internal critical-case review (replaces the follow-up request to the primary judge)
+
+- The follow-up sheet was not sent to the primary judge. The authors decided to perform the whole-report critical-case review and the CB04 conflict evidence check internally.
+- Candidate passages were located by Codex (read-only) in the anonymised reports, and Claude wrote plain-language locations and notes (`scripts/revision/build_internal_critical_sheet.py`). S.B. judged every row after unblinding.
+- Outcome: three new critical cases (R02 CB06 insertion effect on endogenous genes not addressed; R07 CB03 and R10 CB22 decision trees closing after "Decision deferred pending further data"). Evidence sentences confirmed for the four CB04 conflicts (R03, R05, R06, R10).
+- Decision: the primary judge's element judgements are unchanged. CB04 candidates were not counted as new cases because the conflicts reflect linking SDN-3 to the recombinant-DNA assessment without distinguishing gene-pool origin, which is more conservative than the EFSA criterion; the Results state this.
+- Per-condition result files (`l3_summary.json`, `l4_structure.json`) are committed now that no blinded judgement is pending.
