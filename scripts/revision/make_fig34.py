@@ -1,9 +1,9 @@
-"""Figures 3 and 4 (revision): decision trees of the representative report, drawn from its Mermaid source.
+"""Figures 3-6 (revision): decision trees of the representative report, drawn from its Mermaid source.
 
     python -B scripts/revision/make_fig34.py [--out reference/revision/figures_v1]
 
 Nodes, edges and labels are taken unchanged from the report; only visual style lines are added.
-Fig. 3 = SDN-1 (A), SDN-2 (B), ODM (C). Fig. 4 = SDN-3. Requires npx (@mermaid-js/mermaid-cli) and Chrome.
+Fig. 3 = SDN-1, Fig. 4 = SDN-2, Fig. 5 = ODM, Fig. 6 = SDN-3, one tree per figure. Requires npx (@mermaid-js/mermaid-cli) and Chrome.
 """
 from __future__ import annotations
 
@@ -72,7 +72,7 @@ def panels(images, letters):
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="reference/revision/figures_v1")
+    ap.add_argument("--out", default="reference/revision/figures_v2")
     out = ROOT / ap.parse_args().out
     out.mkdir(parents=True, exist_ok=True)
     rep = json.loads((RES / "representative.json").read_text(encoding="utf-8"))["representative"]
@@ -81,8 +81,8 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as t:
         tmp = Path(t)
         imgs = {n: render(styled(tree(text, n)), Path(f"{n}.png"), tmp).copy() for n in ("SDN-1", "SDN-2", "ODM", "SDN-3")}
-    panels([imgs["SDN-1"], imgs["SDN-2"], imgs["ODM"]], "ABC").save(out / "Fig3_v1.png", dpi=(300, 300))
-    imgs["SDN-3"].save(out / "Fig4_v1.png", dpi=(300, 300))
+    for n, name in ((3, "SDN-1"), (4, "SDN-2"), (5, "ODM"), (6, "SDN-3")):
+        imgs[name].save(out / f"Fig{n}_v2.png", dpi=(300, 300))
     print({k: v.size for k, v in imgs.items()})
 
 

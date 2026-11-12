@@ -257,3 +257,10 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Outcome: three new critical cases (R02 CB06 insertion effect on endogenous genes not addressed; R07 CB03 and R10 CB22 decision trees closing after "Decision deferred pending further data"). Evidence sentences confirmed for the four CB04 conflicts (R03, R05, R06, R10).
 - Decision: the primary judge's element judgements are unchanged. CB04 candidates were not counted as new cases because the conflicts reflect linking SDN-3 to the recombinant-DNA assessment without distinguishing gene-pool origin, which is more conservative than the EFSA criterion; the Results state this.
 - Per-condition result files (`l3_summary.json`, `l4_structure.json`) are committed now that no blinded judgement is pending.
+
+## 2026-11-12 Manuscript v2 after co-author comments
+
+- Co-author (J.-H.H.) comments on draft v1: report only the final-protocol runs (A_1..A_5), remove the scoring-protocol comparison and all element-level guideline judging from the manuscript, restore the original Discussion and Conclusion with minimal data-driven edits, reduce the SI to the original level, split the decision-tree figure.
+- Figures v2: `make_fig2.py` (original design, round timeline and per-agent output of the representative run), `make_fig34.py` (one tree per figure, Figs. 3-6), `make_fig7.py` (Critic-score trajectory and full-report similarity of the five final runs, equal panels).
+- Reported similarity uses the full final reports as in the original Methods (0.94 ± 0.02, population SD). The representative run remains the pre-defined safety-content rule (A_5).
+- The comparison-protocol runs and the judging data are kept in the repository and the response letter but are not reported in the manuscript.
