@@ -264,3 +264,10 @@ Decision (corresponding author): rebuild the corpus and rerun all ten runs after
 - Figures v2: `make_fig2.py` (original design, round timeline and per-agent output of the representative run), `make_fig34.py` (one tree per figure, Figs. 3-6), `make_fig7.py` (Critic-score trajectory and full-report similarity of the five final runs, equal panels).
 - Reported similarity uses the full final reports as in the original Methods (0.94 ± 0.02, population SD). The representative run remains the pre-defined safety-content rule (A_5).
 - The comparison-protocol runs and the judging data are kept in the repository and the response letter but are not reported in the manuscript.
+
+## 2026-11-12 Manuscript v3, SI v3, response letter
+
+- Co-author comments (packages_v3): expert affiliations stated with anonymity, scope sentence on animals and microorganisms removed, SI reformatted to the reference layout (Notes S1-S2, Tables S1-S5, Supplementary Data 1 as a separate file).
+- Codex data check corrected three statements: the 23 min 57 s run time includes team composition (in R1), the final synthesis (in R7) and translation of the report (after R7), the rounds alone sum to 22 min 26 s; the research agenda was given to the PI and specialist agents and not to the Critic; similarity splitting is by 28,000 characters. Fig. 2B label now shows both values.
+- Minimal edits where the restored original text conflicted with reviewer comments: generalizability (Introduction, Conclusion), traceability, EU-centric evidence base, tool names and grammar.
+- Response letter: node-label overlap among the five final runs, mean Jaccard 0.07 (l4_structure.json per_condition A), and score decreases 64 of 600 transitions are reported in the response only.

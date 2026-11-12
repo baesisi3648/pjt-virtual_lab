@@ -87,7 +87,7 @@ def main() -> int:
     for sp in ("top", "right", "left"):
         axR.spines[sp].set_visible(False)
     axR.tick_params(axis="y", length=0)
-    axR.text(25, -0.95, f"total  {mmss(meta['total_duration_seconds'])}", ha="right", fontsize=9.5, color=GRAY, fontweight="bold")
+    axR.text(25, -0.95, f"sum of rounds {mmss(sum(d))}, run total {mmss(meta['total_duration_seconds'])}", ha="right", fontsize=9.5, color=GRAY, fontweight="bold")
 
     axT.text(5.0, 52.5, "Per-agent character output", fontsize=11.5, fontweight="bold", color=INK, va="center")
     stats = {r["agent"]: int(r["chars"]) for r in csv.DictReader((ROOT / "experiments" / "runs_rev" / "results_v1" / "output_stats.csv").open(encoding="utf-8-sig")) if r["run"] == REP}
