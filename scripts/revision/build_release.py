@@ -152,7 +152,8 @@ repository root so that the files land in `experiments/runs_rev/`.
   `final_report.ko.md`).
 - `main_v1_logs/`: console logs and the pre-run API checks.
 - `results_v1/extracted/`: the safety-content text of each final report used for the similarity analysis.
-- `retrieval_snapshot_v1.json`: the fixed retrieval inputs of the runs.
+- `retrieval_snapshot_v1.json`: the fixed retrieval inputs of the runs. Its `build.base_snapshot` field names an
+  earlier snapshot used during construction, which is not part of this package.
 
 The analysis results are in `experiments/runs_rev/results_v1/` of the code repository.
 
@@ -161,19 +162,21 @@ Retrieval results (web pages, EFSA Journal records and RAG chunks of regulatory 
 different terms. They were removed where they were injected, namely in the snapshot file and in the `system_prompt` and
 `user_message` fields of `calls.jsonl`, and replaced by markers giving the length and SHA-256 of the removed text. The
 titles, source labels and URLs of each result are kept after the marker in the snapshot file. Model outputs are
-unchanged. The local repository path was replaced by `<repo>`. `RELEASE_MANIFEST.json` lists every file with the SHA-256
-of the published and of the original version.
+unchanged. The local repository path was replaced by `<repo>`. `RELEASE_MANIFEST.json` lists the 102 data files with the
+SHA-256 of the published and of the original version.
 
-Consequences: the prompts cannot be replayed exactly from this package. RAG chunks can be regenerated from the public
-source documents with `scripts/revision/build_corpus_v1.py` (document hashes, chunk-ID sets and the hash of all chunks
-are in `experiments/runs_rev/corpus_v1/corpus_manifest.json`) and compared with the hashes in the markers. Web and EFSA
-Journal results can be consulted at their URLs, but the excerpts returned by the search API cannot be regenerated.
+Consequences: the prompts cannot be replayed exactly from this package. The RAG index can be rebuilt from the public
+source documents with `scripts/revision/build_corpus_v1.py` (OpenAI embedding and Pinecone APIs required; document
+hashes and corpus hashes are in `experiments/runs_rev/corpus_v1/corpus_manifest.json`). The markers hash the formatted
+retrieval result, so a comparison requires rebuilding the snapshot with `scripts/revision/build_retrieval_snapshot.py`.
+Web and EFSA Journal results can be consulted at their URLs, but the excerpts returned by the search API cannot be
+regenerated.
 
 ## Levels of reproduction
-1. Re-analysis of the saved outputs (no API): Critic scores, rounds and score decreases
-   (`experiments/reproducibility/analyze_revision.py` with `--skip-embeddings`) and the other analyses in
-   `scripts/revision/`. The similarity matrices are published
-   as CSV in `results_v1/`; recomputing them requires the OpenAI embedding API (text-embedding-3-large).
+1. Re-analysis of the saved outputs (no API): Critic scores, rounds and score decreases with
+   `python -B -m experiments.reproducibility.analyze_revision --runs-dir experiments/runs_rev/main_v1
+   --out-dir <new empty folder> --skip-embeddings`. The similarity matrices are published as CSV in
+   `experiments/runs_rev/results_v1/` of the code repository; recomputing them requires the OpenAI embedding API (text-embedding-3-large).
 2. Re-running the pipeline requires API access to the generation and Critic models and the retrieval inputs (see above);
    new runs are not expected to reproduce the outputs exactly.
 
