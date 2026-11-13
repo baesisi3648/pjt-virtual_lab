@@ -3,8 +3,9 @@
     python -B scripts/revision/build_release.py [--out release/data_v1]
 
 Scope
-- Copies the gitignored run records (main_v1 = main results; pilot_v1; the replaced corpus-v0 set `main` and its
-  pilots; logs; pilot analyses; extracted report content; retrieval snapshots) into --out, with DATA_README.md.
+- Copies the gitignored records of the main runs (main_v1 and its logs, the extracted report content used for the
+  similarity analysis, the fixed retrieval snapshot v1) into --out, with DATA_README.md. Pilot runs, the replaced
+  corpus-v0 set and the records of the first submission are not included (decision 2026-11-13).
 Third-party text
 - Removed only where it was injected. Model outputs (responses, conversations, reports, scores, team selection) are
   never changed apart from the local path. In the snapshot files every `result`/`text` string is replaced by a marker
@@ -31,16 +32,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RUNS = ROOT / "experiments" / "runs_rev"
-SOURCES = ["main_v1", "main_v1_logs", "pilot_v1", "pilot_v1_logs", "main", "main_logs", "pilot", "pilot_logs",
-           "pilot_analysis_attempt02", "pilot_analysis_attempt03", "pilot_analysis_compare",
-           "results/extracted", "results_v1/extracted",
-           "retrieval_snapshot.json", "retrieval_snapshot_v1.json",
-           "retrieval_snapshot_v1_first_top5_unused.json", "retrieval_snapshot_v1_float_pages_unused.json"]
+SOURCES = ["main_v1", "main_v1_logs", "results_v1/extracted", "retrieval_snapshot_v1.json"]
 SNAPSHOTS = [s for s in SOURCES if s.startswith("retrieval_snapshot")]
-# Original submission (decision D3, 2026-11-09): the five original runs (final reports, message previews, scores,
-# meta; no per-round records were kept), the original analysis results, and the preserved original prompts
-# (current copy; identity with the prompts used at the time is not confirmed). Paths relative to the repository root.
-ORIGINAL = ["experiments/runs", "experiments/reproducibility/results", "prompts"]
+ORIGINAL: list[str] = []  # records of the first submission, not included (decision 2026-11-13)
 TEXT_SUFFIXES = {".json", ".jsonl", ".md", ".log", ".txt", ".csv", ".html"}
 OUTPUT_FILES = {"conversations.json", "messages.json", "critic_scores.json", "final_report.md", "final_report.ko.md",
                 "team_selection.json"}
@@ -143,40 +137,30 @@ def strings(obj):
             yield from strings(v)
 
 
-DATA_README = """# Data package: revision experiment (scoring-protocol comparison)
+DATA_README = """# Data package: run records
 
 Companion to the code repository https://github.com/baesisi3648/pjt-virtual_lab (same release tag). Unpack at the
 repository root so that the files land in `experiments/runs_rev/`.
 
 ## Contents
-- `main_v1/` — **main results**: ten runs (A_1–A_5 revised protocol, B_1–B_5 comparison protocol), corpus v1,
-  experiment manifest `experiment_manifest_v2.json` (in the code repository). One folder per run and attempt with
-  `calls.jsonl` (every model call with request parameters, response identifiers, usage and full response text),
-  `conversations.json`, `messages.json`, `critic_scores.json` (per round, specialist and dimension), `team_selection.json`,
-  `meta.json` and the final reports (`final_report.md`, Korean translation `final_report.ko.md`). `main_v1_logs/`
-  holds the console logs and the pre-run API checks.
-- `pilot_v1/` — pilot runs with corpus v1, not part of the analysis.
-- `main/`, `pilot/` — an earlier set of main runs and pilots with the corpus-v0 index, replaced after an audit found
-  placeholder documents in that index. Kept as a record (amendment and exclusions in `RUN_LOG.md`).
-- `pilot_analysis_*`, `results/extracted`, `results_v1/extracted` — pilot analyses and the safety-content extractions
-  used for the similarity analysis.
-- `retrieval_snapshot*.json` — the fixed retrieval inputs (v1 used in the main runs; v0 for the replaced set; two
-  unused v1 variants that document the change of the RAG selection rule).
+- `main_v1/`: ten runs with corpus v1 under the experiment manifest `experiment_manifest_v2.json` (code repository).
+  A_1 to A_5 used the prompt set `prompts_A/`, which is the protocol reported in the paper; the representative run is
+  A_5. B_1 to B_5 used `prompts_B/`, which differs only in the Critic instructions (`system/critic.md`). One folder
+  per run and attempt with `calls.jsonl` (every model call with request parameters, response model identifiers,
+  usage and full response text), `conversations.json`, `messages.json`, `critic_scores.json` (per round, specialist
+  and dimension), `team_selection.json`, `meta.json` and the final reports (`final_report.md`, Korean translation
+  `final_report.ko.md`).
+- `main_v1_logs/`: console logs and the pre-run API checks.
+- `results_v1/extracted/`: the safety-content text of each final report used for the similarity analysis.
+- `retrieval_snapshot_v1.json`: the fixed retrieval inputs of the runs.
 
-## Original submission
-- `experiments/runs/run_1` … `run_5` — the five runs reported in the original submission: final reports, message
-  previews, Critic scores and run metadata. Complete per-round records, call logs and response model identifiers were
-  not kept for these runs.
-- `experiments/reproducibility/results/` — the original similarity and Critic-score analysis.
-- `prompts/` — the original prompt set as preserved in the repository. Whether it is identical to the prompts used at
-  the time of the original runs cannot be confirmed. The changes made for the revision are listed in Supplementary
-  Table S11 and as patches in `experiments/runs_rev/prompt_sets/` (code repository).
+The analysis results are in `experiments/runs_rev/results_v1/` of the code repository.
 
 ## Removed third-party text
 Retrieval results (web pages, EFSA Journal records and RAG chunks of regulatory documents) are third-party text under
-different terms. They were removed where they were injected, namely in the snapshot files and in the `system_prompt` and
+different terms. They were removed where they were injected, namely in the snapshot file and in the `system_prompt` and
 `user_message` fields of `calls.jsonl`, and replaced by markers giving the length and SHA-256 of the removed text. The
-titles, source labels and URLs of each result are kept after the marker in the snapshot files. Model outputs are
+titles, source labels and URLs of each result are kept after the marker in the snapshot file. Model outputs are
 unchanged. The local repository path was replaced by `<repo>`. `RELEASE_MANIFEST.json` lists every file with the SHA-256
 of the published and of the original version.
 
@@ -186,9 +170,10 @@ are in `experiments/runs_rev/corpus_v1/corpus_manifest.json`) and compared with 
 Journal results can be consulted at their URLs, but the excerpts returned by the search API cannot be regenerated.
 
 ## Levels of reproduction
-1. Re-analysis of the saved outputs (no API): scores, rounds, decreases, the tables of the paper
-   (`experiments/reproducibility/analyze_revision.py`, results in `experiments/runs_rev/results_v1/`). The similarity
-   matrices are published as CSV; recomputing them requires the OpenAI embedding API (text-embedding-3-large).
+1. Re-analysis of the saved outputs (no API): Critic scores, rounds and score decreases
+   (`experiments/reproducibility/analyze_revision.py` with `--skip-embeddings`) and the other analyses in
+   `scripts/revision/`. The similarity matrices are published
+   as CSV in `results_v1/`; recomputing them requires the OpenAI embedding API (text-embedding-3-large).
 2. Re-running the pipeline requires API access to the generation and Critic models and the retrieval inputs (see above);
    new runs are not expected to reproduce the outputs exactly.
 
