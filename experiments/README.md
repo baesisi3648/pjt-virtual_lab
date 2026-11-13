@@ -7,7 +7,8 @@ Two sets of runs live here.
 | `runs/` | The five runs of the originally submitted manuscript (preserved, not regenerated). |
 | `runs_rev/` | The revision experiment: conditions A and B, five runs each, plus preparation records. |
 
-Design and rationale: `reference/revision/revision_plan.md` (sections 0, 7–11).
+The manuscript reports condition A of the revision experiment (records `runs_rev/main_v1/`,
+results `runs_rev/results_v1/`). The run log is `runs_rev/RUN_LOG.md`.
 
 ## Revision experiment (`runs_rev/`)
 
@@ -36,12 +37,15 @@ Notes on condition A:
 python -B scripts/revision/build_retrieval_snapshot.py
 
 # 2. One run = one process. Condition, run number and attempt are explicit.
-python -B run_experiment.py --condition A --run-id 1 --attempt 1
-python -B run_experiment.py --condition B --run-id 1 --attempt 1
-#    output: runs_rev/main/<COND>_<RUN>/attempt_<NN>/ (existing folders are never overwritten)
+#    Without --manifest, give a new output folder (runs in runs_rev/main need a manifest).
+python -B run_experiment.py --condition A --run-id 1 --attempt 1 --out-dir experiments/runs_rev/new_runs
+python -B run_experiment.py --condition B --run-id 1 --attempt 1 --out-dir experiments/runs_rev/new_runs
+#    output: <out-dir>/<COND>_<RUN>/attempt_<NN>/ (existing folders are never overwritten)
 #    pilot runs: add --out-dir experiments/runs_rev/pilot
 
 #    main runs: freeze the inputs once, then run in manifest order (one process per run)
+#    (the reported runs used experiment_manifest_v2.json: --out-dir experiments/runs_rev/main_v1
+#     --retrieval-snapshot experiments/runs_rev/retrieval_snapshot_v1.json)
 python -B scripts/revision/build_manifest.py          # writes runs_rev/experiment_manifest.json
 python -B run_experiment.py --condition B --run-id 1 --attempt 1 `
     --manifest experiments/runs_rev/experiment_manifest.json

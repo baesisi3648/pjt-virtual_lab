@@ -1,23 +1,15 @@
 # Prompt Assets — Public Placeholders
 
-This directory contains **placeholder** prompts that allow the codebase to run
-in a public-facing context. The full prompt set used in the published study —
-including the detailed assessment rubric, the report template, and the
-regulatory-text excerpts — is held privately at `../prompts/` (gitignored).
+This directory contains short placeholder prompts that let the codebase start without the
+study prompts. They are not the prompts used in the study.
 
-**Why placeholders?**
+The prompts used in the study are public in this repository.
 
-The full rubric and report template encode evaluation targets that overlap
-with the conclusions reported in the manuscript. Releasing them publicly
-would constitute target leakage and undermine the reproducibility claim.
-The full prompt set is available from the corresponding author upon
-reasonable request, in keeping with standard practice for evaluation
-rubrics that risk leakage when made openly searchable.
+- `../prompts_A/` is the prompt set of the final protocol reported in the manuscript, including
+  the Critic rubric (`data/critique_rubric.md`).
+- `../prompts_B/` is the comparison prompt set and differs from `prompts_A/` only in
+  `system/critic.md`.
 
-**How to use**
-
-1. To run the public placeholder version, do nothing — the loader will use
-   this directory automatically when `prompts/` is absent.
-2. To run with the full author-curated prompts, place them at
-   `../prompts/` in the same directory layout, or set the environment
-   variable `VIRTUAL_LAB_PROMPTS_DIR=/path/to/prompts`.
+To run with a study prompt set, set the environment variable
+`VIRTUAL_LAB_PROMPTS_DIR=prompts_A` (or `prompts_B`). Without it the loader uses `../prompts/`
+when present and otherwise this directory.

@@ -1,6 +1,6 @@
 [Research Agenda Placeholder]
 
-The full research agenda used in this study is held privately. The agent system uses this placeholder when the private prompt directory is absent.
+The research agenda used in the study is `prompts_A/data/research_agenda.md`. The agent system uses this placeholder when no other prompt directory is available.
 
 Goal: derive a multidisciplinary safety-assessment framework for foods produced by emerging biotechnologies.
 

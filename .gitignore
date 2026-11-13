@@ -58,8 +58,8 @@ reference/
 # from this repo to keep the public history binary-free)
 data/regulatory/*.pdf
 
-# Author-private prompt assets (English-first; full set held privately for paper review)
-# The runnable public placeholders live in prompts.example/.
+# Original prompt set of the first submission (source of prompts_A/ and prompts_B/)
+# The prompts used in the study are public in prompts_A/ and prompts_B/.
 prompts/
 
 # Reproducibility experiment runs (large; regenerated on demand)
@@ -91,3 +91,8 @@ experiments/runs_rev/results_v1/extracted/
 
 # public data package built locally (scripts/revision/build_release.py)
 release/
+
+# Development notes kept locally, not part of the public release
+docs/
+CLAUDE.md
+.mcp.json

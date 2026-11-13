@@ -19,12 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Note on the prompt assets:
-The agent prompt templates and reference text assets used in the published
-study are held privately at `prompts/` (gitignored). This separation is for
-target-leakage prevention, not licensing — the prompts themselves, when
-released to the corresponding author upon request, are also covered by this
-MIT License.
