@@ -77,7 +77,7 @@ The full procedure, the manifest checks and the description of every output file
 - Analysis results used in the manuscript are in `experiments/runs_rev/results_v1/`, and the
   corpus manifest is in `experiments/runs_rev/corpus_v1/`.
 - The complete per-round records of every run (call logs, conversations, Critic scores, final
-  reports, metadata) are archived at [DOI]. The package is built by
+  reports, metadata) are archived at https://doi.org/10.5281/zenodo.24189413 (release v1.0.0). The package is built by
   `scripts/revision/build_release.py`. Excerpts of third-party documents in the retrieval inputs
   are replaced by their source, length and SHA-256, and the documents can be retrieved from the
   listed sources. The published records therefore support reanalysis of the saved outputs but
